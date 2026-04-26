@@ -31,7 +31,7 @@ const Session = {
     window.WIN_CHANCE = data.winChance || 0.5;
   },
   
-  async login(username, password) {
+  async login(username, password, bonus = 0) {
     const { data, error } = await sb.from('users').select('*').eq('username', username).maybeSingle();
     if (error) throw new Error('DB error: ' + error.message);
     if (!data) throw new Error('Username not found.');
@@ -52,24 +52,40 @@ const Session = {
     window.currentUser = data;
     window.balance = data.balance;
     
+    if (bonus && bonus > 0) {
+      window.balance += bonus;
+      window.currentUser.balance = window.balance;
+      const sessionData = {
+        user: window.currentUser,
+        balance: window.balance,
+        winChance: window.WIN_CHANCE
+      };
+      localStorage.setItem(this.KEY, JSON.stringify(sessionData));
+      await this.saveBalance();
+    }
+    
     return data;
   },
   
   async signup(username, password, referralCode = '') {
     const hash = await hashPassword(password);
     let referrerId = null;
+    let newBalance = 1000;
+    let bonus = 0;
     
     if (referralCode) {
       const { data: refData } = await sb.from('users').select('id').eq('referral_code', referralCode).maybeSingle();
-      if (refData && refData.id !== window.currentUser?.id) {
+      if (refData) {
         referrerId = refData.id;
+        bonus = 10000;
+        newBalance = 1000 + bonus;
       }
     }
     
     const { data, error } = await sb.from('users').insert({ 
       username: username, 
       password: hash, 
-      balance: 1000,
+      balance: newBalance,
       referred_by: referrerId
     }).select().maybeSingle();
     
@@ -85,7 +101,7 @@ const Session = {
       }
     }
     
-    return this.login(username, password);
+    return this.login(username, password, bonus);
   },
   
   async generateReferralCode() {

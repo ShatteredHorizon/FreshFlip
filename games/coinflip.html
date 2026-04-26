@@ -30,152 +30,132 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-ser
 
 #app { display: none; flex-direction: column; min-height: 100vh; }
 
-nav {
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  padding: 0 20px;
-  height: 56px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: sticky;
-  top: 0;
-  z-index: 50;
-}
-
-.nav-logo { font-family: 'Rajdhani', sans-serif; font-size: 1.3rem; font-weight: 700; letter-spacing: 2px; color: var(--text); display: flex; align-items: center; gap: 8px; cursor: pointer; }
+nav { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 16px; height: 54px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 50; }
+.nav-logo { font-family: 'Rajdhani', sans-serif; font-size: 1.25rem; font-weight: 700; letter-spacing: 2px; color: var(--text); cursor: pointer; }
 .nav-logo b { color: var(--accent); }
-
-.nav-balance { display: flex; align-items: center; gap: 10px; background: var(--bg2); border: 1px solid var(--border); border-radius: 6px; padding: 6px 14px; }
-.nav-balance span { color: var(--text2); font-size: 0.7rem; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; }
-.nav-balance strong { color: var(--accent); font-family: 'Rajdhani', sans-serif; font-size: 1.1rem; font-weight: 700; }
-
-.nav-right { display: flex; align-items: center; gap: 14px; }
-.nav-user { color: var(--text2); font-size: 0.82rem; }
-.logout-btn { background: transparent; border: 1px solid var(--border); color: var(--text2); padding: 5px 12px; border-radius: 5px; cursor: pointer; font-size: 0.75rem; transition: all 0.2s; }
+.nav-balance { display: flex; align-items: center; gap: 8px; background: var(--bg2); border: 1px solid var(--border); border-radius: 6px; padding: 5px 12px; }
+.nav-balance span { color: var(--text2); font-size: 0.65rem; font-weight: 500; text-transform: uppercase; }
+.nav-balance strong { color: var(--accent); font-family: 'Rajdhani', sans-serif; font-size: 1rem; font-weight: 700; }
+.nav-right { display: flex; align-items: center; gap: 12px; }
+.nav-user { color: var(--text2); font-size: 0.78rem; }
+.logout-btn { background: transparent; border: 1px solid var(--border); color: var(--text2); padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.7rem; transition: all 0.2s; }
 .logout-btn:hover { border-color: var(--red); color: var(--red); }
 
 .layout { display: flex; flex: 1; }
 
-aside { width: 190px; background: var(--surface); border-right: 1px solid var(--border); padding: 10px 0; flex-shrink: 0; }
-.sidebar-section { color: var(--text3); font-size: 0.6rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; padding: 0 14px; margin-bottom: 6px; margin-top: 10px; }
-.sidebar-section:first-child { margin-top: 4px; }
-.sidebar-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; cursor: pointer; color: var(--text2); font-size: 0.85rem; font-weight: 500; transition: all 0.2s; }
+aside { width: 180px; background: var(--surface); border-right: 1px solid var(--border); padding: 8px 0; flex-shrink: 0; }
+.sidebar-section { color: var(--text3); font-size: 0.55rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; padding: 0 12px; margin-bottom: 5px; margin-top: 8px; }
+.sidebar-item { display: flex; align-items: center; gap: 8px; padding: 8px 12px; cursor: pointer; color: var(--text2); font-size: 0.8rem; font-weight: 500; transition: all 0.2s; }
 .sidebar-item:hover { color: var(--text); background: var(--surface2); }
 .sidebar-item.active { color: var(--accent); background: rgba(0,176,96,0.1); }
-.sidebar-item .icon { width: 24px; height: 24px; background: var(--bg3); border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; }
+.sidebar-item .icon { width: 22px; height: 22px; background: var(--bg3); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; }
 
-main { flex: 1; padding: 20px; overflow-y: auto; background: var(--bg2); }
+main { flex: 1; padding: 16px; overflow-y: auto; background: var(--bg2); }
 
-.game-container { max-width: 520px; margin: 0 auto; }
+.game-container { max-width: 480px; margin: 0 auto; }
 
-.page-header { margin-bottom: 20px; }
-.page-header h2 { font-family: 'Rajdhani', sans-serif; font-size: 1.5rem; font-weight: 700; margin-bottom: 4px; }
-.page-header p { color: var(--text2); font-size: 0.8rem; }
+.page-header { margin-bottom: 16px; }
+.page-header h2 { font-family: 'Rajdhani', sans-serif; font-size: 1.4rem; font-weight: 700; }
+.page-header p { color: var(--text2); font-size: 0.75rem; }
 
-.card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 18px; margin-bottom: 14px; }
-.card-title { font-size: 0.65rem; font-weight: 600; color: var(--text2); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 12px; }
+.card-title { font-size: 0.6rem; font-weight: 600; color: var(--text2); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; }
 
-.bet-label { color: var(--text2); font-size: 0.68rem; font-weight: 500; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 6px; display: block; }
-.bet-input-wrap { display: flex; align-items: center; background: var(--bg2); border: 1px solid var(--border); border-radius: 6px; margin-bottom: 8px; }
+.bet-label { color: var(--text2); font-size: 0.65rem; font-weight: 500; text-transform: uppercase; margin-bottom: 5px; display: block; }
+.bet-input-wrap { display: flex; align-items: center; background: var(--bg2); border: 1px solid var(--border); border-radius: 5px; margin-bottom: 6px; }
 .bet-input-wrap:focus-within { border-color: var(--accent); }
-.bet-currency { color: var(--text2); padding: 0 10px; font-size: 0.85rem; font-weight: 600; }
-.bet-input { flex: 1; background: transparent; border: none; padding: 10px 0; color: var(--text); font-size: 0.9rem; outline: none; }
-.bet-quick { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 12px; }
-.bet-quick button { background: var(--surface3); border: 1px solid var(--border); color: var(--text2); padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 0.7rem; font-weight: 500; transition: all 0.2s; }
+.bet-currency { color: var(--text2); padding: 0 8px; font-size: 0.8rem; font-weight: 600; }
+.bet-input { flex: 1; background: transparent; border: none; padding: 8px 0; color: var(--text); font-size: 0.85rem; outline: none; }
+.bet-quick { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 10px; }
+.bet-quick button { background: var(--surface3); border: 1px solid var(--border); color: var(--text2); padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 0.65rem; font-weight: 500; transition: all 0.2s; }
 .bet-quick button:hover { border-color: var(--accent); color: var(--accent); }
 
-.play-btn { width: 100%; padding: 12px; background: var(--accent); border: none; border-radius: 6px; color: #000; font-family: 'Rajdhani', sans-serif; font-size: 0.95rem; font-weight: 700; letter-spacing: 1px; cursor: pointer; transition: all 0.2s; }
+.play-btn { width: 100%; padding: 10px; background: var(--accent); border: none; border-radius: 5px; color: #000; font-family: 'Rajdhani', sans-serif; font-size: 0.9rem; font-weight: 700; letter-spacing: 1px; cursor: pointer; transition: all 0.2s; }
 .play-btn:hover:not(:disabled) { background: var(--accent2); }
 .play-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
-.result-box { margin-top: 12px; padding: 14px; border-radius: 6px; text-align: center; display: none; }
+.result-box { margin-top: 10px; padding: 12px; border-radius: 5px; text-align: center; display: none; }
 .result-box.win { background: rgba(0,176,96,0.1); border: 1px solid rgba(0,176,96,0.3); display: block; }
 .result-box.lose { background: rgba(216,56,72,0.1); border: 1px solid rgba(216,56,72,0.3); display: block; }
-.result-amount { font-family: 'Rajdhani', sans-serif; font-size: 1.5rem; font-weight: 700; }
+.result-amount { font-family: 'Rajdhani', sans-serif; font-size: 1.4rem; font-weight: 700; }
 .result-box.win .result-amount { color: var(--accent); }
 .result-box.lose .result-amount { color: var(--red); }
-.result-msg { color: var(--text2); font-size: 0.75rem; margin-top: 4px; }
+.result-msg { color: var(--text2); font-size: 0.7rem; margin-top: 3px; }
 
-.cf-sides { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
-.cf-side { padding: 14px; border: 2px solid var(--border); background: var(--bg2); border-radius: 8px; cursor: pointer; text-align: center; transition: all 0.2s; }
+.cf-sides { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 12px; }
+.cf-side { padding: 12px; border: 2px solid var(--border); background: var(--bg2); border-radius: 6px; cursor: pointer; text-align: center; transition: all 0.2s; }
 .cf-side:hover { border-color: var(--border2); }
 .cf-side.active[data-side="heads"] { border-color: var(--gold); background: rgba(200,144,32,0.08); }
 .cf-side.active[data-side="tails"] { border-color: var(--blue); background: rgba(56,112,200,0.08); }
-.cf-side-label { font-size: 0.78rem; font-weight: 600; color: var(--text2); letter-spacing: 1px; text-transform: uppercase; }
+.cf-side-label { font-size: 0.72rem; font-weight: 600; color: var(--text2); letter-spacing: 1px; text-transform: uppercase; }
 .cf-side.active[data-side="heads"] .cf-side-label { color: var(--gold); }
 .cf-side.active[data-side="tails"] .cf-side-label { color: var(--blue); }
-.coin-display { display: flex; justify-content: center; margin: 18px 0; }
-.coin { width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; border: 3px solid var(--border); background: var(--surface2); font-family: 'Rajdhani', sans-serif; font-weight: 700; }
+.coin-display { display: flex; justify-content: center; margin: 14px 0; }
+.coin { width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; border: 2px solid var(--border); background: var(--surface2); font-family: 'Rajdhani', sans-serif; font-weight: 700; }
 .coin.heads { border-color: var(--gold); background: rgba(200,144,32,0.1); }
 .coin.tails { border-color: var(--blue); background: rgba(56,112,200,0.1); }
 @keyframes flip { 0%{transform:rotateY(0)} 50%{transform:rotateY(900deg)} 100%{transform:rotateY(1800deg)} }
-.coin.flipping { animation: flip 0.7s ease-in-out; }
+.coin.flipping { animation: flip 0.6s ease-in-out; }
 
-.mines-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin: 12px 0; }
-.mine-cell { aspect-ratio: 1; background: var(--surface3); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1rem; font-weight: 700; transition: all 0.15s; }
+.mines-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin: 10px 0; }
+.mine-cell { aspect-ratio: 1; background: var(--surface3); border: 1px solid var(--border); border-radius: 5px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; font-weight: 700; transition: all 0.15s; }
 .mine-cell:hover:not(.revealed) { border-color: var(--accent); background: rgba(0,176,96,0.1); }
 .mine-cell.gem { border-color: var(--accent); background: rgba(0,176,96,0.15); color: var(--accent); }
 .mine-cell.bomb { border-color: var(--red); background: rgba(216,56,72,0.15); color: var(--red); }
 .mine-cell.revealed { cursor: default; }
-.mines-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; }
-.mines-stat { background: var(--bg2); border: 1px solid var(--border); border-radius: 6px; padding: 10px; text-align: center; }
-.mines-stat label { color: var(--text2); font-size: 0.6rem; letter-spacing: 1px; text-transform: uppercase; display: block; }
-.mines-stat strong { font-family: 'Rajdhani', sans-serif; font-size: 1.1rem; color: var(--accent); }
-.mines-select { width: 100%; background: var(--bg2); border: 1px solid var(--border); border-radius: 6px; padding: 8px 10px; color: var(--text); font-size: 0.85rem; margin-bottom: 8px; }
-.cashout-btn { width: 100%; margin-top: 8px; padding: 10px; background: var(--gold); border: none; border-radius: 6px; color: #000; font-family: 'Rajdhani', sans-serif; font-size: 0.9rem; font-weight: 700; letter-spacing: 1px; cursor: pointer; }
+.mines-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 10px; }
+.mines-stat { background: var(--bg2); border: 1px solid var(--border); border-radius: 5px; padding: 8px; text-align: center; }
+.mines-stat label { color: var(--text2); font-size: 0.55rem; text-transform: uppercase; display: block; }
+.mines-stat strong { font-family: 'Rajdhani', sans-serif; font-size: 1rem; color: var(--accent); }
+.mines-select { width: 100%; background: var(--bg2); border: 1px solid var(--border); border-radius: 5px; padding: 6px 8px; color: var(--text); font-size: 0.8rem; margin-bottom: 6px; }
+.cashout-btn { width: 100%; margin-top: 6px; padding: 8px; background: var(--gold); border: none; border-radius: 5px; color: #000; font-family: 'Rajdhani', sans-serif; font-size: 0.85rem; font-weight: 700; cursor: pointer; }
 .cashout-btn:disabled { opacity: 0.3; cursor: not-allowed; }
 
-.roulette-wheel-wrap { position: relative; width: 160px; height: 160px; margin: 0 auto 18px; }
-.wheel-svg { width: 100%; height: 100%; }
-.wheel-arrow { position: absolute; top: -8px; left: 50%; transform: translateX(-50%); color: var(--accent); font-size: 1rem; }
-@keyframes spin { 0%{transform:rotate(0deg)} 100%{transform:rotate(1800deg)} }
-.roulette-bets { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-bottom: 12px; }
-.r-bet-btn { padding: 8px 4px; border: 1px solid var(--border); background: var(--bg2); border-radius: 5px; cursor: pointer; color: var(--text2); font-size: 0.65rem; font-weight: 600; transition: all 0.2s; text-align: center; }
-.r-bet-btn:hover { border-color: var(--border2); color: var(--text); }
-.r-bet-btn[data-bet="red"].active { border-color: #d83848; background: rgba(216,56,72,0.12); color: #e86070; }
-.r-bet-btn[data-bet="black"].active { border-color: #8090a0; background: rgba(128,144,160,0.12); color: #b0b8c0; }
-.r-bet-btn[data-bet="green"].active { border-color: var(--accent); background: rgba(0,176,96,0.12); color: var(--accent); }
-.r-bet-btn[data-bet="odd"].active { border-color: var(--blue); background: rgba(56,112,200,0.12); color: #5890e0; }
-.r-bet-btn[data-bet="even"].active { border-color: var(--gold); background: rgba(200,144,32,0.12); color: var(--gold); }
-.r-bet-btn[data-bet="1-18"].active { border-color: #9060d8; background: rgba(144,96,216,0.12); color: #a870e8; }
-.r-bet-btn[data-bet="19-36"].active { border-color: #d87038; background: rgba(216,112,56,0.12); color: #e89050; }
-.roulette-num-display { display: none; width: 42px; height: 42px; border-radius: 50%; margin: 0 auto 12px; align-items: center; justify-content: center; font-family: 'Rajdhani', sans-serif; font-size: 1.2rem; font-weight: 700; border: 2px solid; }
-.roulette-num-display.show { display: flex; }
-.roulette-num-display.red { border-color: #d83848; background: rgba(216,56,72,0.15); color: #e86070; }
-.roulette-num-display.black { border-color: #8090a0; background: rgba(128,144,160,0.15); color: #b0b8c0; }
-.roulette-num-display.green { border-color: var(--accent); background: rgba(0,176,96,0.15); color: var(--accent); }
+.roulette-track { background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 12px; overflow: hidden; position: relative; }
+.roulette-strip { display: flex; gap: 4px; position: relative; left: 0; }
+.roulette-item { flex-shrink: 0; width: 50px; height: 55px; background: var(--surface2); border: 2px solid var(--border); border-radius: 5px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.roulette-item.common { border-color: #8090a0; }
+.roulette-item.uncommon { border-color: #3870c8; }
+.roulette-item.rare { border-color: #9060d8; }
+.roulette-item.epic { border-color: #c89020; }
+.roulette-item.legendary { border-color: #d83848; }
+.roulette-item .name { font-size: 0.5rem; font-weight: 600; margin-top: 2px; }
+.roulette-item.common .name { color: #8090a0; }
+.roulette-item.uncommon .name { color: #3870c8; }
+.roulette-item.rare .name { color: #9060d8; }
+.roulette-item.epic .name { color: #c89020; }
+.roulette-item.legendary .name { color: #d83848; }
+.roulette-indicator { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 3px; height: 60px; background: var(--accent); border-radius: 2px; z-index: 10; }
 
-.case-box { background: var(--bg3); border: 1px solid var(--border); border-radius: 10px; padding: 16px; margin-bottom: 14px; position: relative; overflow: hidden; }
-.case-items { display: flex; gap: 6px; overflow-x: auto; padding: 8px 0; }
-.case-item { flex-shrink: 0; width: 60px; height: 70px; background: var(--surface2); border: 2px solid var(--border); border-radius: 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-.case-item.common { border-color: #8090a0; }
-.case-item.uncommon { border-color: #3870c8; }
-.case-item.rare { border-color: #9060d8; }
-.case-item.epic { border-color: #c89020; }
-.case-item.legendary { border-color: #d83848; }
-.case-item .item-name { font-size: 0.55rem; font-weight: 600; margin-top: 3px; }
-.case-item.common .item-name { color: #8090a0; }
-.case-item.uncommon .item-name { color: #3870c8; }
-.case-item.rare .item-name { color: #9060d8; }
-.case-item.epic .item-name { color: #c89020; }
-.case-item.legendary .item-name { color: #d83848; }
-.case-select { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 12px; }
-.case-option { padding: 10px; background: var(--surface3); border: 1px solid var(--border); border-radius: 6px; cursor: pointer; text-align: center; transition: all 0.2s; }
+.case-select { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-bottom: 10px; }
+.case-option { padding: 8px; background: var(--surface3); border: 1px solid var(--border); border-radius: 5px; cursor: pointer; text-align: center; transition: all 0.2s; }
 .case-option:hover { border-color: var(--accent); }
 .case-option.active { border-color: var(--accent); background: rgba(0,176,96,0.1); }
-.case-option .name { font-family: 'Rajdhani', sans-serif; font-size: 0.8rem; font-weight: 600; margin-bottom: 2px; }
-.case-option .price { font-size: 0.65rem; color: var(--text2); }
+.case-option .name { font-family: 'Rajdhani', sans-serif; font-size: 0.75rem; font-weight: 600; }
+.case-option .price { font-size: 0.6rem; color: var(--text2); }
 
-.ref-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 18px; }
-.ref-stat { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 12px; text-align: center; }
-.ref-stat .val { font-family: 'Rajdhani', sans-serif; font-size: 1.3rem; font-weight: 700; color: var(--accent); }
-.ref-stat .lbl { color: var(--text2); font-size: 0.6rem; text-transform: uppercase; margin-top: 3px; }
-.ref-box { background: var(--bg3); border: 2px dashed var(--border); border-radius: 6px; padding: 14px; text-align: center; margin-bottom: 12px; }
-.ref-code { font-family: 'Rajdhani', sans-serif; font-size: 1.4rem; font-weight: 700; color: var(--gold); letter-spacing: 3px; }
-.ref-btn { width: 100%; padding: 10px; background: var(--gold); border: none; border-radius: 5px; color: #000; font-family: 'Rajdhani', sans-serif; font-size: 0.85rem; font-weight: 700; cursor: pointer; }
+.ref-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 14px; }
+.ref-stat { background: var(--surface2); border: 1px solid var(--border); border-radius: 5px; padding: 10px; text-align: center; }
+.ref-stat .val { font-family: 'Rajdhani', sans-serif; font-size: 1.2rem; font-weight: 700; color: var(--accent); }
+.ref-stat .lbl { color: var(--text2); font-size: 0.55rem; text-transform: uppercase; margin-top: 2px; }
+.ref-box { background: var(--bg3); border: 2px dashed var(--border); border-radius: 5px; padding: 12px; text-align: center; margin-bottom: 10px; }
+.ref-code { font-family: 'Rajdhani', sans-serif; font-size: 1.2rem; font-weight: 700; color: var(--gold); letter-spacing: 2px; }
+.ref-btn { width: 100%; padding: 8px; background: var(--gold); border: none; border-radius: 4px; color: #000; font-family: 'Rajdhani', sans-serif; font-size: 0.8rem; font-weight: 700; cursor: pointer; }
 
-@media(max-width: 550px) { aside{display:none;} main{padding:14px;} }
+.ref-link-box { background: var(--bg3); border: 1px solid var(--border); border-radius: 5px; padding: 10px; margin-top: 10px; }
+.ref-link-box label { display: block; color: var(--text2); font-size: 0.6rem; text-transform: uppercase; margin-bottom: 4px; }
+.ref-link-input { width: 100%; background: var(--bg2); border: 1px solid var(--border); border-radius: 4px; padding: 6px 8px; color: var(--text); font-size: 0.75rem; }
+
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 100; }
+.modal { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; max-width: 340px; margin: 20px; }
+.modal h3 { font-family: 'Rajdhani', sans-serif; font-size: 1.2rem; font-weight: 700; margin-bottom: 10px; }
+.modal p { color: var(--text2); font-size: 0.8rem; margin-bottom: 14px; line-height: 1.5; }
+.modal .ref-code-display { background: var(--bg2); border: 1px solid var(--border); border-radius: 6px; padding: 10px; text-align: center; margin-bottom: 14px; }
+.modal .ref-code-display code { font-family: 'Rajdhani', sans-serif; font-size: 1.4rem; font-weight: 700; color: var(--gold); letter-spacing: 2px; }
+.modal-btn { width: 100%; padding: 10px; background: var(--accent); border: none; border-radius: 5px; color: #000; font-family: 'Rajdhani', sans-serif; font-size: 0.9rem; font-weight: 700; cursor: pointer; }
+.modal-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+@media(max-width: 500px) { aside{display:none;} main{padding:12px;} }
 </style>
 </head>
 <body>
@@ -202,13 +182,30 @@ main { flex: 1; padding: 20px; overflow-y: auto; background: var(--bg2); }
     </main>
   </div>
 </div>
+
+<div class="modal-overlay" id="referral-modal" style="display:none;">
+  <div class="modal">
+    <h3>Use Referral Code?</h3>
+    <p>Enter a referral code to get a $10,000 bonus! You don't have to use one.</p>
+    <div class="auth-field">
+      <label>Referral Code (optional)</label>
+      <input type="text" id="modal-referral" class="bet-input" placeholder="Enter code" style="background:var(--bg2);border:1px solid var(--border);border-radius:5px;padding:10px 12px;color:var(--text);width:100%;">
+    </div>
+    <button class="modal-btn" id="modal-use-btn" onclick="useReferral()">USE CODE</button>
+    <button class="modal-btn" style="background:var(--surface3);margin-top:6px;" onclick="skipReferral()">SKIP</button>
+  </div>
+</div>
+
 <script src="../js/auth.js"></script>
 <script>
 const GAMES = {
-  coinflip: `<div class="page-header"><h2>Coin Flip</h2><p>Pick a side and double your bet</p></div><div class="card"><div class="card-title">Choose Side</div><div class="cf-sides"><div class="cf-side active" data-side="heads" onclick="selectSide('heads')"><div class="cf-side-label">HEADS</div></div><div class="cf-side" data-side="tails" onclick="selectSide('tails')"><div class="cf-side-label">TAILS</div></div></div><div class="coin-display"><div class="coin heads" id="coin">H</div></div></div><div class="card"><span class="bet-label">Bet Amount</span><div class="bet-input-wrap"><span class="bet-currency">$</span><input class="bet-input" id="cf-bet" type="number" placeholder="0"></div><div class="bet-quick"><button onclick="setBet('cf-bet',10)">$10</button><button onclick="setBet('cf-bet',50)">$50</button><button onclick="setBet('cf-bet',100)">$100</button><button onclick="halfBet('cf-bet')">1/2</button><button onclick="doubleBet('cf-bet')">2x</button></div><button class="play-btn" id="cf-btn" onclick="playCoinflip()">FLIP</button><div class="result-box" id="cf-result"><div class="result-amount" id="cf-result-amount"></div><div class="result-msg" id="cf-result-msg"></div></div></div>`,
+  coinflip: `<div class="page-header"><h2>Coin Flip</h2><p>Pick a side and double your bet</p></div><div class="card"><div class="card-title">Choose Side</div><div class="cf-sides"><div class="cf-side active" data-side="heads" onclick="selectSide('heads')"><div class="cf-side-label">HEADS</div></div><div class="cf-side" data-side="tails" onclick="selectSide('tails')"><div class="cf-side-label">TAILS</div></div></div><div class="coin-display"><div class="coin heads" id="coin">H</div></div></div><div class="card"><span class="bet-label">Bet Amount</span><div class="bet-input-wrap"><span class="bet-currency">$</span><input class="bet-input" id="cf-bet" type="number" placeholder="0"></div></div><div class="bet-quick"><button onclick="setBet('cf-bet',10)">$10</button><button onclick="setBet('cf-bet',50)">$50</button><button onclick="setBet('cf-bet',100)">$100</button><button onclick="halfBet('cf-bet')">1/2</button><button onclick="doubleBet('cf-bet')">2x</button></div><button class="play-btn" id="cf-btn" onclick="playCoinflip()">FLIP</button><div class="result-box" id="cf-result"><div class="result-amount" id="cf-result-amount"></div><div class="result-msg" id="cf-result-msg"></div></div></div>`,
+  
   mines: `<div class="page-header"><h2>Mines</h2><p>Reveal gems and cash out before hitting a mine</p></div><div class="card"><div class="card-title">Settings</div><select class="mines-select" id="mines-count"><option value="3">3 Mines</option><option value="5" selected>5 Mines</option><option value="10">10 Mines</option></select><span class="bet-label">Bet Amount</span><div class="bet-input-wrap"><span class="bet-currency">$</span><input class="bet-input" id="mines-bet" type="number" placeholder="0"></div><div class="bet-quick"><button onclick="setBet('mines-bet',10)">$10</button><button onclick="setBet('mines-bet',50)">$50</button><button onclick="setBet('mines-bet',100)">$100</button><button onclick="halfBet('mines-bet')">1/2</button><button onclick="doubleBet('mines-bet')">2x</button></div><button class="play-btn" id="mines-start-btn" onclick="startMines()">START</button></div><div class="card" id="mines-game-card" style="display:none"><div class="mines-stats"><div class="mines-stat"><label>Multiplier</label><strong id="mines-multi">1.00x</strong></div><div class="mines-stat"><label>Profit</label><strong id="mines-profit">$0</strong></div><div class="mines-stat"><label>Gems</label><strong id="mines-gems">0</strong></div></div><div class="mines-grid" id="mines-grid"></div><button class="cashout-btn" id="mines-cashout" disabled onclick="cashoutMines()">CASH OUT</button><div class="result-box" id="mines-result"><div class="result-amount" id="mines-result-amount"></div><div class="result-msg" id="mines-result-msg"></div></div></div>`,
-  roulette: `<div class="page-header"><h2>Roulette</h2><p>Open cases to win - higher rarity = bigger reward</p></div><div class="card"><div class="card-title">Select Case</div><div class="case-select"><div class="case-option active" data-case="basic" onclick="selectCase('basic')"><div class="name">Basic</div><div class="price">$10+</div></div><div class="case-option" data-case="premium" onclick="selectCase('premium')"><div class="name">Premium</div><div class="price">$100+</div></div><div class="case-option" data-case="elite" onclick="selectCase('elite')"><div class="name">Elite</div><div class="price">$1000+</div></div></div></div><div class="case-box" id="case-box"><div class="case-items" id="case-items"></div></div><div class="card"><span class="bet-label">Bet Amount</span><div class="bet-input-wrap"><span class="bet-currency">$</span><input class="bet-input" id="case-bet" type="number" placeholder="0"></div><div class="bet-quick"><button onclick="setBet('case-bet',10)">$10</button><button onclick="setBet('case-bet',50)">$50</button><button onclick="setBet('case-bet',100)">$100</button><button onclick="halfBet('case-bet')">1/2</button><button onclick="doubleBet('case-bet')">2x</button></div><button class="play-btn" id="case-btn" onclick="openCase()">OPEN CASE</button><div class="result-box" id="case-result"><div class="result-amount" id="case-result-amount"></div><div class="result-msg" id="case-result-msg"></div></div></div>`,
-  referral: `<div class="page-header"><h2>Referral Program</h2><p>Invite friends and earn rewards</p></div><div class="ref-stats"><div class="ref-stat"><div class="val" id="ref-count">0</div><div class="lbl">Referrals</div></div><div class="ref-stat"><div class="val" id="ref-earned">$0</div><div class="lbl">Earned</div></div><div class="ref-stat"><div class="val">$100K</div><div class="lbl">Per Referral</div></div></div><div class="card"><div class="card-title">Your Referral Code</div><p style="color:var(--text2);font-size:0.75rem;margin-bottom:10px;">Friends get $10K bonus, you get $100K!</p><div class="ref-box"><div class="ref-code" id="ref-code">LOADING...</div></div><button class="ref-btn" onclick="copyRefCode()">COPY CODE</button></div>`
+  
+  roulette: `<div class="page-header"><h2>Roulette</h2><p>Open cases to win - spin for rarities</p></div><div class="card"><div class="card-title">Select Case</div><div class="case-select"><div class="case-option active" data-case="basic" onclick="selectCase('basic')"><div class="name">Basic</div><div class="price">$10+</div></div><div class="case-option" data-case="premium" onclick="selectCase('premium')"><div class="name">Premium</div><div class="price">$100+</div></div><div class="case-option" data-case="elite" onclick="selectCase('elite')"><div class="name">Elite</div><div class="price">$1000+</div></div></div><div class="roulette-track"><div class="roulette-indicator"></div><div class="roulette-strip" id="roulette-strip"></div></div></div><div class="card"><span class="bet-label">Bet Amount</span><div class="bet-input-wrap"><span class="bet-currency">$</span><input class="bet-input" id="case-bet" type="number" placeholder="0"></div><div class="bet-quick"><button onclick="setBet('case-bet',10)">$10</button><button onclick="setBet('case-bet',50)">$50</button><button onclick="setBet('case-bet',100)">$100</button><button onclick="halfBet('case-bet')">1/2</button><button onclick="doubleBet('case-bet')">2x</button></div><button class="play-btn" id="case-btn" onclick="openCase()">OPEN CASE</button><div class="result-box" id="case-result"><div class="result-amount" id="case-result-amount"></div><div class="result-msg" id="case-result-msg"></div></div></div>`,
+  
+  referral: `<div class="page-header"><h2>Referral Program</h2><p>Invite friends and earn rewards</p></div><div class="ref-stats"><div class="ref-stat"><div class="val" id="ref-count">0</div><div class="lbl">Referrals</div></div><div class="ref-stat"><div class="val" id="ref-earned">$0</div><div class="lbl">Earned</div></div><div class="ref-stat"><div class="val">$100K</div><div class="lbl">Per Referral</div></div></div><div class="card"><div class="card-title">Your Referral Code</div><p style="color:var(--text2);font-size:0.7rem;margin-bottom:8px;">Friends get $10K bonus, you get $100K!</p><div class="ref-box"><div class="ref-code" id="ref-code">LOADING...</div></div><button class="ref-btn" onclick="copyRefCode()">COPY CODE</button><div class="ref-link-box"><label>Your Referral Link</label><input type="text" class="ref-link-input" id="ref-link" readonly></div></div>`
 };
 
 let currentGame = 'coinflip';
@@ -218,36 +215,14 @@ let caseType = 'basic';
 let caseSpinning = false;
 
 const CASE_ITEMS = {
-  basic: [
-    { name: 'Common', rarity: 'common', multi: 1 },
-    { name: 'Uncommon', rarity: 'uncommon', multi: 2 },
-    { name: 'Rare', rarity: 'rare', multi: 4 },
-    { name: 'Epic', rarity: 'epic', multi: 8 },
-    { name: 'Legendary', rarity: 'legendary', multi: 20 }
-  ],
-  premium: [
-    { name: 'Common', rarity: 'common', multi: 1 },
-    { name: 'Uncommon', rarity: 'uncommon', multi: 3 },
-    { name: 'Rare', rarity: 'rare', multi: 6 },
-    { name: 'Epic', rarity: 'epic', multi: 15 },
-    { name: 'Legendary', rarity: 'legendary', multi: 40 }
-  ],
-  elite: [
-    { name: 'Uncommon', rarity: 'uncommon', multi: 2 },
-    { name: 'Rare', rarity: 'rare', multi: 5 },
-    { name: 'Epic', rarity: 'epic', multi: 12 },
-    { name: 'Legendary', rarity: 'legendary', multi: 30 },
-    { name: 'Ultimate', rarity: 'legendary', multi: 100 }
-  ]
+  basic: [{name:'Common',rarity:'common',multi:1},{name:'Uncommon',rarity:'uncommon',multi:2},{name:'Rare',rarity:'rare',multi:4},{name:'Epic',rarity:'epic',multi:8},{name:'Legendary',rarity:'legendary',multi:20}],
+  premium: [{name:'Common',rarity:'common',multi:1},{name:'Uncommon',rarity:'uncommon',multi:3},{name:'Rare',rarity:'rare',multi:6},{name:'Epic',rarity:'epic',multi:15},{name:'Legendary',rarity:'legendary',multi:40}],
+  elite: [{name:'Uncommon',rarity:'uncommon',multi:2},{name:'Rare',rarity:'rare',multi:5},{name:'Epic',rarity:'epic',multi:12},{name:'Legendary',rarity:'legendary',multi:30},{name:'Ultimate',rarity:'legendary',multi:100}]
 };
 
-const CASE_WEIGHTS = {
-  basic: [55, 28, 12, 4, 1],
-  premium: [45, 30, 15, 8, 2],
-  elite: [35, 30, 20, 10, 5]
-};
+const CASE_WEIGHTS = { basic: [55,28,12,4,1], premium: [45,30,15,8,2], elite: [35,30,20,10,5] };
 
-const RED_NUMS = [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36];
+let pendingReferral = null;
 
 async function init() {
   await Session.init();
@@ -255,13 +230,49 @@ async function init() {
   document.getElementById('app').style.display = 'flex';
   document.getElementById('nav-user').textContent = window.currentUser.username;
   updateBalanceUI(window.balance);
+  
+  if (window.currentUser.first_login && !window.currentUser.referral_code) {
+    document.getElementById('referral-modal').style.display = 'flex';
+  } else {
+    showGame('coinflip');
+  }
+}
+
+async function useReferral() {
+  const code = document.getElementById('modal-referral').value.trim().toUpperCase();
+  if (code) {
+    try {
+      const { data } = await sb.from('users').select('id').eq('referral_code', code).maybeSingle();
+      if (data && data.id !== window.currentUser.id) {
+        pendingReferral = { referrerId: data.id };
+        alert('Code applied! You will get $10K bonus after registering.');
+      } else if (data && data.id === window.currentUser.id) {
+        alert('You cannot use your own referral code!');
+        return;
+      }
+    } catch(e) {}
+  }
+  closeModal();
+}
+
+function closeModal() {
+  document.getElementById('referral-modal').style.display = 'none';
+  if (window.currentUser && !window.currentUser.referral_code) {
+    sb.from('users').update({ first_login: false }).eq('id', window.currentUser.id);
+    window.currentUser.first_login = false;
+  }
   showGame('coinflip');
+}
+
+function skipReferral() {
+  closeModal();
 }
 
 function showGame(game) {
   currentGame = game;
   document.getElementById('game-panel').innerHTML = GAMES[game];
   document.querySelectorAll('.sidebar-item').forEach(el => el.classList.toggle('active', el.dataset.game === game));
+  if (game === 'roulette') buildRouletteItems();
   if (game === 'referral') loadReferral();
 }
 
@@ -281,7 +292,7 @@ async function playCoinflip() {
   document.getElementById('cf-result').className = 'result-box';
   const coin = document.getElementById('coin');
   coin.className = 'coin flipping';
-  await sleep(750);
+  await sleep(650);
   const win = biasedWin();
   const result = win ? cfSide : (cfSide === 'heads' ? 'tails' : 'heads');
   coin.className = 'coin ' + result;
@@ -313,9 +324,9 @@ async function startMines() {
   minesBet = bet;
   minesCount = parseInt(document.getElementById('mines-count').value);
   minesGemsFound = 0;
-  minesBoard = Array(25).fill(null).map(() => ({ isMine: false, revealed: false }));
+  minesBoard = Array(25).fill(null).map(() => ({isMine:false,revealed:false}));
   let placed = 0;
-  while (placed < minesCount) { const i = Math.floor(Math.random() * 25); if (!minesBoard[i].isMine) { minesBoard[i].isMine = true; placed++; } }
+  while(placed < minesCount) { const i = Math.floor(Math.random() * 25); if(!minesBoard[i].isMine) { minesBoard[i].isMine = true; placed++; } }
   minesActive = true;
   updateBalanceUI(window.balance - minesBet);
   document.getElementById('mines-start-btn').disabled = true;
@@ -371,19 +382,28 @@ async function cashoutMines() {
 function selectCase(c) {
   caseType = c;
   document.querySelectorAll('.case-option').forEach(el => el.classList.toggle('active', el.dataset.case === c));
+  buildRouletteItems();
 }
 
-function buildCaseItems() {
-  const container = document.getElementById('case-items');
-  if (!container) return;
-  container.innerHTML = '';
+function buildRouletteItems() {
+  const strip = document.getElementById('roulette-strip');
+  if (!strip) return;
+  strip.innerHTML = '';
   const items = CASE_ITEMS[caseType];
   items.forEach(item => {
     const el = document.createElement('div');
-    el.className = 'case-item ' + item.rarity;
-    el.innerHTML = '<span class="item-name">' + item.name + '</span>';
-    container.appendChild(el);
+    el.className = 'roulette-item ' + item.rarity;
+    el.innerHTML = '<span class="name">' + item.name + '</span>';
+    strip.appendChild(el);
   });
+  for (let i = 0; i < 10; i++) {
+    items.forEach(item => {
+      const el = document.createElement('div');
+      el.className = 'roulette-item ' + item.rarity;
+      el.innerHTML = '<span class="name">' + item.name + '</span>';
+      strip.appendChild(el);
+    });
+  }
 }
 
 async function openCase() {
@@ -402,52 +422,40 @@ async function openCase() {
   
   let rand = Math.random() * total;
   let winnerIdx = 0;
-  for (let i = 0; i < weights.length; i++) {
-    rand -= weights[i];
-    if (rand <= 0) { winnerIdx = i; break; }
-  }
-  
+  for (let i = 0; i < weights.length; i++) { rand -= weights[i]; if (rand <= 0) { winnerIdx = i; break; } }
   if (!biasedWin()) winnerIdx = Math.floor(Math.random() * Math.min(2, items.length));
   
   const winner = items[winnerIdx];
   const won = Math.floor(bet * winner.multi);
   
-  const container = document.getElementById('case-items');
-  container.innerHTML = '';
-  const totalItems = 25;
-  for (let i = 0; i < totalItems; i++) {
-    const item = items[i % items.length];
-    const el = document.createElement('div');
-    el.className = 'case-item ' + item.rarity;
-    el.innerHTML = '<span class="item-name">' + item.name + '</span>';
-    if (i === totalItems - 4) el.style.transform = 'scale(1.1)';
-    container.appendChild(el);
-  }
+  const strip = document.getElementById('roulette-strip');
+  strip.style.transition = 'none';
+  strip.style.left = '0px';
   
-  container.style.transition = 'transform 3s cubic-bezier(0.1, 0, 0.2, 1)';
-  container.style.transform = 'translateX(-' + (22 * 66) + 'px)';
+  const itemWidth = 54;
+  const targetPos = -(winnerIdx * itemWidth) + 85;
+  const extraSpins = 5 * items.length * itemWidth;
   
-  await sleep(3200);
-  container.style.transition = 'none';
-  container.style.transform = 'translateX(0)';
+  await sleep(50);
+  strip.style.transition = 'left 2.5s cubic-bezier(0.15, 0.85, 0.25, 1)';
+  strip.style.left = '-' + (extraSpins + Math.abs(targetPos)) + 'px';
   
-  if (won > 0) {
-    updateBalanceUI(window.balance + won);
-    showResult('case', true, won - bet, 'Got ' + winner.name + ' (' + winner.multi + 'x)!');
-  } else {
-    showResult('case', false, bet, 'Got ' + winner.name + ' but still lost :(');
-  }
+  await sleep(2600);
+  
+  if (won > 0) { updateBalanceUI(window.balance + won); showResult('case', true, won - bet, winner.name + ' (' + winner.multi + 'x)!'); }
+  else { showResult('case', false, bet, winner.name + ' (lost)'); }
   
   await Session.saveBalance();
   caseSpinning = false;
   btn.disabled = false;
-  setTimeout(() => buildCaseItems(), 500);
 }
 
 async function loadReferral() {
   let code = window.currentUser?.referral_code;
   if (!code) { code = await Session.generateReferralCode(); }
   document.getElementById('ref-code').textContent = code || 'ERROR';
+  document.getElementById('ref-link').value = window.location.origin + '?ref=' + code;
+  
   const { data: refs } = await sb.from('users').select('id').eq('referred_by', window.currentUser.id);
   const count = refs ? refs.length : 0;
   document.getElementById('ref-count').textContent = count;
@@ -456,7 +464,7 @@ async function loadReferral() {
 
 function copyRefCode() {
   const code = document.getElementById('ref-code').textContent;
-  navigator.clipboard.writeText(code).then(() => alert('Copied!'));
+  navigator.clipboard.writeText(code).then(() => alert('Code copied!'));
 }
 
 init();
