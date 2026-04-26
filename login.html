@@ -126,6 +126,7 @@ sb.auth.onAuthStateChange((event, session) => {
 async function handleDiscordUser(session) {
   const email = session.user.email;
   const username = session.user.user_metadata.name || session.user.user_metadata.full_name || 'DiscordUser';
+  window.pendingDiscordSession = session;
   
   let { data: existing } = await sb.from('users').select('*').eq('email', email).maybeSingle();
   
@@ -158,6 +159,9 @@ async function finishDiscordSignup(email) {
     const { data: refData } = await sb.from('users').select('id').eq('referral_code', ref).maybeSingle();
     if (refData) { referrerId = refData.id; newBalance = 11000; }
   }
+  
+  const session = sb.auth.session();
+  if (!session) { setMsg('Session expired. Try again.', 'error'); return; }
   
   const u = session.user;
   
