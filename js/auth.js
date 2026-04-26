@@ -8,7 +8,9 @@ const Session = {
   
   async init() {
     this.loadFromStorage();
-    if (this.isLoggedIn()) await this.refreshUser();
+    if (this.isLoggedIn()) {
+      await this.refreshUser();
+    }
   },
   
   loadFromStorage() {
@@ -16,8 +18,10 @@ const Session = {
     if (stored) {
       try {
         const data = JSON.parse(stored);
-        if (data.user && data.user.id) this.setUser(data);
-      } catch(e) {}
+        if (data.user && data.user.id) {
+          this.setUser(data);
+        }
+      } catch (e) {}
     }
   },
   
@@ -31,35 +35,56 @@ const Session = {
     const { data, error } = await sb.from('users').select('*').eq('username', username).maybeSingle();
     if (error) throw new Error('DB error: ' + error.message);
     if (!data) throw new Error('Username not found.');
+    
     const ok = await verifyPassword(password, data.password);
     if (!ok) throw new Error('Wrong password.');
+    
     await loadSettings();
-    const sessionData = { user: data, balance: data.balance, winChance: window.WIN_CHANCE };
+    
+    const sessionData = {
+      user: data,
+      balance: data.balance,
+      winChance: window.WIN_CHANCE
+    };
     localStorage.setItem(this.KEY, JSON.stringify(sessionData));
     this.setUser(sessionData);
+    
     window.currentUser = data;
     window.balance = data.balance;
+    
     return data;
   },
   
   async signup(username, password, referralCode = '') {
     const hash = await hashPassword(password);
     let referrerId = null;
+    
     if (referralCode) {
       const { data: refData } = await sb.from('users').select('id').eq('referral_code', referralCode).maybeSingle();
-      if (refData && refData.id !== window.currentUser?.id) referrerId = refData.id;
+      if (refData && refData.id !== window.currentUser?.id) {
+        referrerId = refData.id;
+      }
     }
+    
     const { data, error } = await sb.from('users').insert({ 
-      username: username, password: hash, balance: 1000, referred_by: referrerId 
+      username: username, 
+      password: hash, 
+      balance: 1000,
+      referred_by: referrerId
     }).select().maybeSingle();
+    
     if (error) {
       if (error.code === '23505') throw new Error('Username already taken.');
       throw new Error('Error: ' + error.message);
     }
+    
     if (referrerId) {
       const { data: refUser } = await sb.from('users').select('balance').eq('id', referrerId).maybeSingle();
-      if (refUser) await sb.from('users').update({ balance: refUser.balance + 100000 }).eq('id', referrerId);
+      if (refUser) {
+        await sb.from('users').update({ balance: refUser.balance + 100000 }).eq('id', referrerId);
+      }
     }
+    
     return this.login(username, password);
   },
   
@@ -88,7 +113,9 @@ const Session = {
     await sb.from('users').update({ balance: window.balance }).eq('id', window.currentUser.id);
   },
   
-  isLoggedIn() { return window.currentUser && window.currentUser.id; },
+  isLoggedIn() {
+    return window.currentUser && window.currentUser.id;
+  },
   
   async refreshUser() {
     if (!window.currentUser) return;
@@ -101,6 +128,16 @@ const Session = {
       stored.balance = data.balance;
       localStorage.setItem(this.KEY, JSON.stringify(stored));
     }
+  },
+  
+  requireAuth() {
+    if (!this.isLoggedIn()) {
+      const path = window.location.pathname;
+      const isGames = path.includes('/games/');
+      window.location.href = isGames ? '../login.html' : 'login.html';
+      return false;
+    }
+    return true;
   }
 };
 
@@ -108,10 +145,12 @@ async function loadSettings() {
   try {
     const { data } = await sb.from('settings').select('value').eq('key', 'win_chance').maybeSingle();
     if (data) window.WIN_CHANCE = parseFloat(data.value);
-  } catch(e) {}
+  } catch (e) {}
 }
 
-function biasedWin() { return Math.random() < (window.WIN_CHANCE || 0.5); }
+function biasedWin() {
+  return Math.random() < (window.WIN_CHANCE || 0.5);
+}
 
 async function hashPassword(password) {
   const encoder = new TextEncoder();
@@ -127,7 +166,8 @@ async function verifyPassword(password, stored) {
     const encoder = new TextEncoder();
     const keyMaterial = await crypto.subtle.importKey('raw', encoder.encode(password), 'PBKDF2', false, ['deriveBits']);
     const hashBuffer = await crypto.subtle.deriveBits({ name: 'PBKDF2', salt: new Uint8Array(salt), iterations: 100000, hash: 'SHA-256' }, keyMaterial, 256);
-    return Array.from(new Uint8Array(hashBuffer)).every((v, i) => v === hash[i]);
+    const newHash = Array.from(new Uint8Array(hashBuffer));
+    return newHash.every((v, i) => v === hash[i]);
   } catch { return false; }
 }
 
@@ -135,6 +175,8 @@ function updateBalanceUI(b) {
   window.balance = Math.max(0, Math.round(b));
   const el = document.getElementById('nav-balance');
   if (el) el.textContent = '$' + window.balance.toLocaleString();
+  const el2 = document.getElementById('user-balance');
+  if (el2) el2.textContent = '$' + window.balance.toLocaleString();
 }
 
 function setBet(id, v) { document.getElementById(id).value = v; }
@@ -158,7 +200,6 @@ function showResult(prefix, win, amount, msg) {
 
 if (typeof window !== 'undefined') {
   window.Session = Session;
-  window.sb = sb;
   window.loadSettings = loadSettings;
   window.biasedWin = biasedWin;
   window.hashPassword = hashPassword;

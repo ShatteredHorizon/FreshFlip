@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FreshFlip - Coin Flip</title>
+<title>FreshFlip - Mines</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -46,7 +46,6 @@ nav {
   position: sticky;
   top: 0;
   z-index: 50;
-  backdrop-filter: blur(10px);
 }
 
 .nav-logo {
@@ -342,111 +341,100 @@ main { flex: 1; padding: 28px; overflow-y: auto; background: var(--bg2); }
   margin-top: 8px;
 }
 
-.cf-sides {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 20px;
-}
+.mines-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 20px 0; }
 
-.cf-side {
-  padding: 20px;
-  border: 2px solid var(--border);
-  background: var(--bg3);
-  border-radius: 14px;
+.mine-cell {
+  aspect-ratio: 1;
+  background: var(--surface3);
+  border: 1px solid var(--border);
+  border-radius: 12px;
   cursor: pointer;
-  text-align: center;
-  transition: all 0.2s;
-}
-
-.cf-side:hover {
-  border-color: var(--border2);
-  background: var(--surface2);
-}
-
-.cf-side.active[data-side="heads"] {
-  border-color: var(--gold);
-  background: rgba(255,204,0,0.1);
-}
-
-.cf-side.active[data-side="tails"] {
-  border-color: var(--blue);
-  background: rgba(68,136,255,0.1);
-}
-
-.cf-side-icon {
-  font-size: 2rem;
-  margin-bottom: 8px;
-}
-
-.cf-side-label {
-  font-size: 0.88rem;
-  font-weight: 600;
-  color: var(--text2);
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-
-.cf-side.active[data-side="heads"] .cf-side-label { color: var(--gold); }
-.cf-side.active[data-side="tails"] .cf-side-label { color: var(--blue); }
-
-.coin-display {
-  display: flex;
-  justify-content: center;
-  margin: 24px 0;
-}
-
-.coin {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2.5rem;
-  border: 4px solid var(--border);
-  background: var(--surface2);
-  transition: all 0.3s;
+  font-size: 1.4rem;
+  transition: all 0.15s;
 }
 
-.coin.heads {
-  border-color: var(--gold);
-  background: rgba(255,204,0,0.15);
-  box-shadow: 0 0 30px rgba(255,204,0,0.3);
+.mine-cell:hover:not(.revealed) {
+  border-color: var(--accent);
+  background: var(--accent-glow);
+  transform: scale(1.05);
 }
 
-.coin.tails {
-  border-color: var(--blue);
-  background: rgba(68,136,255,0.15);
-  box-shadow: 0 0 30px rgba(68,136,255,0.3);
+.mine-cell.gem {
+  border-color: var(--accent);
+  background: rgba(0,255,136,0.15);
+  color: var(--accent);
 }
 
-@keyframes flip {
-  0% { transform: rotateY(0) scale(1); }
-  50% { transform: rotateY(900deg) scale(1.1); }
-  100% { transform: rotateY(1800deg) scale(1); }
+.mine-cell.bomb {
+  border-color: var(--red);
+  background: rgba(255,68,102,0.15);
+  color: var(--red);
 }
 
-.coin.flipping {
-  animation: flip 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+.mine-cell.revealed { cursor: default; transform: none !important; }
+
+.mines-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
+
+.mines-stat { background: var(--bg3); border: 1px solid var(--border); border-radius: 12px; padding: 14px; text-align: center; }
+
+.mines-stat label { color: var(--text2); font-size: 0.7rem; letter-spacing: 1px; text-transform: uppercase; display: block; margin-bottom: 4px; }
+
+.mines-stat strong { font-family: 'Orbitron', sans-serif; font-size: 1.4rem; color: var(--accent); }
+
+.mines-select {
+  width: 100%;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  outline: none;
+  margin-bottom: 12px;
+  cursor: pointer;
 }
 
-@media(max-width: 700px) {
-  aside { display: none; }
-  main { padding: 16px; }
+.mines-select:focus { border-color: var(--accent); }
+
+.cashout-btn {
+  width: 100%;
+  margin-top: 12px;
+  padding: 16px;
+  background: var(--gold);
+  border: none;
+  border-radius: 12px;
+  color: #000;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 0.2s;
 }
+
+.cashout-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(255,204,0,0.3);
+}
+
+.cashout-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  transform: none;
+}
+
+@media(max-width: 700px) { aside { display: none; } main { padding: 16px; } }
 </style>
 </head>
 <body>
 <div id="app">
   <nav>
-    <div class="nav-logo" onclick="window.location.href='coinflip.html'">
-      <span>◆</span>FRESHFLIP
-    </div>
-    <div class="nav-balance">
-      <span>Balance</span>
-      <strong id="nav-balance">$0</strong>
-    </div>
+    <div class="nav-logo" onclick="window.location.href='coinflip.html'"><span>◆</span>FRESHFLIP</div>
+    <div class="nav-balance"><span>Balance</span><strong id="nav-balance">$0</strong></div>
     <div class="nav-right">
       <span class="nav-user" id="nav-user"></span>
       <button class="logout-btn" onclick="Session.logout()">Sign Out</button>
@@ -456,66 +444,54 @@ main { flex: 1; padding: 28px; overflow-y: auto; background: var(--bg2); }
   <div class="layout">
     <aside>
       <div class="sidebar-section">Games</div>
-      <div class="sidebar-item active" onclick="window.location.href='coinflip.html'">
-        <span class="icon">🪙</span>Coin Flip
-      </div>
-      <div class="sidebar-item" onclick="window.location.href='mines.html'">
-        <span class="icon">💣</span>Mines
-      </div>
-      <div class="sidebar-item" onclick="window.location.href='plinko.html'">
-        <span class="icon">🎯</span>Plinko
-      </div>
-      <div class="sidebar-item" onclick="window.location.href='roulette.html'">
-        <span class="icon">🎰</span>Roulette
-      </div>
-      <div class="sidebar-item" onclick="window.location.href='case.html'">
-        <span class="icon">📦</span>Case Open
-      </div>
+      <div class="sidebar-item" onclick="window.location.href='coinflip.html'"><span class="icon">🪙</span>Coin Flip</div>
+      <div class="sidebar-item active" onclick="window.location.href='mines.html'"><span class="icon">💣</span>Mines</div>
+      <div class="sidebar-item" onclick="window.location.href='plinko.html'"><span class="icon">🎯</span>Plinko</div>
+      <div class="sidebar-item" onclick="window.location.href='roulette.html'"><span class="icon">🎰</span>Roulette</div>
+      <div class="sidebar-item" onclick="window.location.href='case.html'"><span class="icon">📦</span>Case Open</div>
     </aside>
     
     <main>
       <div class="game-header">
-        <h2>🪙 Coin Flip</h2>
-        <p>Pick a side - double your bet on a win!</p>
+        <h2>💣 Mines</h2>
+        <p>Reveal gems and cash out before hitting a mine!</p>
       </div>
       
       <div class="card">
-        <div class="card-title">Choose Side</div>
-        <div class="cf-sides">
-          <div class="cf-side active" data-side="heads" onclick="selectSide('heads')">
-            <div class="cf-side-icon">👑</div>
-            <div class="cf-side-label">Heads</div>
-          </div>
-          <div class="cf-side" data-side="tails" onclick="selectSide('tails')">
-            <div class="cf-side-icon">🌊</div>
-            <div class="cf-side-label">Tails</div>
-          </div>
-        </div>
-        <div class="coin-display">
-          <div class="coin heads" id="coin">👑</div>
-        </div>
-      </div>
-      
-      <div class="card">
+        <div class="card-title">Game Settings</div>
+        <span class="bet-label">Number of Mines</span>
+        <select class="mines-select" id="mines-count">
+          <option value="3">3 Mines</option>
+          <option value="5" selected>5 Mines</option>
+          <option value="10">10 Mines</option>
+          <option value="15">15 Mines</option>
+        </select>
         <span class="bet-label">Bet Amount</span>
         <div class="bet-input-wrap">
           <span class="bet-currency">$</span>
-          <input class="bet-input" id="cf-bet" type="number" placeholder="0" min="1">
+          <input class="bet-input" id="mines-bet" type="number" placeholder="0" min="1">
         </div>
         <div class="bet-quick">
-          <button onclick="setBet('cf-bet',10)">$10</button>
-          <button onclick="setBet('cf-bet',50)">$50</button>
-          <button onclick="setBet('cf-bet',100)">$100</button>
-          <button onclick="setBet('cf-bet',500)">$500</button>
-          <button onclick="halfBet('cf-bet')">½</button>
-          <button onclick="doubleBet('cf-bet')">2×</button>
+          <button onclick="setBet('mines-bet',10)">$10</button>
+          <button onclick="setBet('mines-bet',50)">$50</button>
+          <button onclick="setBet('mines-bet',100)">$100</button>
+          <button onclick="halfBet('mines-bet')">½</button>
+          <button onclick="doubleBet('mines-bet')">2×</button>
         </div>
-        
-        <button class="play-btn" id="cf-btn" onclick="playCoinflip()">FLIP COIN</button>
-        
-        <div class="result-box" id="cf-result">
-          <div class="result-amount" id="cf-result-amount"></div>
-          <div class="result-msg" id="cf-result-msg"></div>
+        <button class="play-btn" id="mines-start-btn" onclick="startMines()">START GAME</button>
+      </div>
+      
+      <div class="card" id="mines-game-card" style="display:none">
+        <div class="mines-stats">
+          <div class="mines-stat"><label>Multiplier</label><strong id="mines-multi">1.00×</strong></div>
+          <div class="mines-stat"><label>Profit</label><strong id="mines-profit">$0</strong></div>
+          <div class="mines-stat"><label>Gems</label><strong id="mines-gems">0</strong></div>
+        </div>
+        <div class="mines-grid" id="mines-grid"></div>
+        <button class="cashout-btn" id="mines-cashout" disabled onclick="cashoutMines()">CASH OUT</button>
+        <div class="result-box" id="mines-result">
+          <div class="result-amount" id="mines-result-amount"></div>
+          <div class="result-msg" id="mines-result-msg"></div>
         </div>
       </div>
     </main>
@@ -524,7 +500,7 @@ main { flex: 1; padding: 28px; overflow-y: auto; background: var(--bg2); }
 
 <script src="../js/auth.js"></script>
 <script>
-let cfSide = 'heads';
+let minesActive = false, minesBoard = [], minesGemsFound = 0, minesBet = 0, minesCount = 0;
 
 async function init() {
   await Session.init();
@@ -537,44 +513,101 @@ async function init() {
   updateBalanceUI(window.balance);
 }
 
-function selectSide(s) {
-  cfSide = s;
-  document.querySelectorAll('.cf-side').forEach(b => b.classList.toggle('active', b.dataset.side === s));
-  const coin = document.getElementById('coin');
-  coin.className = 'coin ' + (s === 'heads' ? 'heads' : 'tails');
-  coin.textContent = s === 'heads' ? '👑' : '🌊';
+function getMinesMulti(gems, mines) {
+  if (gems === 0) return 1;
+  return Math.max(1, parseFloat((1 + gems * mines * 0.12).toFixed(2)));
 }
 
-async function playCoinflip() {
-  const bet = getBet('cf-bet');
+function buildMinesGrid(locked) {
+  const grid = document.getElementById('mines-grid');
+  grid.innerHTML = '';
+  minesBoard.forEach((cell, i) => {
+    const el = document.createElement('div');
+    el.className = 'mine-cell' + (cell.revealed ? ' revealed ' + (cell.isMine ? 'bomb' : 'gem') : '');
+    el.textContent = cell.revealed ? (cell.isMine ? '💣' : '💎') : '';
+    if (!cell.revealed && !locked) el.onclick = () => revealCell(i);
+    grid.appendChild(el);
+  });
+}
+
+async function startMines() {
+  const bet = getBet('mines-bet');
   if (!bet || bet < 1) { alert('Enter a valid bet.'); return; }
   if (bet > window.balance) { alert('Not enough balance.'); return; }
   
-  const btn = document.getElementById('cf-btn');
-  btn.disabled = true;
-  document.getElementById('cf-result').className = 'result-box';
+  minesBet = bet;
+  minesCount = parseInt(document.getElementById('mines-count').value);
+  minesGemsFound = 0;
   
-  const coin = document.getElementById('coin');
-  coin.className = 'coin flipping';
-  
-  await sleep(900);
-  
-  const win = biasedWin();
-  const result = win ? cfSide : (cfSide === 'heads' ? 'tails' : 'heads');
-  
-  coin.className = 'coin ' + result;
-  coin.textContent = result === 'heads' ? '👑' : '🌊';
-  
-  if (win) {
-    updateBalanceUI(window.balance + bet);
-    showResult('cf', true, bet, 'You got ' + result + '! Win!');
-  } else {
-    updateBalanceUI(window.balance - bet);
-    showResult('cf', false, bet, 'It landed ' + result + '.');
+  minesBoard = Array(25).fill(null).map(() => ({ isMine: false, revealed: false }));
+  let placed = 0;
+  while (placed < minesCount) {
+    const i = Math.floor(Math.random() * 25);
+    if (!minesBoard[i].isMine) { minesBoard[i].isMine = true; placed++; }
   }
   
+  minesActive = true;
+  updateBalanceUI(window.balance - minesBet);
+  document.getElementById('mines-start-btn').disabled = true;
+  document.getElementById('mines-game-card').style.display = 'block';
+  document.getElementById('mines-result').className = 'result-box';
+  document.getElementById('mines-cashout').disabled = false;
+  updateMinesInfo();
+  buildMinesGrid(false);
+}
+
+function revealCell(i) {
+  if (!minesActive || minesBoard[i].revealed) return;
+  
+  const forceLose = !biasedWin() && minesGemsFound === 0;
+  if (forceLose && !minesBoard[i].isMine) {
+    minesBoard[i].isMine = true;
+    for (let j = 0; j < 25; j++) {
+      if (j !== i && minesBoard[j].isMine && !minesBoard[j].revealed) {
+        minesBoard[j].isMine = false;
+        break;
+      }
+    }
+  }
+  
+  minesBoard[i].revealed = true;
+  
+  if (minesBoard[i].isMine) {
+    minesBoard.forEach(c => c.revealed = true);
+    buildMinesGrid(true);
+    minesActive = false;
+    document.getElementById('mines-start-btn').disabled = false;
+    document.getElementById('mines-cashout').disabled = true;
+    showResult('mines', false, minesBet, 'You hit a mine!');
+    Session.saveBalance();
+  } else {
+    minesGemsFound++;
+    updateMinesInfo();
+    buildMinesGrid(false);
+    if (25 - minesCount - minesGemsFound === 0) cashoutMines();
+  }
+}
+
+function updateMinesInfo() {
+  const multi = getMinesMulti(minesGemsFound, minesCount);
+  const profit = Math.floor(minesBet * multi) - minesBet;
+  document.getElementById('mines-multi').textContent = multi.toFixed(2) + '×';
+  document.getElementById('mines-profit').textContent = '$' + profit;
+  document.getElementById('mines-gems').textContent = minesGemsFound;
+}
+
+async function cashoutMines() {
+  if (!minesActive) return;
+  minesActive = false;
+  const multi = getMinesMulti(minesGemsFound, minesCount);
+  const won = Math.floor(minesBet * multi);
+  updateBalanceUI(window.balance + won);
+  document.getElementById('mines-start-btn').disabled = false;
+  document.getElementById('mines-cashout').disabled = true;
+  minesBoard.forEach(c => c.revealed = true);
+  buildMinesGrid(true);
+  showResult('mines', true, won - minesBet, 'Cashed out at ' + multi.toFixed(2) + '×!');
   await Session.saveBalance();
-  btn.disabled = false;
 }
 
 init();

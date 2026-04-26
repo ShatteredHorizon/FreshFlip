@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FreshFlip - Coin Flip</title>
+<title>FreshFlip - Case Open</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -27,6 +27,7 @@
   --red: #ff4466;
   --gold: #ffcc00;
   --blue: #4488ff;
+  --purple: #a855f7;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -342,93 +343,133 @@ main { flex: 1; padding: 28px; overflow-y: auto; background: var(--bg2); }
   margin-top: 8px;
 }
 
-.cf-sides {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
+.case-container {
+  position: relative;
+  height: 200px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
   margin-bottom: 20px;
 }
 
-.cf-side {
-  padding: 20px;
+.case-scroller {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.case-item {
+  flex-shrink: 0;
+  width: 80px;
+  height: 100px;
+  background: var(--surface2);
   border: 2px solid var(--border);
-  background: var(--bg3);
-  border-radius: 14px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0 4px;
+  transition: transform 0.1s;
+}
+
+.case-item .item-rarity {
+  font-size: 1.8rem;
+  margin-bottom: 4px;
+}
+
+.case-item .item-name {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--text2);
+  text-align: center;
+  padding: 0 4px;
+}
+
+.case-item.common { border-color: #8a9ab0; }
+.case-item.uncommon { border-color: #4488ff; }
+.case-item.rare { border-color: #a855f7; }
+.case-item.epic { border-color: #ffcc00; }
+.case-item.legendary { border-color: #ff4466; }
+
+.case-item.common .item-name { color: #8a9ab0; }
+.case-item.uncommon .item-name { color: #4488ff; }
+.case-item.rare .item-name { color: #a855f7; }
+.case-item.epic .item-name { color: var(--gold); }
+.case-item.legendary .item-name { color: var(--red); }
+
+.case-select {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.case-option {
+  padding: 16px;
+  background: var(--surface3);
+  border: 2px solid var(--border);
+  border-radius: 12px;
   cursor: pointer;
   text-align: center;
   transition: all 0.2s;
 }
 
-.cf-side:hover {
-  border-color: var(--border2);
-  background: var(--surface2);
+.case-option:hover {
+  border-color: var(--accent);
 }
 
-.cf-side.active[data-side="heads"] {
-  border-color: var(--gold);
-  background: rgba(255,204,0,0.1);
+.case-option.active {
+  border-color: var(--accent);
+  background: var(--accent-glow);
 }
 
-.cf-side.active[data-side="tails"] {
-  border-color: var(--blue);
-  background: rgba(68,136,255,0.1);
+.case-option .case-name {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 4px;
 }
 
-.cf-side-icon {
-  font-size: 2rem;
+.case-option .case-price {
+  font-size: 0.75rem;
+  color: var(--text2);
+}
+
+.case-item.winner {
+  transform: scale(1.15);
+  box-shadow: 0 0 30px rgba(255,204,0,0.5);
+}
+
+.winner-display {
+  text-align: center;
+  padding: 20px;
+  display: none;
+}
+
+.winner-display.show {
+  display: block;
+}
+
+.winner-display .winner-rarity {
+  font-size: 3rem;
   margin-bottom: 8px;
 }
 
-.cf-side-label {
-  font-size: 0.88rem;
-  font-weight: 600;
-  color: var(--text2);
-  letter-spacing: 1px;
-  text-transform: uppercase;
+.winner-display .winner-name {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 4px;
 }
 
-.cf-side.active[data-side="heads"] .cf-side-label { color: var(--gold); }
-.cf-side.active[data-side="tails"] .cf-side-label { color: var(--blue); }
-
-.coin-display {
-  display: flex;
-  justify-content: center;
-  margin: 24px 0;
-}
-
-.coin {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 2.5rem;
-  border: 4px solid var(--border);
-  background: var(--surface2);
-  transition: all 0.3s;
-}
-
-.coin.heads {
-  border-color: var(--gold);
-  background: rgba(255,204,0,0.15);
-  box-shadow: 0 0 30px rgba(255,204,0,0.3);
-}
-
-.coin.tails {
-  border-color: var(--blue);
-  background: rgba(68,136,255,0.15);
-  box-shadow: 0 0 30px rgba(68,136,255,0.3);
-}
-
-@keyframes flip {
-  0% { transform: rotateY(0) scale(1); }
-  50% { transform: rotateY(900deg) scale(1.1); }
-  100% { transform: rotateY(1800deg) scale(1); }
-}
-
-.coin.flipping {
-  animation: flip 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+.winner-display .winner-multi {
+  font-size: 1rem;
+  color: var(--gold);
 }
 
 @media(max-width: 700px) {
@@ -456,7 +497,7 @@ main { flex: 1; padding: 28px; overflow-y: auto; background: var(--bg2); }
   <div class="layout">
     <aside>
       <div class="sidebar-section">Games</div>
-      <div class="sidebar-item active" onclick="window.location.href='coinflip.html'">
+      <div class="sidebar-item" onclick="window.location.href='coinflip.html'">
         <span class="icon">🪙</span>Coin Flip
       </div>
       <div class="sidebar-item" onclick="window.location.href='mines.html'">
@@ -468,54 +509,63 @@ main { flex: 1; padding: 28px; overflow-y: auto; background: var(--bg2); }
       <div class="sidebar-item" onclick="window.location.href='roulette.html'">
         <span class="icon">🎰</span>Roulette
       </div>
-      <div class="sidebar-item" onclick="window.location.href='case.html'">
+      <div class="sidebar-item active" onclick="window.location.href='case.html'">
         <span class="icon">📦</span>Case Open
       </div>
     </aside>
     
     <main>
       <div class="game-header">
-        <h2>🪙 Coin Flip</h2>
-        <p>Pick a side - double your bet on a win!</p>
+        <h2>📦 Case Open</h2>
+        <p>Open cases like CSGO - rare items worth more!</p>
       </div>
       
       <div class="card">
-        <div class="card-title">Choose Side</div>
-        <div class="cf-sides">
-          <div class="cf-side active" data-side="heads" onclick="selectSide('heads')">
-            <div class="cf-side-icon">👑</div>
-            <div class="cf-side-label">Heads</div>
+        <div class="card-title">Select Case</div>
+        <div class="case-select">
+          <div class="case-option active" data-case="basic" onclick="selectCase('basic')">
+            <div class="case-name">Basic Case</div>
+            <div class="case-price">$10+</div>
           </div>
-          <div class="cf-side" data-side="tails" onclick="selectSide('tails')">
-            <div class="cf-side-icon">🌊</div>
-            <div class="cf-side-label">Tails</div>
+          <div class="case-option" data-case="premium" onclick="selectCase('premium')">
+            <div class="case-name">Premium Case</div>
+            <div class="case-price">$100+</div>
+          </div>
+          <div class="case-option" data-case="elite" onclick="selectCase('elite')">
+            <div class="case-name">Elite Case</div>
+            <div class="case-price">$1000+</div>
           </div>
         </div>
-        <div class="coin-display">
-          <div class="coin heads" id="coin">👑</div>
-        </div>
-      </div>
-      
-      <div class="card">
+        
         <span class="bet-label">Bet Amount</span>
         <div class="bet-input-wrap">
           <span class="bet-currency">$</span>
-          <input class="bet-input" id="cf-bet" type="number" placeholder="0" min="1">
+          <input class="bet-input" id="case-bet" type="number" placeholder="0" min="1">
         </div>
         <div class="bet-quick">
-          <button onclick="setBet('cf-bet',10)">$10</button>
-          <button onclick="setBet('cf-bet',50)">$50</button>
-          <button onclick="setBet('cf-bet',100)">$100</button>
-          <button onclick="setBet('cf-bet',500)">$500</button>
-          <button onclick="halfBet('cf-bet')">½</button>
-          <button onclick="doubleBet('cf-bet')">2×</button>
+          <button onclick="setBet('case-bet',10)">$10</button>
+          <button onclick="setBet('case-bet',50)">$50</button>
+          <button onclick="setBet('case-bet',100)">$100</button>
+          <button onclick="setBet('case-bet',500)">$500</button>
+          <button onclick="halfBet('case-bet')">½</button>
+          <button onclick="doubleBet('case-bet')">2×</button>
         </div>
         
-        <button class="play-btn" id="cf-btn" onclick="playCoinflip()">FLIP COIN</button>
-        
-        <div class="result-box" id="cf-result">
-          <div class="result-amount" id="cf-result-amount"></div>
-          <div class="result-msg" id="cf-result-msg"></div>
+        <button class="play-btn" id="case-open-btn" onclick="openCase()">OPEN CASE</button>
+      </div>
+      
+      <div class="card">
+        <div class="case-container" id="case-container">
+          <div class="case-scroller" id="case-scroller"></div>
+        </div>
+        <div class="winner-display" id="winner-display">
+          <div class="winner-rarity" id="winner-rarity"></div>
+          <div class="winner-name" id="winner-name"></div>
+          <div class="winner-multi" id="winner-multi"></div>
+        </div>
+        <div class="result-box" id="case-result">
+          <div class="result-amount" id="case-result-amount"></div>
+          <div class="result-msg" id="case-result-msg"></div>
         </div>
       </div>
     </main>
@@ -524,7 +574,44 @@ main { flex: 1; padding: 28px; overflow-y: auto; background: var(--bg2); }
 
 <script src="../js/auth.js"></script>
 <script>
-let cfSide = 'heads';
+const CASES = {
+  basic: {
+    items: [
+      { name: 'Common', rarity: 'common', multi: 1, icon: '📦' },
+      { name: 'Uncommon', rarity: 'uncommon', multi: 2, icon: '📦' },
+      { name: 'Rare', rarity: 'rare', multi: 3, icon: '💎' },
+      { name: 'Epic', rarity: 'epic', multi: 5, icon: '⭐' },
+      { name: 'Legendary', rarity: 'legendary', multi: 10, icon: '👑' }
+    ]
+  },
+  premium: {
+    items: [
+      { name: 'Common', rarity: 'common', multi: 1, icon: '📦' },
+      { name: 'Uncommon', rarity: 'uncommon', multi: 2, icon: '💎' },
+      { name: 'Rare', rarity: 'rare', multi: 5, icon: '⭐' },
+      { name: 'Epic', rarity: 'epic', multi: 10, icon: '👑' },
+      { name: 'Legendary', rarity: 'legendary', multi: 25, icon: '🔥' }
+    ]
+  },
+  elite: {
+    items: [
+      { name: 'Uncommon', rarity: 'uncommon', multi: 1, icon: '💎' },
+      { name: 'Rare', rarity: 'rare', multi: 3, icon: '⭐' },
+      { name: 'Epic', rarity: 'epic', multi: 8, icon: '👑' },
+      { name: 'Legendary', rarity: 'legendary', multi: 20, icon: '🔥' },
+      { name: 'ULTIMATE', rarity: 'legendary', multi: 50, icon: '💯' }
+    ]
+  }
+};
+
+let currentCase = 'basic';
+let caseSpinning = false;
+
+const CASE_WEIGHTS = {
+  basic: [60, 25, 10, 4, 1],
+  premium: [50, 30, 12, 6, 2],
+  elite: [40, 30, 15, 10, 5]
+};
 
 async function init() {
   await Session.init();
@@ -535,46 +622,96 @@ async function init() {
   document.getElementById('app').style.display = 'flex';
   document.getElementById('nav-user').textContent = window.currentUser.username;
   updateBalanceUI(window.balance);
+  buildCase();
 }
 
-function selectSide(s) {
-  cfSide = s;
-  document.querySelectorAll('.cf-side').forEach(b => b.classList.toggle('active', b.dataset.side === s));
-  const coin = document.getElementById('coin');
-  coin.className = 'coin ' + (s === 'heads' ? 'heads' : 'tails');
-  coin.textContent = s === 'heads' ? '👑' : '🌊';
+function selectCase(c) {
+  currentCase = c;
+  document.querySelectorAll('.case-option').forEach(opt => opt.classList.toggle('active', opt.dataset.case === c));
 }
 
-async function playCoinflip() {
-  const bet = getBet('cf-bet');
+function buildCase() {
+  const scroller = document.getElementById('case-scroller');
+  scroller.innerHTML = '';
+  const items = CASES[currentCase].items;
+  
+  items.forEach(item => {
+    const el = document.createElement('div');
+    el.className = `case-item ${item.rarity}`;
+    el.innerHTML = `<span class="item-rarity">${item.icon}</span><span class="item-name">${item.name}</span>`;
+    scroller.appendChild(el);
+  });
+}
+
+async function openCase() {
+  const bet = getBet('case-bet');
   if (!bet || bet < 1) { alert('Enter a valid bet.'); return; }
   if (bet > window.balance) { alert('Not enough balance.'); return; }
   
-  const btn = document.getElementById('cf-btn');
+  if (caseSpinning) return;
+  caseSpinning = true;
+  
+  const btn = document.getElementById('case-open-btn');
   btn.disabled = true;
-  document.getElementById('cf-result').className = 'result-box';
+  updateBalanceUI(window.balance - bet);
   
-  const coin = document.getElementById('coin');
-  coin.className = 'coin flipping';
+  const scroller = document.getElementById('case-scroller');
+  const items = CASES[currentCase].items;
+  const weights = CASE_WEIGHTS[currentCase];
+  const total = weights.reduce((a, b) => a + b, 0);
   
-  await sleep(900);
+  let rand = Math.random() * total;
+  let winner_idx = 0;
+  for (let i = 0; i < weights.length; i++) {
+    rand -= weights[i];
+    if (rand <= 0) { winner_idx = i; break; }
+  }
   
-  const win = biasedWin();
-  const result = win ? cfSide : (cfSide === 'heads' ? 'tails' : 'heads');
+  if (!biasedWin()) {
+    winner_idx = Math.floor(Math.random() * Math.min(2, items.length));
+  }
   
-  coin.className = 'coin ' + result;
-  coin.textContent = result === 'heads' ? '👑' : '🌊';
+  const winner = items[winner_idx];
+  const won = Math.floor(bet * winner.multi);
   
-  if (win) {
-    updateBalanceUI(window.balance + bet);
-    showResult('cf', true, bet, 'You got ' + result + '! Win!');
+  scroller.innerHTML = '';
+  const totalItems = 30;
+  for (let i = 0; i < totalItems; i++) {
+    const item = items[i % items.length];
+    const el = document.createElement('div');
+    el.className = `case-item ${item.rarity}`;
+    el.innerHTML = `<span class="item-rarity">${item.icon}</span><span class="item-name">${item.name}</span>`;
+    if (i === totalItems - 1 - 3) el.classList.add('winner');
+    scroller.appendChild(el);
+  }
+  
+  const container = document.getElementById('case-container');
+  const scrollAmount = (items.length * 3 + 3) * 88;
+  scroller.style.transition = 'transform 4s cubic-bezier(0.1, 0, 0.2, 1)';
+  scroller.style.transform = `translateX(-${scrollAmount}px)`;
+  
+  await sleep(4200);
+  
+  scroller.style.transition = 'none';
+  scroller.style.transform = 'translateX(0)';
+  
+  document.getElementById('winner-rarity').textContent = winner.icon;
+  document.getElementById('winner-name').textContent = winner.name;
+  document.getElementById('winner-name').style.color = winner.rarity === 'legendary' ? 'var(--red)' : winner.rarity === 'epic' ? 'var(--gold)' : 'var(--text)';
+  document.getElementById('winner-multi').textContent = `${winner.multi}x ($${won})`;
+  
+  if (won > 0) {
+    updateBalanceUI(window.balance + won);
+    showResult('case', true, won - bet, `Won ${winner.name} (${winner.multi}x)!`);
   } else {
-    updateBalanceUI(window.balance - bet);
-    showResult('cf', false, bet, 'It landed ' + result + '.');
+    showResult('case', false, bet, `Got ${winner.name} but lost :(`);
   }
   
   await Session.saveBalance();
+  caseSpinning = false;
   btn.disabled = false;
+  
+  setTimeout(() => buildCase(), 500);
 }
 
 init();
