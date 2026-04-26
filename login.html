@@ -51,9 +51,15 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-ser
     </div>
     <div id="signup-form" style="display:none">
       <div class="auth-field"><label>Username</label><input type="text" id="signup-user" placeholder="Choose username"></div>
+      <div class="auth-field"><label>Email</label><input type="email" id="signup-email" placeholder="your@email.com"></div>
       <div class="auth-field"><label>Password</label><input type="password" id="signup-pass" placeholder="Min 6 characters"></div>
       <div class="auth-field"><label>Referral Code (optional)</label><input type="text" id="signup-referral" placeholder="Enter code"></div>
       <button class="auth-btn" id="signup-btn" onclick="doSignup()">CREATE ACCOUNT</button>
+    </div>
+    <div id="verify-form" style="display:none">
+      <div class="auth-field"><label>Verification Code</label><input type="text" id="verify-code" placeholder="Enter 6-digit code"></div>
+      <button class="auth-btn" id="verify-btn" onclick="doVerify()">VERIFY EMAIL</button>
+      <button class="auth-btn" style="background:var(--surface);margin-top:6px" id="resend-btn" onclick="resendCode()">RESEND CODE</button>
     </div>
     <div class="auth-msg" id="auth-msg"></div>
   </div>
@@ -72,6 +78,7 @@ function switchTab(tab) {
   document.querySelectorAll('.auth-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
   document.getElementById('login-form').style.display = tab === 'login' ? 'block' : 'none';
   document.getElementById('signup-form').style.display = tab === 'signup' ? 'block' : 'none';
+  document.getElementById('verify-form').style.display = tab === 'verify' ? 'block' : 'none';
   setMsg('', '');
 }
 
@@ -95,19 +102,56 @@ async function doLogin() {
 
 async function doSignup() {
   const u = document.getElementById('signup-user').value.trim();
+  const email = document.getElementById('signup-email').value.trim();
   const p = document.getElementById('signup-pass').value;
   const ref = document.getElementById('signup-referral').value.trim().toUpperCase();
-  if (!u || !p) { setMsg('Fill all fields.', 'error'); return; }
+  if (!u || !p || !email) { setMsg('Fill all fields.', 'error'); return; }
   if (u.length < 3) { setMsg('Username min 3 chars.', 'error'); return; }
   if (p.length < 6) { setMsg('Password min 6 chars.', 'error'); return; }
+  if (!email.includes('@')) { setMsg('Valid email required.', 'error'); return; }
   const btn = document.getElementById('signup-btn');
   btn.disabled = true; btn.textContent = 'CREATING...';
   try {
-    await Session.signup(u, p, ref);
-    setMsg('Account created!', 'success');
-    setTimeout(() => window.location.href = 'games/coinflip.html', 800);
+    pendingEmail = email;
+    const hash = await hashPassword(p);
+    let referrerId = null, newBalance = 1000;
+    if (ref) {
+      const { data: refData } = await sb.from('users').select('id').eq('referral_code', ref).maybeSingle();
+      if (refData) { referrerId = refData.id; newBalance = 11000; }
+    }
+    const { data, error } = await sb.from('users').insert({ 
+      username: u, password: hash, email: email, balance: newBalance, referred_by: referrerId 
+    }).select().maybeSingle();
+    if (error) { if (error.code === '23505') throw new Error('Username already taken.'); throw new Error('Error: ' + error.message); }
+    window.pendingUserId = data.id;
+    await sendVerificationEmail(email, data.id);
+    switchTab('verify');
+    setMsg('Code sent to ' + email, 'success');
   } catch(e) { setMsg(e.message, 'error'); }
   finally { btn.disabled = false; btn.textContent = 'CREATE ACCOUNT'; }
+}
+
+let pendingEmail = '', pendingUserId = '';
+
+async function doVerify() {
+  const code = document.getElementById('verify-code').value.trim();
+  if (!code || code.length !== 6) { setMsg('Enter 6-digit code.', 'error'); return; }
+  const btn = document.getElementById('verify-btn');
+  btn.disabled = true; btn.textContent = 'VERIFYING...';
+  try {
+    await verifyEmailCode(window.pendingUserId, code);
+    setMsg('Email verified! Signing in...', 'success');
+    setTimeout(() => window.location.href = 'games/coinflip.html', 1000);
+  } catch(e) { setMsg(e.message, 'error'); }
+  finally { btn.disabled = false; btn.textContent = 'VERIFY EMAIL'; }
+}
+
+async function resendCode() {
+  if (!pendingEmail || !window.pendingUserId) return;
+  try {
+    await sendVerificationEmail(pendingEmail, window.pendingUserId);
+    setMsg('Code resent!', 'success');
+  } catch(e) { setMsg(e.message, 'error'); }
 }
 
 Session.init().then(() => { if (Session.isLoggedIn()) window.location.href = 'games/coinflip.html'; });

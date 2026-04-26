@@ -1,5 +1,6 @@
 const SUPABASE_URL = 'https://ghaojptkyxxvxdzmdzpk.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdoYW9qcHRreXh4dnhkem1kenBrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcxNDMyNDgsImV4cCI6MjA5MjcxOTI0OH0.mQ9QoyIj_3iF7T9hWZ5y8iMv_bDMgoTIcDjR-4S3Dpk';
+const FUNCTIONS_URL = 'https://ghaojptkyxxvxdzmdzpk.supabase.co/functions/v1';
 
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -214,6 +215,43 @@ function showResult(prefix, win, amount, msg) {
   document.getElementById(prefix + '-result-msg').textContent = msg;
 }
 
+async function sendVerificationEmail(email, userId) {
+  const code = Math.floor(100000 + Math.random() * 900000).toString();
+  await sb.from('users').update({
+    verify_code: code,
+    verify_sent_at: new Date().toISOString()
+  }).eq('id', userId);
+  
+  const response = await fetch(FUNCTIONS_URL + '/send-verify-email', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SUPABASE_KEY },
+    body: JSON.stringify({ email, userId, code })
+  });
+  
+  const result = await response.json();
+  if (!response.ok) throw new Error(result.error || 'Failed to send email');
+  return result;
+}
+
+async function verifyEmailCode(userId, code) {
+  const { data } = await sb.from('users').select('verify_code, verify_sent_at').eq('id', userId).maybeSingle();
+  if (!data || !data.verify_code) throw new Error('No verification code');
+  
+  const sentAt = new Date(data.verify_sent_at);
+  const now = new Date();
+  const diff = (now - sentAt) / 1000 / 60;
+  if (diff > 10) throw new Error('Code expired');
+  if (data.verify_code !== code) throw new Error('Invalid code');
+  
+  await sb.from('users').update({
+    email_verified: true,
+    verify_code: null,
+    verify_sent_at: null
+  }).eq('id', userId);
+  
+  return true;
+}
+
 if (typeof window !== 'undefined') {
   window.Session = Session;
   window.loadSettings = loadSettings;
@@ -227,4 +265,6 @@ if (typeof window !== 'undefined') {
   window.getBet = getBet;
   window.sleep = sleep;
   window.showResult = showResult;
+  window.sendVerificationEmail = sendVerificationEmail;
+  window.verifyEmailCode = verifyEmailCode;
 }

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FreshFlip - Referral</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0c0f12;--bg2:#101418;--surface:#1a1f26;--surface2:#222a34;--surface3:#2a3340;--border:#343d4a;--accent:#00b060;--text:#d0d8e0;--text2:#8898a8;--gold:#c89020}*{margin:0;padding:0;box-sizing:border-box}body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh}#app{display:none;flex-direction:column;min-height:100vh}nav{background:var(--surface);border-bottom:1px solid var(--border);padding:0 16px;height:54px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}.nav-logo{font-family:'Rajdhani',sans-serif;font-size:1.25rem;font-weight:700;letter-spacing:2px;cursor:pointer}.nav-logo b{color:var(--accent)}.nav-balance{display:flex;align-items:center;gap:8px;background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:5px 12px}.nav-balance span{color:var(--text2);font-size:0.65rem;font-weight:500;text-transform:uppercase}.nav-balance strong{color:var(--accent);font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:700}.nav-right{display:flex;align-items:center;gap:12px}.nav-user{color:var(--text2);font-size:0.78rem}.logout-btn{background:0 0;border:1px solid var(--border);color:var(--text2);padding:4px 10px;border-radius:4px;cursor:pointer;font-size:0.7rem}.logout-btn:hover{border-color:var(--red);color:var(--red)}.layout{display:flex;flex:1}aside{width:180px;background:var(--surface);border-right:1px solid var(--border);padding:8px 0;flex-shrink:0}.sidebar-section{color:#586878;font-size:0.55rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:0 12px;margin-bottom:5px;margin-top:8px}.sidebar-item{display:flex;align-items:center;gap:8px;padding:8px 12px;cursor:pointer;color:var(--text2);font-size:0.8rem;font-weight:500;transition:all .2s}.sidebar-item:hover{color:var(--text);background:var(--surface2)}.sidebar-item.active{color:var(--accent);background:rgba(0,176,96,0.1)}.sidebar-item .icon{width:22px;height:22px;background:var(--bg2);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700}main{flex:1;padding:16px;overflow-y:auto;background:var(--bg2)}.game-container{max-width:480px;margin:0 auto}.page-header{margin-bottom:16px}.page-header h2{font-family:'Rajdhani',sans-serif;font-size:1.4rem;font-weight:700}.page-header p{color:var(--text2);font-size:0.75rem}.ref-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:14px}.ref-stat{background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:10px;text-align:center}.ref-stat .val{font-family:'Rajdhani',sans-serif;font-size:1.2rem;font-weight:700;color:var(--accent)}.ref-stat .lbl{color:var(--text2);font-size:0.55rem;text-transform:uppercase;margin-top:2px}.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px}.card-title{font-size:0.6rem;font-weight:600;color:var(--text2);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px}.ref-box{background:var(--bg2);border:2px dashed var(--border);border-radius:5px;padding:12px;text-align:center;margin-bottom:10px}.ref-code{font-family:'Rajdhani',sans-serif;font-size:1.2rem;font-weight:700;color:var(--gold);letter-spacing:2px}.ref-btn{width:100%;padding:8px;background:var(--gold);border:none;border-radius:4px;color:#000;font-family:'Rajdhani',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer}.ref-link-box{background:var(--bg2);border:1px solid var(--border);border-radius:5px;padding:10px;margin-top:10px}.ref-link-box label{display:block;color:var(--text2);font-size:0.6rem;text-transform:uppercase;margin-bottom:4px}.ref-link-input{width:100%;background:var(--surface3);border:1px solid var(--border);border-radius:4px;padding:6px 8px;color:var(--text);font-size:0.75rem}@media(max-width:500px){aside{display:none}main{padding:12px}}
+</style>
+</head>
+<body>
+<div id="app">
+<nav>
+<div class="nav-logo" onclick="location.href='coinflip.html'">FRESH<b>FLIP</b></div>
+<div class="nav-balance"><span>Balance</span><strong id="nav-balance">$0</strong></div>
+<div class="nav-right"><span class="nav-user" id="nav-user"></span><button class="logout-btn" onclick="Session.logout()">Sign Out</button></div>
+</nav>
+<div class="layout">
+<aside>
+<div class="sidebar-section">Games</div>
+<div class="sidebar-item" onclick="location.href='coinflip.html'"><span class="icon">C</span>Coin Flip</div>
+<div class="sidebar-item" onclick="location.href='mines.html'"><span class="icon">M</span>Mines</div>
+<div class="sidebar-item" onclick="location.href='roulette.html'"><span class="icon">R</span>Roulette</div>
+<div class="sidebar-section">Account</div>
+<div class="sidebar-item active"><span class="icon">+</span>Referral</div>
+</aside>
+<main>
+<div class="game-container">
+<div class="page-header"><h2>Referral Program</h2><p>Invite friends and earn rewards</p></div>
+<div class="ref-stats"><div class="ref-stat"><div class="val" id="ref-count">0</div><div class="lbl">Referrals</div></div><div class="ref-stat"><div class="val" id="ref-earned">$0</div><div class="lbl">Earned</div></div><div class="ref-stat"><div class="val">$100K</div><div class="lbl">Per Referral</div></div></div>
+<div class="card">
+<div class="card-title">Your Referral Code</div>
+<p style="color:var(--text2);font-size:0.7rem;margin-bottom:8px;">Friends get $10K bonus, you get $100K!</p>
+<div class="ref-box"><div class="ref-code" id="ref-code">LOADING...</div></div>
+<button class="ref-btn" onclick="copyRefCode()">COPY CODE</button>
+<div class="ref-link-box"><label>Your Referral Link</label><input type="text" class="ref-link-input" id="ref-link" readonly></div>
+</div>
+</div>
+</main>
+</div>
+</div>
+<script src="../js/auth.js"></script>
+<script>
+async function init(){await Session.init();if(!Session.isLoggedIn()){location.href='../login.html';return}document.getElementById('app').style.display='flex';document.getElementById('nav-user').textContent=window.currentUser.username;updateBalanceUI(window.balance);loadReferral();}
+async function loadReferral(){let code=window.currentUser?.referral_code;if(!code){code=await Session.generateReferralCode();}document.getElementById('ref-code').textContent=code||'ERROR';document.getElementById('ref-link').value=window.location.origin+'/?ref='+code;const{data:refs}=await sb.from('users').select('id').eq('referred_by',window.currentUser.id);const count=refs?refs.length:0;document.getElementById('ref-count').textContent=count;document.getElementById('ref-earned').textContent='$'+(count*100000).toLocaleString();}
+function copyRefCode(){const code=document.getElementById('ref-code').textContent;navigator.clipboard.writeText(code).then(()=>alert('Code copied!'));}
+init();
+</script>
+</body>
+</html>
