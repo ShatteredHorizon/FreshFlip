@@ -111,6 +111,7 @@ async function doSignup() {
   if (!email.includes('@')) { setMsg('Valid email required.', 'error'); return; }
   const btn = document.getElementById('signup-btn');
   btn.disabled = true; btn.textContent = 'CREATING...';
+  setMsg('', '');
   try {
     pendingEmail = email;
     const hash = await hashPassword(p);
@@ -127,7 +128,10 @@ async function doSignup() {
     await sendVerificationEmail(email, data.id);
     switchTab('verify');
     setMsg('Code sent to ' + email, 'success');
-  } catch(e) { setMsg(e.message, 'error'); }
+  } catch(e) { 
+    console.error(e);
+    setMsg(e.message || 'Error: ' + e, 'error'); 
+  }
   finally { btn.disabled = false; btn.textContent = 'CREATE ACCOUNT'; }
 }
 
