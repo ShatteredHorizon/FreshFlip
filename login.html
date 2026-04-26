@@ -123,7 +123,11 @@ async function doSignup() {
     const { data, error } = await sb.from('users').insert({ 
       username: u, password: hash, email: email, balance: newBalance, referred_by: referrerId 
     }).select().maybeSingle();
-    if (error) { if (error.code === '23505') throw new Error('Username already taken.'); throw new Error('Error: ' + error.message); }
+    if (error) { 
+      console.log('Signup error:', error);
+      if (error.code === '23505' || error.message.includes('duplicate')) throw new Error('Username already taken.');
+      throw new Error('Error: ' + error.message); 
+    }
     window.pendingUserId = data.id;
     await sendVerificationEmail(email, data.id);
     switchTab('verify');
