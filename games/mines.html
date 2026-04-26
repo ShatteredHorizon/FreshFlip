@@ -5,58 +5,377 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FreshFlip - Mines</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0c0f12;--bg2:#101418;--surface:#1a1f26;--surface2:#222a34;--surface3:#2a3340;--border:#343d4a;--accent:#00b060;--accent2:#009050;--text:#d0d8e0;--text2:#8898a8;--text3:#586878;--red:#d83848;--gold:#c89020}*{margin:0;padding:0;box-sizing:border-box}body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh}#app{display:none;flex-direction:column;min-height:100vh}nav{background:var(--surface);border-bottom:1px solid var(--border);padding:0 16px;height:54px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}.nav-logo{font-family:'Rajdhani',sans-serif;font-size:1.25rem;font-weight:700;letter-spacing:2px;color:var(--text);cursor:pointer}.nav-logo b{color:var(--accent)}.nav-balance{display:flex;align-items:center;gap:8px;background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:5px 12px}.nav-balance span{color:var(--text2);font-size:0.65rem;font-weight:500;text-transform:uppercase}.nav-balance strong{color:var(--accent);font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:700}.nav-right{display:flex;align-items:center;gap:12px}.nav-user{color:var(--text2);font-size:0.78rem}.logout-btn{background:0 0;border:1px solid var(--border);color:var(--text2);padding:4px 10px;border-radius:4px;cursor:pointer;font-size:0.7rem}.logout-btn:hover{border-color:var(--red);color:var(--red)}.layout{display:flex;flex:1}aside{width:180px;background:var(--surface);border-right:1px solid var(--border);padding:8px 0;flex-shrink:0}.sidebar-section{color:var(--text3);font-size:0.55rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:0 12px;margin-bottom:5px;margin-top:8px}.sidebar-item{display:flex;align-items:center;gap:8px;padding:8px 12px;cursor:pointer;color:var(--text2);font-size:0.8rem;font-weight:500;transition:all .2s}.sidebar-item:hover{color:var(--text);background:var(--surface2)}.sidebar-item.active{color:var(--accent);background:rgba(0,176,96,0.1)}.sidebar-item .icon{width:22px;height:22px;background:var(--bg2);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700}main{flex:1;padding:16px;overflow-y:auto;background:var(--bg2)}.game-container{max-width:480px;margin:0 auto}.page-header{margin-bottom:16px}.page-header h2{font-family:'Rajdhani',sans-serif;font-size:1.4rem;font-weight:700}.page-header p{color:var(--text2);font-size:0.75rem}.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px}.card-title{font-size:0.6rem;font-weight:600;color:var(--text2);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px}.bet-label{color:var(--text2);font-size:0.65rem;font-weight:500;text-transform:uppercase;margin-bottom:5px;display:block}.bet-input-wrap{display:flex;align-items:center;background:var(--bg2);border:1px solid var(--border);border-radius:5px;margin-bottom:6px}.bet-input-wrap:focus-within{border-color:var(--accent)}.bet-currency{color:var(--text2);padding:0 8px;font-size:0.8rem;font-weight:600}.bet-input{flex:1;background:0 0;border:none;padding:8px 0;color:var(--text);font-size:0.85rem;outline:0}.bet-quick{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:10px}.bet-quick button{background:var(--surface3);border:1px solid var(--border);color:var(--text2);padding:4px 8px;border-radius:4px;cursor:pointer;font-size:0.65rem;font-weight:500}.bet-quick button:hover{border-color:var(--accent);color:var(--accent)}.play-btn{width:100%;padding:10px;background:var(--accent);border:none;border-radius:5px;color:#000;font-family:'Rajdhani',sans-serif;font-size:0.9rem;font-weight:700;cursor:pointer}.play-btn:hover:not(:disabled){background:var(--accent2)}.play-btn:disabled{opacity:.4;cursor:not-allowed}.result-box{margin-top:10px;padding:12px;border-radius:5px;text-align:center;display:none}.result-box.win{background:rgba(0,176,96,0.1);border:1px solid rgba(0,176,96,0.3);display:block}.result-box.lose{background:rgba(216,56,72,0.1);border:1px solid rgba(216,56,72,0.3);display:block}.result-amount{font-family:'Rajdhani',sans-serif;font-size:1.4rem;font-weight:700}.result-box.win .result-amount{color:var(--accent)}.result-box.lose .result-amount{color:var(--red)}.result-msg{color:var(--text2);font-size:0.7rem;margin-top:3px}.mines-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin:10px 0}.mine-cell{aspect-ratio:1;background:var(--surface3);border:1px solid var(--border);border-radius:5px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.9rem;font-weight:700}.mine-cell:hover:not(.revealed){border-color:var(--accent);background:rgba(0,176,96,0.1)}.mine-cell.gem{border-color:var(--accent);background:rgba(0,176,96,0.15);color:var(--accent)}.mine-cell.bomb{border-color:var(--red);background:rgba(216,56,72,0.15);color:var(--red)}.mine-cell.revealed{cursor:default}.mines-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px}.mines-stat{background:var(--bg2);border:1px solid var(--border);border-radius:5px;padding:8px;text-align:center}.mines-stat label{color:var(--text2);font-size:0.55rem;text-transform:uppercase;display:block}.mines-stat strong{font-family:'Rajdhani',sans-serif;font-size:1rem;color:var(--accent)}.mines-select{width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:5px;padding:6px 8px;color:var(--text);font-size:0.8rem;margin-bottom:6px}.cashout-btn{width:100%;margin-top:6px;padding:8px;background:var(--gold);border:none;border-radius:5px;color:#000;font-family:'Rajdhani',sans-serif;font-size:0.85rem;font-weight:700;cursor:pointer}.cashout-btn:disabled{opacity:.3;cursor:not-allowed}@media(max-width:500px){aside{display:none}main{padding:12px}}
+:root {
+  --bg: #0f0f13;
+  --bg2: #1a1a23;
+  --bg3: #222230;
+  --accent: #00ff88;
+  --text: #fff;
+  --text2: #888;
+  --border: #2a2a35;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body { background: var(--bg); color: var(--text); font-family: 'Space Grotesk', sans-serif; min-height: 100vh; }
+
+.app { display: flex; min-height: 100vh; }
+
+.sidebar {
+  width: 240px;
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  padding: 20px 0;
+  flex-shrink: 0;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  padding: 0 20px 20px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 20px;
+}
+
+.logo span { color: var(--accent); }
+
+.nav-section { padding: 0 16px; margin-bottom: 8px; }
+
+.nav-label {
+  font-size: 0.65rem;
+  color: var(--text2);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.nav-link {
+  display: block;
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: var(--text);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.nav-link:hover { background: var(--bg3); }
+
+.nav-link.active { background: var(--accent); color: #000; }
+
+.main { flex: 1; padding: 30px; overflow-y: auto; }
+
+.game-header { margin-bottom: 30px; }
+.game-header h1 { font-size: 2rem; margin-bottom: 8px; }
+.game-header p { color: var(--text2); }
+
+.header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+}
+
+.balance { display: flex; align-items: center; gap: 12px; }
+.balance-label { color: var(--text2); font-size: 0.75rem; }
+.balance-value { font-size: 1.2rem; font-weight: 700; color: var(--accent); }
+
+.user { display: flex; align-items: center; gap: 10px; }
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  background: var(--accent);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: #000;
+}
+
+.game-content { max-width: 600px; }
+
+.bet-section {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.select-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.select-btn {
+  flex: 1;
+  padding: 12px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  cursor: pointer;
+  font-size: 0.85rem;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.select-btn:hover { border-color: var(--accent); }
+.select-btn.active { background: var(--accent); color: #000; border-color: var(--accent); }
+
+.mines-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin: 20px 0;
+}
+
+.mine-cell {
+  aspect-ratio: 1;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.mine-cell:hover { border-color: var(--accent); }
+.mine-cell.gem { background: var(--accent); color: #000; border-color: var(--accent); }
+.mine-cell.mine { background: #ff4757; border-color: #ff4757; }
+
+.bet-row { display: flex; gap: 10px; margin-bottom: 12px; }
+
+.bet-btn {
+  padding: 10px 16px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.bet-btn:hover { border-color: var(--accent); }
+
+input[type="number"] {
+  width: 100%;
+  padding: 12px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  margin-bottom: 12px;
+  font-size: 1rem;
+}
+
+.play-btn {
+  width: 100%;
+  padding: 14px;
+  background: var(--accent);
+  border: none;
+  border-radius: 8px;
+  color: #000;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.stats {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.stat {
+  flex: 1;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  text-align: center;
+}
+
+.stat-label { font-size: 0.7rem; color: var(--text2); }
+.stat-value { font-size: 1.1rem; font-weight: 700; color: var(--accent); }
+
+@media(max-width: 768px) { .sidebar { display: none; } }
 </style>
 </head>
 <body>
-<div id="app">
-<nav>
-<div class="nav-logo" onclick="location.href='coinflip.html'">FRESH<b>FLIP</b></div>
-<div class="nav-balance"><span>Balance</span><strong id="nav-balance">$0</strong></div>
-<div class="nav-right"><span class="nav-user" id="nav-user"></span><button class="logout-btn" onclick="Session.logout()">Sign Out</button></div>
-</nav>
-<div class="layout">
-<aside>
-<div class="sidebar-section">Games</div>
-<div class="sidebar-item" onclick="location.href='coinflip.html'"><span class="icon">C</span>Coin Flip</div>
-<div class="sidebar-item active"><span class="icon">M</span>Mines</div>
-<div class="sidebar-item" onclick="location.href='roulette.html'"><span class="icon">R</span>Roulette</div>
-<div class="sidebar-section">Account</div>
-<div class="sidebar-item" onclick="location.href='referral.html'"><span class="icon">+</span>Referral</div>
-</aside>
-<main>
-<div class="game-container">
-<div class="page-header"><h2>Mines</h2><p>Reveal gems and cash out before hitting a mine</p></div>
-<div class="card">
-<div class="card-title">Settings</div>
-<select class="mines-select" id="mines-count"><option value="3">3 Mines</option><option value="5" selected>5 Mines</option><option value="10">10 Mines</option></select>
-<span class="bet-label">Bet Amount</span>
-<div class="bet-input-wrap"><span class="bet-currency">$</span><input class="bet-input" id="mines-bet" type="number" placeholder="0"></div>
-<div class="bet-quick"><button onclick="setBet('mines-bet',10)">$10</button><button onclick="setBet('mines-bet',50)">$50</button><button onclick="setBet('mines-bet',100)">$100</button><button onclick="halfBet('mines-bet')">1/2</button><button onclick="doubleBet('mines-bet')">2x</button></div>
-<button class="play-btn" id="mines-start-btn" onclick="startMines()">START</button>
+<div class="app">
+  <div class="sidebar">
+    <div class="logo">FRESH<span>FLIP</span></div>
+    <div class="nav-section">
+      <div class="nav-label">Games</div>
+      <a href="mines.html" class="nav-link active">Mines</a>
+      <a href="crash.html" class="nav-link">Crash</a>
+      <a href="hilo.html" class="nav-link">HiLo</a>
+      <a href="dice.html" class="nav-link">Dice</a>
+      <a href="coinflip.html" class="nav-link">Coinflip</a>
+      <a href="limbo.html" class="nav-link">Limbo</a>
+      <a href="tower.html" class="nav-link">Dragon Tower</a>
+      <a href="wheel.html" class="nav-link">Wheel</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Menu</div>
+      <a href="referral.html" class="nav-link">Referrals</a>
+      <a href="daily.html" class="nav-link">Daily Rewards</a>
+    </div>
+  </div>
+  
+  <div class="main">
+    <div class="header-bar">
+      <div class="balance">
+        <span class="balance-label">Balance</span>
+        <span class="balance-value" id="balance">$0</span>
+      </div>
+      <div class="user">
+        <span id="username">User</span>
+        <div class="user-avatar" id="avatar">U</div>
+      </div>
+    </div>
+    
+    <div class="game-header">
+      <h1>Mines</h1>
+      <p>Click the safe tiles and avoid the mines to win!</p>
+    </div>
+    
+    <div class="game-content">
+      <div class="bet-section">
+        <div class="select-row">
+          <button class="select-btn active" onclick="setMines(3)">3</button>
+          <button class="select-btn" onclick="setMines(5)">5</button>
+          <button class="select-btn" onclick="setMines(10)">10</button>
+        </div>
+        
+        <div class="stats">
+          <div class="stat">
+            <div class="stat-label">Multiplier</div>
+            <div class="stat-value" id="multi">1.00x</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Profit</div>
+            <div class="stat-value" id="profit">$0</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Gems</div>
+            <div class="stat-value" id="gems">0</div>
+          </div>
+        </div>
+        
+        <div class="mines-grid" id="grid"></div>
+        
+        <button class="play-btn" id="play-btn" onclick="startGame()">START GAME</button>
+      </div>
+    </div>
+  </div>
 </div>
-<div class="card" id="mines-game-card" style="display:none">
-<div class="mines-stats"><div class="mines-stat"><label>Multiplier</label><strong id="mines-multi">1.00x</strong></div><div class="mines-stat"><label>Profit</label><strong id="mines-profit">$0</strong></div><div class="mines-stat"><label>Gems</label><strong id="mines-gems">0</strong></div></div>
-<div class="mines-grid" id="mines-grid"></div>
-<button class="cashout-btn" id="mines-cashout" disabled onclick="cashoutMines()">CASH OUT</button>
-<div class="result-box" id="mines-result"><div class="result-amount" id="mines-result-amount"></div><div class="result-msg" id="mines-result-msg"></div></div>
-</div>
-</div>
-</main>
-</div>
-</div>
+
 <script src="../js/auth.js"></script>
 <script>
-let minesActive=false,minesBoard=[],minesGemsFound=0,minesBet=0,minesCount=0;
-async function init(){await Session.init();if(!Session.isLoggedIn()){location.href='../login.html';return}document.getElementById('app').style.display='flex';document.getElementById('nav-user').textContent=window.currentUser.username;updateBalanceUI(window.balance);}
-function getMinesMulti(gems,mines){return gems===0?1:Math.max(1,parseFloat((1+gems*mines*0.12).toFixed(2)));}
-function buildMinesGrid(locked){const grid=document.getElementById('mines-grid');grid.innerHTML='';minesBoard.forEach((cell,i)=>{const el=document.createElement('div');el.className='mine-cell'+(cell.revealed?' revealed '+(cell.isMine?'bomb':'gem'):'');el.textContent=cell.revealed?(cell.isMine?'X':'?'):'';if(!cell.revealed&&!locked)el.onclick=()=>revealCell(i);grid.appendChild(el);});}
-async function startMines(){const bet=getBet('mines-bet');if(!bet||bet<1){alert('Enter a valid bet.');return}if(bet>window.balance){alert('Insufficient balance.');return}minesBet=bet;minesCount=parseInt(document.getElementById('mines-count').value);minesGemsFound=0;minesBoard=Array(25).fill(null).map(()=>({isMine:false,revealed:false}));let placed=0;while(placed<minesCount){const i=Math.floor(Math.random()*25);if(!minesBoard[i].isMine){minesBoard[i].isMine=true;placed++;}}minesActive=true;updateBalanceUI(window.balance-minesBet);document.getElementById('mines-start-btn').disabled=true;document.getElementById('mines-game-card').style.display='block';document.getElementById('mines-cashout').disabled=false;updateMinesInfo();buildMinesGrid(false);}
-function revealCell(i){if(!minesActive||minesBoard[i].revealed)return;const forceLose=!biasedWin()&&minesGemsFound===0;if(forceLose&&!minesBoard[i].isMine){minesBoard[i].isMine=true;for(let j=0;j<25;j++){if(j!==i&&minesBoard[j].isMine&&!minesBoard[j].revealed){minesBoard[j].isMine=false;break;}}}minesBoard[i].revealed=true;if(minesBoard[i].isMine){minesBoard.forEach(c=>c.revealed=true);buildMinesGrid(true);minesActive=false;document.getElementById('mines-start-btn').disabled=false;document.getElementById('mines-cashout').disabled=true;showResult('mines',false,minesBet,'Hit a mine!');Session.saveBalance();}else{minesGemsFound++;updateMinesInfo();buildMinesGrid(false);if(25-minesCount-minesGemsFound===0)cashoutMines();}}
-function updateMinesInfo(){const multi=getMinesMulti(minesGemsFound,minesCount);document.getElementById('mines-multi').textContent=multi.toFixed(2)+'x';document.getElementById('mines-profit').textContent='$'+(Math.floor(minesBet*multi)-minesBet);document.getElementById('mines-gems').textContent=minesGemsFound;}
-async function cashoutMines(){if(!minesActive)return;minesActive=false;const multi=getMinesMulti(minesGemsFound,minesCount);const won=Math.floor(minesBet*multi);updateBalanceUI(window.balance+won);document.getElementById('mines-start-btn').disabled=false;document.getElementById('mines-cashout').disabled=true;showResult('mines',true,won-minesBet,'Cashed out at '+multi.toFixed(2)+'x!');await Session.saveBalance();}
+let minesCount = 3;
+let gameActive = false;
+let betAmount = 0;
+let gemsFound = 0;
+let board = [];
+
+async function init() {
+  await Session.init();
+  if (!Session.isLoggedIn()) { location.href = '../login.html'; return; }
+  document.getElementById('username').textContent = window.currentUser.username;
+  document.getElementById('avatar').textContent = window.currentUser.username.charAt(0).toUpperCase();
+  document.getElementById('balance').textContent = '$' + window.balance.toLocaleString();
+  buildGrid();
+}
+
+function setMines(n) {
+  minesCount = n;
+  document.querySelectorAll('.select-btn').forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
+  buildGrid();
+}
+
+function buildGrid() {
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  for (let i = 0; i < 25; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'mine-cell';
+    cell.textContent = '?';
+    cell.onclick = () => reveal(i);
+    grid.appendChild(cell);
+  }
+}
+
+function startGame() {
+  const input = document.querySelector('input[type="number"]');
+  betAmount = parseInt(input.value) || 0;
+  if (!betAmount || betAmount < 1 || betAmount > window.balance) return;
+  
+  gameActive = true;
+  gemsFound = 0;
+  board = Array(25).fill(0);
+  let placed = 0;
+  while (placed < minesCount) {
+    let i = Math.floor(Math.random() * 25);
+    if (!board[i]) { board[i] = 1; placed++; }
+  }
+  
+  updateBalanceUI(window.balance - betAmount);
+  document.getElementById('play-btn').textContent = 'CASH OUT';
+  document.getElementById('play-btn').onclick = cashOut;
+  buildGrid();
+  updateInfo();
+}
+
+function reveal(i) {
+  if (!gameActive || board[i] === -1) return;
+  
+  const cells = document.querySelectorAll('.mine-cell');
+  if (board[i] === 1) {
+    cells[i].className = 'mine-cell mine';
+    cells[i].textContent = 'X';
+    gameActive = false;
+    document.getElementById('play-btn').textContent = 'START GAME';
+    document.getElementById('play-btn').onclick = startGame;
+  } else {
+    board[i] = -1;
+    gemsFound++;
+    cells[i].className = 'mine-cell gem';
+    cells[i].textContent = '$';
+    updateInfo();
+  }
+}
+
+function updateInfo() {
+  const mult = 1 + gemsFound * minesCount * 0.12;
+  const profit = Math.floor(betAmount * mult) - betAmount;
+  document.getElementById('multi').textContent = mult.toFixed(2) + 'x';
+  document.getElementById('profit').textContent = '$' + profit;
+  document.getElementById('gems').textContent = gemsFound;
+}
+
+function cashOut() {
+  if (!gameActive) return;
+  gameActive = false;
+  const mult = 1 + gemsFound * minesCount * 0.12;
+  const won = Math.floor(betAmount * mult);
+  updateBalanceUI(window.balance + won);
+  document.getElementById('play-btn').textContent = 'START GAME';
+  document.getElementById('play-btn').onclick = startGame;
+  Session.saveBalance();
+}
+
 init();
 </script>
 </body>

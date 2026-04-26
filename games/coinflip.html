@@ -5,265 +5,214 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FreshFlip - Coin Flip</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg-primary: #0a0e17;
-  --bg-secondary: #111827;
-  --bg-tertiary: #1a2332;
-  --bg-card: #162032;
-  --accent-primary: #00ff88;
-  --accent-secondary: #00cc6a;
-  --accent-glow: rgba(0, 255, 136, 0.4);
-  --gold: #ffd700;
-  --gold-dark: #b8860b;
-  --red-bright: #ff3366;
-  --blue-bright: #00d4ff;
-  --text-primary: #ffffff;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
-  --border-glow: rgba(0, 255, 136, 0.3);
-  --gradient-primary: linear-gradient(135deg, #00ff88 0%, #00cc6a 100%);
-  --gradient-gold: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%);
-  --shadow-glow: 0 0 30px rgba(0, 255, 136, 0.3);
+  --bg: #0f0f13;
+  --bg2: #1a1a23;
+  --bg3: #222230;
+  --accent: #00ff88;
+  --text: #fff;
+  --text2: #888;
+  --border: #2a2a35;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { background: var(--bg-primary); color: var(--text-primary); font-family: 'Inter', sans-serif; min-height: 100vh; }
 
-#app { display: none; flex-direction: column; min-height: 100vh; }
-
-header {
-  background: rgba(22, 32, 50, 0.95);
-  border-bottom: 1px solid var(--border-glow);
-  padding: 12px 24px;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  backdrop-filter: blur(20px);
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Space Grotesk', sans-serif;
+  min-height: 100vh;
 }
 
-.header-inner {
-  max-width: 1400px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.app { display: flex; min-height: 100vh; }
+
+.sidebar {
+  width: 240px;
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  padding: 20px 0;
+  flex-shrink: 0;
 }
 
 .logo {
-  font-family: 'Orbitron', sans-serif;
   font-size: 1.5rem;
   font-weight: 700;
-  letter-spacing: 3px;
-  background: var(--gradient-primary);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  cursor: pointer;
-  transition: all 0.3s;
-}
-
-.logo:hover { transform: scale(1.05); }
-
-.header-right {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.user-name {
-  font-weight: 600;
-  font-size: 0.9rem;
-  color: var(--text-secondary);
-}
-
-.balance-display {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(0, 0, 0, 0.3);
-  padding: 8px 16px;
-  border-radius: 50px;
-  border: 2px solid var(--accent-primary);
-}
-
-.balance-value {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--accent-primary);
-}
-
-.logout-btn {
-  background: transparent;
-  border: 1px solid var(--text-muted);
-  color: var(--text-secondary);
-  padding: 6px 14px;
-  border-radius: 50px;
-  cursor: pointer;
-  font-size: 0.7rem;
-  font-weight: 600;
-  transition: all 0.3s;
-}
-
-.logout-btn:hover {
-  border-color: var(--red-bright);
-  color: var(--red-bright);
-}
-
-main { flex: 1; padding: 30px 24px; max-width: 800px; margin: 0 auto; width: 100%; }
-
-.game-title {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 1.8rem;
-  font-weight: 700;
-  margin-bottom: 8px;
-}
-
-.game-subtitle {
-  color: var(--text-secondary);
-  font-size: 0.9rem;
-  margin-bottom: 24px;
-}
-
-.game-card {
-  background: var(--bg-card);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 16px;
-  padding: 24px;
+  padding: 0 20px 20px;
+  border-bottom: 1px solid var(--border);
   margin-bottom: 20px;
 }
 
-.section-label {
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: var(--text-secondary);
+.logo span { color: var(--accent); }
+
+.nav-section {
+  padding: 0 16px;
+  margin-bottom: 8px;
+}
+
+.nav-label {
+  font-size: 0.65rem;
+  color: var(--text2);
   text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
-.select-buttons {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 16px;
-}
-
-.select-btn {
-  flex: 1;
-  padding: 14px;
-  background: var(--bg-tertiary);
-  border: 2px solid rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
-  cursor: pointer;
-  transition: all 0.3s;
-  text-align: center;
-}
-
-.select-btn:hover {
-  border-color: var(--accent-primary);
-}
-
-.select-btn.active {
-  border-color: var(--accent-primary);
-  background: rgba(0, 255, 136, 0.1);
-}
-
-.select-btn .label {
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 1rem;
-  font-weight: 700;
-  margin-bottom: 4px;
-}
-
-.select-btn .sub {
-  font-size: 0.7rem;
-  color: var(--text-muted);
-}
-
-.bet-input-wrap {
-  display: flex;
-  align-items: center;
-  background: var(--bg-secondary);
-  border: 2px solid rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
-  margin-bottom: 12px;
-  transition: all 0.3s;
-}
-
-.bet-input-wrap:focus-within {
-  border-color: var(--accent-primary);
-  box-shadow: var(--shadow-glow);
-}
-
-.bet-currency {
-  color: var(--text-secondary);
-  padding: 0 14px;
-  font-family: 'Orbitron', sans-serif;
-  font-weight: 700;
-}
-
-.bet-input {
-  flex: 1;
-  background: transparent;
-  border: none;
-  padding: 14px 0;
-  color: var(--text-primary);
-  font-family: 'Orbitron', sans-serif;
-  font-size: 1.2rem;
-  font-weight: 700;
-  outline: none;
-}
-
-.quick-buttons {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-bottom: 16px;
-}
-
-.quick-btn {
-  padding: 8px 14px;
-  background: var(--bg-tertiary);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+.nav-link {
+  display: block;
+  padding: 10px 12px;
   border-radius: 8px;
-  color: var(--text-secondary);
-  cursor: pointer;
-  font-size: 0.75rem;
-  font-weight: 600;
+  color: var(--text);
+  text-decoration: none;
+  font-size: 0.9rem;
   transition: all 0.2s;
 }
 
-.quick-btn:hover {
-  border-color: var(--accent-primary);
-  color: var(--accent-primary);
+.nav-link:hover {
+  background: var(--bg3);
+}
+
+.nav-link.active {
+  background: var(--accent);
+  color: #000;
+}
+
+.main {
+  flex: 1;
+  padding: 30px;
+  overflow-y: auto;
+}
+
+.game-header {
+  margin-bottom: 30px;
+}
+
+.game-header h1 {
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+
+.game-header p {
+  color: var(--text2);
+}
+
+.game-content {
+  max-width: 500px;
+}
+
+.bet-section {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.bet-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.bet-btn {
+  padding: 10px 16px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+}
+
+.bet-btn:hover {
+  border-color: var(--accent);
+}
+
+.bet-btn.active {
+  background: var(--accent);
+  color: #000;
+  border-color: var(--accent);
 }
 
 .play-btn {
   width: 100%;
-  padding: 16px;
-  background: var(--gradient-primary);
+  padding: 14px;
+  background: var(--accent);
   border: none;
-  border-radius: 10px;
+  border-radius: 8px;
   color: #000;
-  font-family: 'Orbitron', sans-serif;
   font-size: 1rem;
   font-weight: 700;
-  letter-spacing: 2px;
   cursor: pointer;
-  transition: all 0.3s;
-  box-shadow: var(--shadow-glow);
 }
 
-.play-btn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 40px var(--accent-glow);
+.play-btn:hover {
+  background: #00dd77;
 }
 
-.play-btn:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
+.result {
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  display: none;
+}
+
+.result.show { display: block; }
+.result.win { background: rgba(0, 255, 136, 0.1); border: 1px solid var(--accent); }
+.result.lose { background: rgba(255, 71, 87, 0.1); border: 1px solid #ff4757; }
+
+.result-amount {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.result.win .result-amount { color: var(--accent); }
+.result.lose .result-amount { color: #ff4757; }
+
+.header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+}
+
+.balance {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.balance-label {
+  color: var(--text2);
+  font-size: 0.75rem;
+}
+
+.balance-value {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  background: var(--accent);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: #000;
 }
 
 .coin-display {
@@ -274,190 +223,162 @@ main { flex: 1; padding: 30px 24px; max-width: 800px; margin: 0 auto; width: 100
 }
 
 .coin {
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Orbitron', sans-serif;
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-weight: 700;
-  border: 4px solid;
-  background: var(--bg-card);
-  transition: all 0.3s;
+  border: 3px solid;
+  background: var(--bg3);
 }
 
 .coin.heads {
-  border-color: var(--gold);
-  background: linear-gradient(135deg, rgba(255, 215, 0, 0.2) 0%, var(--bg-card) 100%);
-  color: var(--gold);
+  border-color: #ffd700;
+  color: #ffd700;
 }
 
 .coin.tails {
-  border-color: var(--blue-bright);
-  background: linear-gradient(135deg, rgba(0, 212, 255, 0.2) 0%, var(--bg-card) 100%);
-  color: var(--blue-bright);
+  border-color: #3742fa;
+  color: #3742fa;
 }
 
-.coin.flipping {
-  animation: flip-coin 0.6s ease-in-out;
-}
-
-@keyframes flip-coin {
-  0% { transform: rotateY(0); }
-  50% { transform: rotateY(900deg); }
-  100% { transform: rotateY(1800deg); }
-}
-
-.result-box {
-  margin-top: 16px;
-  padding: 20px;
-  border-radius: 12px;
-  text-align: center;
-  display: none;
-}
-
-.result-box.win {
-  background: rgba(0, 255, 136, 0.1);
-  border: 2px solid rgba(0, 255, 136, 0.3);
-  display: block;
-}
-
-.result-box.lose {
-  background: rgba(255, 51, 102, 0.1);
-  border: 2px solid rgba(255, 51, 102, 0.3);
-  display: block;
-}
-
-.result-amount {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 1.8rem;
-  font-weight: 700;
-}
-
-.result-box.win .result-amount { color: var(--accent-primary); }
-.result-box.lose .result-amount { color: var(--red-bright); }
-
-.result-msg {
-  color: var(--text-secondary);
-  font-size: 0.85rem;
-  margin-top: 6px;
-}
-
-@media(max-width: 600px) {
-  .header-inner { flex-direction: column; gap: 12px; }
-  .select-buttons { flex-direction: column; }
+@media(max-width: 768px) {
+  .sidebar { display: none; }
 }
 </style>
 </head>
 <body>
-<div id="app">
-  <header>
-    <div class="header-inner">
-      <div class="logo" onclick="location.href='../index.html'">FRESHFLIP</div>
-      <div class="header-right">
-        <span class="user-name" id="nav-user"></span>
-        <div class="balance-display">
-          <span class="balance-value" id="nav-balance">$0</span>
-        </div>
-        <button class="logout-btn" onclick="Session.logout()">Sign Out</button>
-      </div>
-    </div>
-  </header>
-  
-  <main>
-    <h1 class="game-title">Coin Flip</h1>
-    <p class="game-subtitle">Pick heads or tails - double your bet</p>
+<div class="app">
+  <div class="sidebar">
+    <div class="logo">FRESH<span>FLIP</span></div>
     
-    <div class="game-card">
-      <p class="section-label">Choose Side</p>
-      <div class="select-buttons">
-        <div class="select-btn active" data-side="heads" onclick="selectSide('heads')">
-          <div class="label">HEADS</div>
-          <div class="sub">2x</div>
-        </div>
-        <div class="select-btn" data-side="tails" onclick="selectSide('tails')">
-          <div class="label">TAILS</div>
-          <div class="sub">2x</div>
-        </div>
+    <div class="nav-section">
+      <div class="nav-label">Games</div>
+      <a href="/mines" class="nav-link">Mines</a>
+      <a href="/crash" class="nav-link">Crash</a>
+      <a href="/hilo" class="nav-link">HiLo</a>
+      <a href="/dice" class="nav-link">Dice</a>
+      <a href="/coinflip" class="nav-link active">Coinflip</a>
+      <a href="/limbo" class="nav-link">Limbo</a>
+      <a href="/chicken" class="nav-link">Chicken</a>
+      <a href="/tower" class="nav-link">Dragon Tower</a>
+      <a href="/wheel" class="nav-link">Wheel</a>
+    </div>
+    
+    <div class="nav-section">
+      <div class="nav-label">Menu</div>
+      <a href="/livebets" class="nav-link">Live Bets</a>
+      <a href="/referrals" class="nav-link">Referrals</a>
+      <a href="/daily" class="nav-link">Daily Rewards</a>
+    </div>
+  </div>
+  
+  <div class="main">
+    <div class="header-bar">
+      <div class="balance">
+        <span class="balance-label">Balance</span>
+        <span class="balance-value" id="balance">$0</span>
       </div>
-      
-      <div class="coin-display">
-        <div class="coin heads" id="coin">H</div>
-      </div>
-      
-      <p class="section-label">Bet Amount</p>
-      <div class="bet-input-wrap">
-        <span class="bet-currency">$</span>
-        <input class="bet-input" id="cf-bet" type="number" placeholder="0">
-      </div>
-      <div class="quick-buttons">
-        <button class="quick-btn" onclick="setBet('cf-bet',10)">$10</button>
-        <button class="quick-btn" onclick="setBet('cf-bet',50)">$50</button>
-        <button class="quick-btn" onclick="setBet('cf-bet',100)">$100</button>
-        <button class="quick-btn" onclick="halfBet('cf-bet')">1/2</button>
-        <button class="quick-btn" onclick="doubleBet('cf-bet')">2x</button>
-      </div>
-      <button class="play-btn" id="cf-btn" onclick="playCoinflip()">FLIP</button>
-      
-      <div class="result-box" id="cf-result">
-        <div class="result-amount" id="cf-result-amount"></div>
-        <div class="result-msg" id="cf-result-msg"></div>
+      <div class="user">
+        <span id="username">User</span>
+        <div class="user-avatar" id="avatar">U</div>
       </div>
     </div>
-  </main>
+    
+    <div class="game-header">
+      <h1>Coinflip</h1>
+      <p>Pick a side and flip the coin! 1.85x payout on a win.</p>
+    </div>
+    
+    <div class="game-content">
+      <div class="bet-section">
+        <div class="bet-row">
+          <button class="bet-btn active" onclick="pickSide('heads')">Heads</button>
+          <button class="bet-btn" onclick="pickSide('tails')">Tails</button>
+        </div>
+        
+        <div class="coin-display">
+          <div class="coin heads" id="coin">H</div>
+        </div>
+        
+        <div class="bet-row">
+          <button class="bet-btn" onclick="setBet(10)">+$10</button>
+          <button class="bet-btn" onclick="setBet(50)">+$50</button>
+          <button class="bet-btn" onclick="setBet(100)">+$100</button>
+        </div>
+        
+        <input type="number" placeholder="Bet Amount" id="bet-input" style="width:100%;padding:12px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);margin-bottom:12px;font-size:1rem;">
+        
+        <button class="play-btn" onclick="play()">FLIP COIN</button>
+      </div>
+      
+      <div class="result win" id="result">
+        <div class="result-amount" id="result-amount">+$0</div>
+        <div class="result-msg" id="result-msg">Won!</div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script src="../js/auth.js"></script>
 <script>
-let cfSide = 'heads';
+let side = 'heads';
 
 async function init() {
   await Session.init();
   if (!Session.isLoggedIn()) { location.href = '../login.html'; return; }
-  document.getElementById('app').style.display = 'flex';
-  document.getElementById('nav-user').textContent = window.currentUser.username;
-  updateBalanceUI(window.balance);
+  document.getElementById('username').textContent = window.currentUser.username;
+  document.getElementById('avatar').textContent = window.currentUser.username.charAt(0).toUpperCase();
+  document.getElementById('balance').textContent = '$' + window.balance.toLocaleString();
 }
 
-function selectSide(s) {
-  cfSide = s;
-  document.querySelectorAll('.select-btn').forEach(b => {
-    b.classList.toggle('active', b.dataset.side === s);
+function pickSide(s) {
+  side = s;
+  document.querySelectorAll('.bet-row .bet-btn').forEach((btn, i) => {
+    btn.classList.toggle('active', i === (s === 'heads' ? 0 : 1));
   });
-  const coin = document.getElementById('coin');
-  coin.className = 'coin ' + s;
-  coin.textContent = s === 'heads' ? 'H' : 'T';
+  document.getElementById('coin').className = 'coin ' + s;
+  document.getElementById('coin').textContent = s === 'heads' ? 'H' : 'T';
 }
 
-async function playCoinflip() {
-  const bet = getBet('cf-bet');
-  if (!bet || bet < 1) return;
-  if (bet > window.balance) return;
+function setBet(amount) {
+  const input = document.getElementById('bet-input');
+  input.value = (parseInt(input.value) || 0) + amount;
+}
+
+async function play() {
+  const bet = parseInt(document.getElementById('bet-input').value) || 0;
+  if (!bet || bet < 1 || bet > window.balance) return;
   
-  const btn = document.getElementById('cf-btn');
-  btn.disabled = true;
-  document.getElementById('cf-result').className = 'result-box';
-  
+  const result = document.getElementById('result');
   const coin = document.getElementById('coin');
-  coin.className = 'coin flipping';
+  coin.style.transform = 'rotateY(720deg)';
   
-  await sleep(650);
+  await new Promise(r => setTimeout(r, 600));
+  
   const win = biasedWin();
-  const result = win ? cfSide : (cfSide === 'heads' ? 'tails' : 'heads');
-  coin.className = 'coin ' + result;
-  coin.textContent = result === 'heads' ? 'H' : 'T';
+  const outcome = win ? side : (side === 'heads' ? 'tails' : 'heads');
+  coin.className = 'coin ' + outcome;
+  coin.textContent = outcome === 'heads' ? 'H' : 'T';
+  coin.style.transform = 'rotateY(0)';
   
+  const won = win ? Math.floor(bet * 1.85) : 0;
   if (win) {
-    updateBalanceUI(window.balance + bet);
-    showResult('cf', true, bet, 'Won!');
+    updateBalanceUI(window.balance + won - bet);
+    result.className = 'result show win';
+    document.getElementById('result-amount').textContent = '+$' + won;
+    document.getElementById('result-msg').textContent = 'Won!';
   } else {
     updateBalanceUI(window.balance - bet);
-    showResult('cf', false, bet, 'Lost.');
+    result.className = 'result show lose';
+    document.getElementById('result-amount').textContent = '-$' + bet;
+    document.getElementById('result-msg').textContent = 'Lost!';
   }
-  await Session.saveBalance();
-  btn.disabled = false;
+  Session.saveBalance();
+  document.getElementById('balance').textContent = '$' + window.balance.toLocaleString();
 }
 
 init();
