@@ -3,52 +3,213 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FreshFlip Casino</title>
+<title>FreshFlip - Login</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-:root { --bg: #0c0f12; --surface: #1a1f26; --bg2: #101418; --border: #343d4a; --accent: #00b060; --accent2: #009050; --text: #d0d8e0; --text2: #8898a8; --text3: #586878; --red: #d83848; --gold: #c89020; }
+:root {
+  --bg-primary: #0a0e17;
+  --bg-secondary: #111827;
+  --bg-tertiary: #1a2332;
+  --bg-card: #162032;
+  --accent-primary: #00ff88;
+  --accent-secondary: #00cc6a;
+  --accent-glow: rgba(0, 255, 136, 0.4);
+  --text-primary: #ffffff;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --red-bright: #ff3366;
+  --border-glow: rgba(0, 255, 136, 0.3);
+  --blue-bright: #5865F2;
+  --gradient-primary: linear-gradient(135deg, #00ff88 0%, #00cc6a 100%);
+  --gradient-discord: linear-gradient(135deg, #5865F2 0%, #424549 100%);
+  --shadow-glow: 0 0 30px rgba(0, 255, 136, 0.3);
+}
+
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+body { background: var(--bg-primary); color: var(--text-primary); font-family: 'Inter', sans-serif; min-height: 100vh; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
 
-.auth-container { width: 100%; max-width: 360px; padding: 20px; }
-.auth-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 28px; box-shadow: 0 16px 48px rgba(0,0,0,0.5); }
-.auth-logo { text-align: center; margin-bottom: 24px; }
-.auth-logo h1 { font-family: 'Rajdhani', sans-serif; font-size: 2rem; font-weight: 700; letter-spacing: 3px; color: var(--text); }
-.auth-logo h1 b { color: var(--accent); }
-.auth-logo p { color: var(--text2); font-size: 0.55rem; letter-spacing: 3px; text-transform: uppercase; margin-top: 4px; }
-.auth-tagline { text-align: center; color: var(--text2); font-size: 0.8rem; margin-bottom: 20px; }
+body::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(ellipse at 30% 30%, rgba(0, 255, 136, 0.1) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 70%, rgba(88, 101, 242, 0.08) 0%, transparent 50%);
+  pointer-events: none;
+}
 
-.auth-field { margin-bottom: 14px; }
-.auth-field label { display: block; color: var(--text2); font-size: 0.6rem; font-weight: 500; text-transform: uppercase; margin-bottom: 6px; }
-.auth-field input { width: 100%; background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; color: var(--text); font-size: 0.9rem; outline: none; }
-.auth-field input:focus { border-color: var(--accent); }
+.auth-container { width: 100%; max-width: 400px; padding: 20px; position: relative; z-index: 1; }
 
-.auth-btn { width: 100%; padding: 14px; background: var(--accent); border: none; border-radius: 8px; color: #000; font-family: 'Rajdhani', sans-serif; font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: all 0.2s; }
-.auth-btn:hover:not(:disabled) { background: var(--accent2); transform: translateY(-1px); }
-.auth-btn:disabled { opacity: 0.5; }
+.auth-card {
+  background: rgba(22, 32, 50, 0.95);
+  border: 1px solid var(--border-glow);
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: var(--shadow-glow), 0 20px 60px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(20px);
+}
 
-.auth-btn.discord { background: #5865F2; color: #fff; margin-bottom: 12px; }
-.auth-btn.discord:hover:not(:disabled) { background: #4752C8; }
-.auth-btn.secondary { background: var(--bg2); color: var(--text); border: 1px solid var(--border); }
-.auth-btn.secondary:hover:not(:disabled) { border-color: var(--accent); color: var(--text); }
+.auth-logo {
+  text-align: center;
+  margin-bottom: 8px;
+}
 
-.divider { display: flex; align-items: center; gap: 12px; margin: 16px 0; }
-.divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-.divider span { color: var(--text3); font-size: 0.65rem; text-transform: uppercase; }
+.auth-logo h1 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 4px;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
 
-.auth-msg { text-align: center; margin-top: 12px; padding: 10px; border-radius: 6px; font-size: 0.75rem; display: none; }
-.auth-msg.error { background: rgba(216,56,72,0.15); color: var(--red); display: block; }
-.auth-msg.success { background: rgba(0,176,96,0.15); color: var(--accent); display: block; }
+.auth-logo p {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+.auth-subtitle {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-bottom: 24px;
+}
+
+.auth-btn {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 10px;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-bottom: 12px;
+}
+
+.discord-btn {
+  background: var(--gradient-discord);
+  color: #fff;
+  box-shadow: 0 4px 20px rgba(88, 101, 242, 0.3);
+}
+
+.discord-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(88, 101, 242, 0.4);
+}
+
+.discord-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.divider::before, .divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.divider span {
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+}
+
+.auth-field { margin-bottom: 12px; }
+
+.auth-field label {
+  display: block;
+  color: var(--text-secondary);
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.auth-field input {
+  width: 100%;
+  background: var(--bg-secondary);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 12px 14px;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  outline: none;
+  transition: all 0.3s;
+}
+
+.auth-field input:focus {
+  border-color: var(--accent-primary);
+  box-shadow: var(--shadow-glow);
+}
+
+.auth-field input::placeholder {
+  color: var(--text-muted);
+}
+
+.login-btn {
+  background: var(--gradient-primary);
+  color: #000;
+  box-shadow: var(--shadow-glow);
+}
+
+.login-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px var(--accent-glow);
+}
+
+.login-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.auth-msg {
+  text-align: center;
+  margin-top: 12px;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  display: none;
+}
+
+.auth-msg.error {
+  background: rgba(255, 51, 102, 0.1);
+  border: 1px solid rgba(255, 51, 102, 0.3);
+  color: var(--red-bright);
+  display: block;
+}
+
+.auth-msg.success {
+  background: rgba(0, 255, 136, 0.1);
+  border: 1px solid rgba(0, 255, 136, 0.3);
+  color: var(--accent-primary);
+  display: block;
+}
 </style>
 </head>
 <body>
 <div class="auth-container">
   <div class="auth-card">
-    <div class="auth-logo"><h1>FRESH<b>FLIP</b></h1><p>Premium Casino</p></div>
-    <p class="auth-tagline">Sign in with Discord to play</p>
+    <div class="auth-logo">
+      <h1>FRESEFLIP</h1>
+      <p>Premium Casino</p>
+    </div>
+    <p class="auth-subtitle">Sign in to play</p>
     
-    <button class="auth-btn discord" onclick="doDiscordLogin()">CONTINUE WITH DISCORD</button>
+    <button class="auth-btn discord-btn" id="discord-btn" onclick="doDiscordLogin()">CONTINUE WITH DISCORD</button>
     
     <div class="divider"><span>or</span></div>
     
@@ -60,16 +221,14 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-ser
       <label>Password</label>
       <input type="password" id="login-pass" placeholder="Your password">
     </div>
-    <button class="auth-btn secondary" onclick="doLogin()">SIGN IN</button>
+    <button class="auth-btn login-btn" id="login-btn" onclick="doLogin()">SIGN IN</button>
     
     <div class="auth-msg" id="auth-msg"></div>
   </div>
 </div>
+
 <script src="js/auth.js"></script>
 <script>
-const urlParams = new URLSearchParams(window.location.search);
-const refParam = urlParams.get('ref');
-
 function setMsg(msg, type) {
   const el = document.getElementById('auth-msg');
   if (!msg) { el.style.display = 'none'; return; }
@@ -81,7 +240,7 @@ async function doLogin() {
   const u = document.getElementById('login-user').value.trim();
   const p = document.getElementById('login-pass').value;
   if (!u || !p) { setMsg('Fill all fields.', 'error'); return; }
-  const btn = event.target;
+  const btn = document.getElementById('login-btn');
   btn.disabled = true; btn.textContent = 'SIGNING IN...';
   try { await Session.login(u, p); window.location.href = 'index.html'; }
   catch(e) { setMsg(e.message, 'error'); }
@@ -89,11 +248,13 @@ async function doLogin() {
 }
 
 async function doDiscordLogin() {
+  const btn = document.getElementById('discord-btn');
+  btn.disabled = true;
   const { data, error } = await sb.auth.signInWithOAuth({ 
     provider: 'discord',
     options: { redirectTo: 'https://freshflip.vercel.app/login.html' }
   });
-  if (error) { setMsg(error.message, 'error'); }
+  if (error) { setMsg(error.message, 'error'); btn.disabled = false; }
 }
 
 sb.auth.onAuthStateChange((event, session) => {
@@ -117,9 +278,9 @@ async function handleDiscordUser(session) {
 
 function showDiscordUsernameModal(email) {
   document.querySelector('.auth-card').innerHTML = `
-    <div class="auth-logo"><h1>FRESH<b>FLIP</b></h1><p>Premium Casino</p></div>
-    <p class="auth-tagline" style="color:var(--accent);">New Discord Account</p>
-    <p class="auth-tagline">${email}</p>
+    <div class="auth-logo"><h1>FRESEFLIP</h1><p>Premium Casino</p></div>
+    <p class="auth-subtitle" style="color:var(--accent-primary);">New Discord Account</p>
+    <p class="auth-subtitle">${email}</p>
     <div class="auth-field">
       <label>Choose Username</label>
       <input type="text" id="discord-username" placeholder="Username">
@@ -132,7 +293,7 @@ function showDiscordUsernameModal(email) {
       <label>Referral Code (optional)</label>
       <input type="text" id="signup-referral" placeholder="Enter code">
     </div>
-    <button class="auth-btn" id="discord-finish-btn">CREATE ACCOUNT</button>
+    <button class="auth-btn login-btn" id="discord-finish-btn">CREATE ACCOUNT</button>
   `;
   document.getElementById('discord-finish-btn').onclick = () => finishDiscordSignup(email);
 }
