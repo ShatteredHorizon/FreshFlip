@@ -34,6 +34,8 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-ser
 .auth-msg { text-align: center; margin-top: 8px; padding: 6px; border-radius: 3px; font-size: 0.7rem; display: none; }
 .auth-msg.error { background: rgba(216,56,72,0.15); color: var(--red); display: block; }
 .auth-msg.success { background: rgba(0,176,96,0.15); color: var(--accent); display: block; }
+<.auth-btn.discord { background: #5865F2; color: #fff; margin-bottom: 8px; }
+.auth-btn.discord:hover:not(:disabled) { background: #4752C8; }
 </style>
 </head>
 <body>
@@ -45,11 +47,15 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-ser
       <button class="auth-tab" data-tab="signup" onclick="switchTab('signup')">Register</button>
     </div>
     <div id="login-form">
+      <button class="auth-btn discord" id="discord-btn" onclick="doDiscordLogin()">SIGN IN WITH DISCORD</button>
+      <p style="text-align:center;color:var(--text3);font-size:0.6rem;margin:8px 0;">- or -</p>
       <div class="auth-field"><label>Username</label><input type="text" id="login-user" placeholder="Enter username"></div>
       <div class="auth-field"><label>Password</label><input type="password" id="login-pass" placeholder="Enter password"></div>
       <button class="auth-btn" id="login-btn" onclick="doLogin()">SIGN IN</button>
     </div>
     <div id="signup-form" style="display:none">
+      <button class="auth-btn discord" id="signup-discord-btn" onclick="doDiscordSignup()">REGISTER WITH DISCORD</button>
+      <p style="text-align:center;color:var(--text3);font-size:0.6rem;margin:8px 0;">- or -</p>
       <div class="auth-field"><label>Username</label><input type="text" id="signup-user" placeholder="Choose username"></div>
       <div class="auth-field"><label>Email</label><input type="email" id="signup-email" placeholder="your@email.com"></div>
       <div class="auth-field"><label>Password</label><input type="password" id="signup-pass" placeholder="Min 6 characters"></div>
@@ -98,6 +104,88 @@ async function doLogin() {
   try { await Session.login(u, p); window.location.href = 'games/coinflip.html'; }
   catch(e) { setMsg(e.message, 'error'); }
   finally { btn.disabled = false; btn.textContent = 'SIGN IN'; }
+}
+
+let pendingDiscordUser = null;
+
+async function doDiscordLogin() {
+  const { data, error } = await sb.auth.signInWithOAuth({ provider: 'discord' });
+  if (error) { setMsg(error.message, 'error'); }
+}
+
+async function doDiscordSignup() {
+  doDiscordLogin();
+}
+
+sb.auth.onAuthStateChange((event, session) => {
+  if (event === 'SIGNED_IN' && session) {
+    handleDiscordUser(session);
+  }
+});
+
+async function handleDiscordUser(session) {
+  const email = session.user.email;
+  const username = session.user.user_metadata.name || session.user.user_metadata.full_name || 'DiscordUser';
+  
+  let { data: existing } = await sb.from('users').select('*').eq('email', email).maybeSingle();
+  
+  if (existing) {
+    await loginWithDiscord(existing);
+  } else {
+    showDiscordUsernameModal(email, username);
+  }
+}
+
+function showDiscordUsernameModal(email, defaultUsername) {
+  document.getElementById('signup-form').innerHTML = `
+    <p style="color:var(--accent);font-size:0.7rem;margin-bottom:10px;">Verify Discord Account</p>
+    <p style="color:var(--text2);font-size:0.65rem;margin-bottom:10px;">${email}</p>
+    <div class="auth-field"><label>Choose Username</label><input type="text" id="discord-username" placeholder="Username" value="${defaultUsername}"></div>
+    <div class="auth-field"><label>Referral Code (optional)</label><input type="text" id="signup-referral" placeholder="Enter code"></div>
+    <button class="auth-btn" id="discord-finish-btn">COMPLETE SIGNUP</button>
+  `;
+  document.getElementById('discord-finish-btn').onclick = () => finishDiscordSignup(email);
+  switchTab('signup');
+}
+
+async function finishDiscordSignup(email) {
+  const username = document.getElementById('discord-username').value.trim();
+  const ref = document.getElementById('signup-referral').value.trim().toUpperCase();
+  if (!username || username.length < 3) { setMsg('Username min 3 chars.', 'error'); return; }
+  
+  let referrerId = null, newBalance = 1000;
+  if (ref) {
+    const { data: refData } = await sb.from('users').select('id').eq('referral_code', ref).maybeSingle();
+    if (refData) { referrerId = refData.id; newBalance = 11000; }
+  }
+  
+  const u = session.user;
+  
+  const { error } = await sb.from('users').insert({
+    username: username,
+    email: email,
+    discord_id: u.id,
+    balance: newBalance,
+    referred_by: referrerId
+  });
+  
+  if (error) {
+    if (error.code === '23505') setMsg('Username taken.', 'error');
+    else setMsg(error.message, 'error');
+    return;
+  }
+  
+  const { data: user } = await sb.from('users').select('*').eq('email', email).maybeSingle();
+  await loginWithDiscord(user);
+}
+
+async function loginWithDiscord(user) {
+  await loadSettings();
+  const sessionData = { user: user, balance: user.balance, winChance: window.WIN_CHANCE };
+  localStorage.setItem('ff_session', JSON.stringify(sessionData));
+  window.currentUser = user;
+  window.balance = user.balance;
+  window.location.href = 'games/coinflip.html';
 }
 
 async function doSignup() {
