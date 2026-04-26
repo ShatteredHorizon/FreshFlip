@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FreshFlip Casino</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bcryptjs@2.4.3/bCrypt.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{--bg:#0f1923;--surface:#1a2634;--surface2:#213040;--border:#2a3f52;--accent:#00e701;--accent2:#00b300;--text:#e8f4f8;--muted:#7a9bb5;--red:#ff4757;--gold:#f5a623;--blue:#1e90ff;}
@@ -110,7 +109,7 @@
 </style>
 </head>
 <body>
- 
+
 <div id="auth-screen">
   <div class="auth-box">
     <div class="auth-logo">
@@ -134,7 +133,7 @@
     <div class="auth-msg" id="auth-msg"></div>
   </div>
 </div>
- 
+
 <div id="app">
   <nav>
     <div class="nav-logo">⚡ FRESHFLIP</div>
@@ -234,42 +233,52 @@
     </main>
   </div>
 </div>
- 
+
 <script>
 // ===================== CONFIG =====================
 const SUPABASE_URL = 'https://ghaojptkyxxvxdzmdzpk.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_7P8N45QLtr-RIvapvUVnPg_4yWwE615';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdoYW9qcHRreXh4dnhkem1kenBrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcxNDMyNDgsImV4cCI6MjA5MjcxOTI0OH0.mQ9QoyIj_3iF7T9hWZ5y8iMv_bDMgoTIcDjR-4S3Dpk';
 // ==================================================
- 
+
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 let currentUser = null;
 let balance = 0;
- 
-function hashPassword(password) {
-  return new Promise((resolve) => {
-    dcodeIO.bcrypt.hash(password, 10, null, (err, hash) => resolve(hash));
-  });
+
+// Password hashing using built-in Web Crypto API — no external library needed
+async function hashPassword(password) {
+  const encoder = new TextEncoder();
+  const salt = crypto.getRandomValues(new Uint8Array(16));
+  const keyMaterial = await crypto.subtle.importKey('raw', encoder.encode(password), 'PBKDF2', false, ['deriveBits']);
+  const hashBuffer = await crypto.subtle.deriveBits({name:'PBKDF2', salt, iterations:100000, hash:'SHA-256'}, keyMaterial, 256);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const saltArray = Array.from(salt);
+  return btoa(JSON.stringify({salt: saltArray, hash: hashArray}));
 }
- 
-function comparePassword(password, hash) {
-  return new Promise((resolve) => {
-    dcodeIO.bcrypt.compare(password, hash, null, (err, result) => resolve(result));
-  });
+
+async function verifyPassword(password, stored) {
+  try {
+    const {salt, hash} = JSON.parse(atob(stored));
+    const encoder = new TextEncoder();
+    const keyMaterial = await crypto.subtle.importKey('raw', encoder.encode(password), 'PBKDF2', false, ['deriveBits']);
+    const hashBuffer = await crypto.subtle.deriveBits({name:'PBKDF2', salt: new Uint8Array(salt), iterations:100000, hash:'SHA-256'}, keyMaterial, 256);
+    const newHash = Array.from(new Uint8Array(hashBuffer));
+    return newHash.every((v, i) => v === hash[i]);
+  } catch { return false; }
 }
- 
+
 function switchTab(t) {
   document.getElementById('login-form').style.display = t==='login'?'block':'none';
   document.getElementById('signup-form').style.display = t==='signup'?'block':'none';
   document.querySelectorAll('.auth-tab').forEach((el,i)=>el.classList.toggle('active',(t==='login'&&i===0)||(t==='signup'&&i===1)));
   setMsg('','');
 }
- 
+
 function setMsg(msg, type) {
   const el = document.getElementById('auth-msg');
   el.className = 'auth-msg'+(type?' '+type:'');
   el.textContent = msg;
 }
- 
+
 async function signup() {
   const u = document.getElementById('signup-user').value.trim();
   const p = document.getElementById('signup-pass').value;
@@ -292,7 +301,7 @@ async function signup() {
     btn.disabled=false; btn.textContent='CREATE ACCOUNT';
   }
 }
- 
+
 async function login() {
   const u = document.getElementById('login-user').value.trim();
   const p = document.getElementById('login-pass').value;
@@ -303,7 +312,7 @@ async function login() {
     const {data, error} = await sb.from('users').select('*').eq('username', u).maybeSingle();
     if (error) { setMsg('DB error: '+error.message,'err'); return; }
     if (!data) { setMsg('Username not found.','err'); return; }
-    const ok = await comparePassword(p, data.password);
+    const ok = await verifyPassword(p, data.password);
     if (!ok) { setMsg('Wrong password.','err'); return; }
     currentUser = data;
     balance = data.balance;
@@ -314,50 +323,50 @@ async function login() {
     btn.disabled=false; btn.textContent='LOGIN';
   }
 }
- 
+
 function enterApp() {
   document.getElementById('auth-screen').style.display='none';
   document.getElementById('app').style.display='flex';
   document.getElementById('nav-user').textContent = currentUser.username;
   updateBalanceUI(balance);
 }
- 
+
 function logout() {
   currentUser=null; balance=0;
   document.getElementById('auth-screen').style.display='flex';
   document.getElementById('app').style.display='none';
 }
- 
+
 async function saveBalance() {
   if (!currentUser) return;
   await sb.from('users').update({balance}).eq('id', currentUser.id);
 }
- 
+
 function updateBalanceUI(b) {
   balance = Math.max(0, b);
   document.getElementById('nav-balance').textContent = '$'+balance.toLocaleString();
 }
- 
+
 function showGame(g, el) {
   document.querySelectorAll('.game-panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.sidebar-item').forEach(s=>s.classList.remove('active'));
   document.getElementById('panel-'+g).classList.add('active');
   el.classList.add('active');
 }
- 
+
 function setBet(id,v){document.getElementById(id).value=v;}
 function halfBet(id){const v=parseFloat(document.getElementById(id).value)||0;document.getElementById(id).value=Math.max(1,Math.floor(v/2));}
 function doubleBet(id){const v=parseFloat(document.getElementById(id).value)||0;document.getElementById(id).value=Math.floor(v*2);}
 function getBet(id){return Math.floor(parseFloat(document.getElementById(id).value)||0);}
 function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
- 
+
 function showResult(prefix, win, amount, msg) {
   const box = document.getElementById(prefix+'-result');
   box.className = 'result-box '+(win?'win':'lose');
   document.getElementById(prefix+'-result-amount').textContent = (win?'+':'-')+'$'+Math.abs(amount).toLocaleString();
   document.getElementById(prefix+'-result-msg').textContent = msg;
 }
- 
+
 // COINFLIP
 let cfSide = 'heads';
 function selectSide(s) {
@@ -367,11 +376,11 @@ function selectSide(s) {
   coin.className='coin '+(s==='heads'?'heads':'tails');
   coin.textContent=s==='heads'?'👑':'🌊';
 }
- 
+
 async function playCoinflip() {
   const bet=getBet('cf-bet');
-  if (!bet||bet<1){alert('Enter a valid bet.');return;}
-  if (bet>balance){alert('Not enough balance.');return;}
+  if(!bet||bet<1){alert('Enter a valid bet.');return;}
+  if(bet>balance){alert('Not enough balance.');return;}
   const btn=document.getElementById('cf-btn');
   btn.disabled=true;
   document.getElementById('cf-result').className='result-box';
@@ -387,11 +396,11 @@ async function playCoinflip() {
   await saveBalance();
   btn.disabled=false;
 }
- 
+
 // MINES
 let minesActive=false,minesBoard=[],minesGemsFound=0,minesBet=0,minesCount=0;
 function getMinesMulti(gems,mines){if(gems===0)return 1;return Math.max(1,parseFloat((1+gems*mines*0.12).toFixed(2)));}
- 
+
 function buildMinesGrid(locked) {
   const grid=document.getElementById('mines-grid');
   grid.innerHTML='';
@@ -403,7 +412,7 @@ function buildMinesGrid(locked) {
     grid.appendChild(el);
   });
 }
- 
+
 async function startMines() {
   const bet=getBet('mines-bet');
   if(!bet||bet<1){alert('Enter a valid bet.');return;}
@@ -420,7 +429,7 @@ async function startMines() {
   document.getElementById('mines-result').className='result-box';
   updateMinesInfo();buildMinesGrid(false);
 }
- 
+
 function revealCell(i) {
   if(!minesActive||minesBoard[i].revealed)return;
   minesBoard[i].revealed=true;
@@ -437,7 +446,7 @@ function revealCell(i) {
     if(25-minesCount-minesGemsFound===0)cashoutMines();
   }
 }
- 
+
 function updateMinesInfo() {
   const multi=getMinesMulti(minesGemsFound,minesCount);
   const profit=Math.floor(minesBet*multi)-minesBet;
@@ -445,7 +454,7 @@ function updateMinesInfo() {
   document.getElementById('mines-profit').textContent='$'+profit;
   document.getElementById('mines-gems').textContent=minesGemsFound;
 }
- 
+
 async function cashoutMines() {
   if(!minesActive)return;
   minesActive=false;
@@ -459,11 +468,11 @@ async function cashoutMines() {
   showResult('mines',true,won-minesBet,'Cashed out at '+multi.toFixed(2)+'x!');
   await saveBalance();
 }
- 
+
 // ROULETTE
 const RED_NUMS=[1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36];
 let rBet=null;
- 
+
 function buildWheel(){
   const svg=document.getElementById('roulette-svg');
   const nums=[0,32,15,19,4,21,2,25,17,34,6,27,13,36,11,30,8,23,10,5,24,16,33,1,20,14,31,9,22,18,29,7,28,12,35,3,26];
@@ -480,12 +489,12 @@ function buildWheel(){
   html+=`<circle cx="${cx}" cy="${cy}" r="18" fill="#0f1923" stroke="#2a3f52" stroke-width="2"/>`;
   svg.innerHTML=html;
 }
- 
+
 function selectRBet(b){
   rBet=b;
   document.querySelectorAll('.roulette-bet-btn').forEach(el=>el.classList.toggle('active',el.dataset.bet===b));
 }
- 
+
 async function spinRoulette(){
   if(!rBet){alert('Select a bet type first.');return;}
   const bet=getBet('r-bet');
@@ -518,7 +527,7 @@ async function spinRoulette(){
   await saveBalance();
   btn.disabled=false;
 }
- 
+
 buildWheel();
 </script>
 </body>
