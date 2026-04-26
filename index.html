@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FreshFlip Casino</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="js/auth.js"></script>
+<script>
+async function init() {
+  await Session.init();
+  if (Session.isLoggedIn()) {
+    window.location.href = 'games/coinflip.html';
+  } else {
+    window.location.href = 'login.html';
+  }
+}
+init();
+</script>
+</head>
+<body style="background:#080e14;color:#ddeeff;display:flex;align-items:center;justify-content:center;min-height:100vh;">
+<p>Loading...</p>
+</body>
+</html>

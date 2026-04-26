@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FreshFlip Casino - Sign In</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #080e14;
+  --bg2: #0c1520;
+  --surface: #111d2b;
+  --surface2: #162333;
+  --surface3: #1c2d40;
+  --border: #1f3248;
+  --border2: #264060;
+  --accent: #00c74d;
+  --accent2: #00a33e;
+  --accent-glow: rgba(0,199,77,0.15);
+  --text: #ddeeff;
+  --text2: #8aaec8;
+  --red: #e84545;
+  --red-glow: rgba(232,69,69,0.15);
+  --gold: #e8a020;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; min-height:100vh; display:flex; align-items:center; justify-content:center; overflow-x:hidden; }
+#auth-screen { position:fixed; inset:0; background:var(--bg); display:flex; align-items:center; justify-content:center; z-index:100; }
+#auth-screen::before { content:''; position:fixed; inset:0; background:radial-gradient(ellipse at 50% 0%, rgba(0,199,77,0.06) 0%, transparent 70%); pointer-events:none; }
+.auth-box { background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:44px; width:400px; max-width:95vw; position:relative; box-shadow:0 0 60px rgba(0,0,0,0.6); }
+.auth-logo { text-align:center; margin-bottom:36px; }
+.auth-logo .logo-icon { font-size:2rem; margin-bottom:10px; color:var(--accent); display:block; letter-spacing:-2px; }
+.auth-logo h1 { font-family:'Rajdhani',sans-serif; font-size:2rem; font-weight:700; color:var(--text); letter-spacing:4px; }
+.auth-logo h1 span { color:var(--accent); }
+.auth-logo p { color:var(--text2); font-size:0.75rem; margin-top:6px; letter-spacing:3px; text-transform:uppercase; }
+.auth-tabs { display:flex; gap:4px; background:var(--bg2); border-radius:12px; padding:4px; margin-bottom:28px; border:1px solid var(--border); }
+.auth-tab { flex:1; padding:10px; border:none; background:transparent; color:var(--text2); border-radius:9px; cursor:pointer; font-family:'Inter',sans-serif; font-size:0.88rem; font-weight:500; transition:all .2s; }
+.auth-tab.active { background:var(--surface2); color:var(--text); box-shadow:0 2px 8px rgba(0,0,0,0.3); }
+.auth-label { color:var(--text2); font-size:0.75rem; font-weight:500; letter-spacing:0.5px; margin-bottom:6px; display:block; text-transform:uppercase; }
+.auth-input { width:100%; background:var(--bg2); border:1px solid var(--border); border-radius:10px; padding:13px 16px; color:var(--text); font-family:'Inter',sans-serif; font-size:0.95rem; margin-bottom:16px; outline:none; transition:all .2s; }
+.auth-input:focus { border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-glow); }
+.auth-btn { width:100%; padding:14px; background:var(--accent); border:none; border-radius:11px; color:#000; font-family:'Rajdhani',sans-serif; font-size:1.1rem; font-weight:700; letter-spacing:1.5px; cursor:pointer; transition:all .2s; margin-top:4px; }
+.auth-btn:hover:not(:disabled) { background:var(--accent2); transform:translateY(-1px); box-shadow:0 6px 20px rgba(0,199,77,0.3); }
+.auth-btn:disabled { opacity:.5; cursor:not-allowed; }
+.auth-msg { font-size:0.82rem; text-align:center; margin-top:14px; min-height:18px; padding:8px; border-radius:8px; }
+.auth-msg.err { color:var(--red); background:var(--red-glow); }
+.auth-msg.ok { color:var(--accent); background:var(--accent-glow); }
+.back-link { text-align:center; margin-top:20px; }
+.back-link a { color:var(--text2); font-size:0.85rem; text-decoration:none; }
+.back-link a:hover { color:var(--accent); }
+</style>
+</head>
+<body>
+<div id="auth-screen">
+  <div class="auth-box">
+    <div class="auth-logo">
+      <span class="logo-icon">◆</span>
+      <h1>FRESH<span>FLIP</span></h1>
+      <p>FreshSMP Casino</p>
+    </div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchTab('login')">Sign In</button>
+      <button class="auth-tab" onclick="switchTab('signup')">Register</button>
+    </div>
+    <div id="login-form">
+      <span class="auth-label">Username</span>
+      <input class="auth-input" id="login-user" type="text" placeholder="Enter your username">
+      <span class="auth-label">Password</span>
+      <input class="auth-input" id="login-pass" type="password" placeholder="Enter your password">
+      <button class="auth-btn" id="login-btn" onclick="doLogin()">SIGN IN</button>
+    </div>
+    <div id="signup-form" style="display:none">
+      <span class="auth-label">Username</span>
+      <input class="auth-input" id="signup-user" type="text" placeholder="Choose a username">
+      <span class="auth-label">Password</span>
+      <input class="auth-input" id="signup-pass" type="password" placeholder="Min 6 characters">
+      <button class="auth-btn" id="signup-btn" onclick="doSignup()">CREATE ACCOUNT</button>
+    </div>
+    <div class="auth-msg" id="auth-msg"></div>
+  </div>
+</div>
+<script src="js/auth.js"></script>
+<script>
+function switchTab(t) {
+  document.getElementById('login-form').style.display = t==='login'?'block':'none';
+  document.getElementById('signup-form').style.display = t==='signup'?'block':'none';
+  document.querySelectorAll('.auth-tab').forEach((el,i)=>el.classList.toggle('active',(t==='login'&&i===0)||(t==='signup'&&i===1)));
+  setMsg('','');
+}
+
+function setMsg(msg, type) {
+  const el = document.getElementById('auth-msg');
+  el.className = 'auth-msg'+(type?' '+type:'');
+  el.textContent = msg;
+}
+
+async function doLogin() {
+  const u = document.getElementById('login-user').value.trim();
+  const p = document.getElementById('login-pass').value;
+  if (!u||!p) { setMsg('Please fill all fields.','err'); return; }
+  const btn = document.getElementById('login-btn');
+  btn.disabled=true; btn.textContent='Signing in...';
+  try {
+    await Session.login(u, p);
+    window.location.href = 'games/coinflip.html';
+  } catch(e) { setMsg(e.message,'err'); }
+  finally { btn.disabled=false; btn.textContent='SIGN IN'; }
+}
+
+async function doSignup() {
+  const u = document.getElementById('signup-user').value.trim();
+  const p = document.getElementById('signup-pass').value;
+  if (!u||!p) { setMsg('Please fill all fields.','err'); return; }
+  if (u.length<3) { setMsg('Username must be at least 3 characters.','err'); return; }
+  if (p.length<6) { setMsg('Password must be at least 6 characters.','err'); return; }
+  const btn = document.getElementById('signup-btn');
+  btn.disabled=true; btn.textContent='Creating...';
+  try {
+    await Session.signup(u, p);
+    setMsg('Account created! Signing you in...','ok');
+    setTimeout(() => window.location.href = 'games/coinflip.html', 800);
+  } catch(e) { setMsg(e.message,'err'); }
+  finally { btn.disabled=false; btn.textContent='CREATE ACCOUNT'; }
+}
+
+Session.init().then(() => {
+  if (Session.isLoggedIn()) {
+    window.location.href = 'games/coinflip.html';
+  }
+});
+</script>
+</body>
+</html>

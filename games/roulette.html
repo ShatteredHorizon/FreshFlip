@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FreshFlip Casino - Roulette</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #080e14;
+  --bg2: #0c1520;
+  --surface: #111d2b;
+  --surface2: #162333;
+  --surface3: #1c2d40;
+  --border: #1f3248;
+  --border2: #264060;
+  --accent: #00c74d;
+  --accent2: #00a33e;
+  --accent-glow: rgba(0,199,77,0.15);
+  --text: #ddeeff;
+  --text2: #8aaec8;
+  --red: #e84545;
+  --red-glow: rgba(232,69,69,0.15);
+  --gold: #e8a020;
+  --blue: #2196f3;
+  --purple: #9c6fe4;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; min-height:100vh; overflow-x:hidden; }
+::-webkit-scrollbar { width:6px; }
+::-webkit-scrollbar-track { background:var(--bg); }
+::-webkit-scrollbar-thumb { background:var(--border2); border-radius:3px; }
+
+#app { display:none; flex-direction:column; min-height:100vh; }
+
+nav { background:var(--surface); border-bottom:1px solid var(--border); padding:0 28px; height:62px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:50; backdrop-filter:blur(10px); }
+.nav-logo { font-family:'Rajdhani',sans-serif; font-size:1.4rem; font-weight:700; color:var(--text); letter-spacing:3px; display:flex; align-items:center; gap:8px; cursor:pointer; }
+.nav-logo .dot { color:var(--accent); font-size:1.8rem; line-height:1; }
+.nav-center { display:flex; align-items:center; gap:8px; }
+.nav-balance { display:flex; align-items:center; gap:10px; background:var(--bg2); border:1px solid var(--border); border-radius:10px; padding:8px 18px; }
+.nav-balance .bal-label { color:var(--text2); font-size:0.72rem; font-weight:500; letter-spacing:1px; text-transform:uppercase; }
+.nav-balance .bal-amount { color:var(--accent); font-family:'Rajdhani',sans-serif; font-size:1.25rem; font-weight:700; min-width:80px; }
+.nav-right { display:flex; align-items:center; gap:12px; }
+.nav-user { color:var(--text2); font-size:0.85rem; font-weight:500; }
+.logout-btn { background:transparent; border:1px solid var(--border); color:var(--text2); padding:7px 16px; border-radius:9px; cursor:pointer; font-size:0.82rem; font-weight:500; transition:all .2s; }
+.logout-btn:hover { border-color:var(--red); color:var(--red); }
+
+.layout { display:flex; flex:1; }
+
+aside { width:210px; background:var(--surface); border-right:1px solid var(--border); padding:20px 12px; flex-shrink:0; }
+.sidebar-section { color:var(--text2); font-size:0.68rem; font-weight:600; letter-spacing:2px; text-transform:uppercase; padding:0 10px; margin-bottom:8px; margin-top:16px; }
+.sidebar-section:first-child { margin-top:0; }
+.sidebar-item { display:flex; align-items:center; gap:12px; padding:11px 14px; cursor:pointer; color:var(--text2); font-size:0.88rem; font-weight:500; transition:all .2s; border-radius:10px; margin-bottom:2px; border:1px solid transparent; }
+.sidebar-item:hover { color:var(--text); background:var(--surface2); }
+.sidebar-item.active { color:var(--accent); background:var(--accent-glow); border-color:rgba(0,199,77,0.2); }
+.sidebar-icon { width:28px; height:28px; border-radius:7px; display:flex; align-items:center; justify-content:center; font-size:0.9rem; background:var(--surface3); flex-shrink:0; font-style:normal; }
+.sidebar-item.active .sidebar-icon { background:rgba(0,199,77,0.2); }
+
+main { flex:1; padding:32px; overflow-y:auto; background:var(--bg2); }
+
+.game-header { margin-bottom:24px; }
+.game-header h2 { font-family:'Rajdhani',sans-serif; font-size:2rem; font-weight:700; letter-spacing:1px; margin-bottom:4px; }
+.game-header p { color:var(--text2); font-size:0.84rem; }
+
+.card { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:24px; margin-bottom:16px; }
+.card-title { font-size:0.72rem; font-weight:600; color:var(--text2); letter-spacing:2px; text-transform:uppercase; margin-bottom:16px; }
+
+.bet-label { color:var(--text2); font-size:0.75rem; font-weight:500; letter-spacing:0.5px; text-transform:uppercase; margin-bottom:8px; display:block; }
+.bet-input-wrap { display:flex; align-items:center; background:var(--bg2); border:1px solid var(--border); border-radius:10px; margin-bottom:10px; overflow:hidden; transition:all .2s; }
+.bet-input-wrap:focus-within { border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-glow); }
+.bet-currency { color:var(--text2); padding:0 14px; font-size:0.9rem; font-weight:600; }
+.bet-input { flex:1; background:transparent; border:none; padding:13px 0; color:var(--text); font-family:'Inter',sans-serif; font-size:1rem; outline:none; }
+.bet-quick { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:0; }
+.bet-quick button { background:var(--surface3); border:1px solid var(--border); color:var(--text2); padding:6px 13px; border-radius:8px; cursor:pointer; font-size:0.78rem; font-weight:500; transition:all .2s; }
+.bet-quick button:hover { border-color:var(--accent); color:var(--accent); background:var(--accent-glow); }
+
+.play-btn { width:100%; padding:15px; background:var(--accent); border:none; border-radius:12px; color:#000; font-family:'Rajdhani',sans-serif; font-size:1.15rem; font-weight:700; letter-spacing:2px; cursor:pointer; transition:all .25s; margin-top:16px; }
+.play-btn:hover:not(:disabled) { background:var(--accent2); transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,199,77,0.3); }
+.play-btn:disabled { opacity:.4; cursor:not-allowed; transform:none; box-shadow:none; }
+
+.result-box { margin-top:16px; padding:18px 20px; border-radius:12px; text-align:center; display:none; }
+.result-box.win { background:var(--accent-glow); border:1px solid rgba(0,199,77,0.3); display:block; }
+.result-box.lose { background:var(--red-glow); border:1px solid rgba(232,69,69,0.3); display:block; }
+.result-amount { font-family:'Rajdhani',sans-serif; font-size:2rem; font-weight:700; line-height:1; }
+.result-box.win .result-amount { color:var(--accent); }
+.result-box.lose .result-amount { color:var(--red); }
+.result-msg { color:var(--text2); font-size:0.84rem; margin-top:6px; }
+
+.roulette-wheel-wrap { position:relative; width:200px; height:200px; margin:0 auto 24px; }
+.wheel-svg { width:100%; height:100%; drop-shadow(0 0 20px rgba(0,199,77,0.2)); }
+.wheel-arrow { position:absolute; top:-12px; left:50%; transform:translateX(-50%); color:var(--accent); font-size:1.3rem; }
+@keyframes spin { 0%{transform:rotate(0deg)} 100%{transform:rotate(1800deg)} }
+.roulette-bets { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:16px; }
+.r-bet-btn { padding:12px 6px; border:1px solid var(--border); background:var(--bg2); border-radius:10px; cursor:pointer; color:var(--text2); font-size:0.78rem; font-weight:600; transition:all .2s; text-align:center; letter-spacing:0.5px; }
+.r-bet-btn:hover { border-color:var(--border2); color:var(--text); }
+.r-bet-btn[data-bet="red"].active { border-color:#e53e3e; background:rgba(229,62,62,.12); color:#fc8181; }
+.r-bet-btn[data-bet="black"].active { border-color:#718096; background:rgba(113,128,150,.12); color:#cbd5e0; }
+.r-bet-btn[data-bet="green"].active { border-color:var(--accent); background:var(--accent-glow); color:var(--accent); }
+.r-bet-btn[data-bet="odd"].active { border-color:var(--blue); background:rgba(33,150,243,.12); color:#63b3ed; }
+.r-bet-btn[data-bet="even"].active { border-color:var(--gold); background:rgba(232,160,32,.12); color:var(--gold); }
+.r-bet-btn[data-bet="1-18"].active { border-color:var(--purple); background:rgba(156,111,228,.12); color:#b794f4; }
+.r-bet-btn[data-bet="19-36"].active { border-color:#ed8936; background:rgba(237,137,54,.12); color:#fbd38d; }
+.roulette-num-display { display:none; width:56px; height:56px; border-radius:50%; margin:0 auto 16px; align-items:center; justify-content:center; font-family:'Rajdhani',sans-serif; font-size:1.6rem; font-weight:700; border:2px solid; }
+.roulette-num-display.show { display:flex; }
+.roulette-num-display.red { border-color:#e53e3e; background:rgba(229,62,62,.15); color:#fc8181; }
+.roulette-num-display.black { border-color:#718096; background:rgba(113,128,150,.15); color:#cbd5e0; }
+.roulette-num-display.green { border-color:var(--accent); background:var(--accent-glow); color:var(--accent); }
+
+@media(max-width:700px){ aside{display:none;} main{padding:16px;} }
+</style>
+</head>
+<body>
+<div id="app">
+  <nav>
+    <div class="nav-logo" onclick="window.location.href='coinflip.html'"><span class="dot">◆</span>FRESHFLIP</div>
+    <div class="nav-center">
+      <div class="nav-balance">
+        <span class="bal-label">Balance</span>
+        <span class="bal-amount" id="nav-balance">$0</span>
+      </div>
+    </div>
+    <div class="nav-right">
+      <span class="nav-user" id="nav-user"></span>
+      <button class="logout-btn" onclick="Session.logout()">Sign Out</button>
+    </div>
+  </nav>
+  <div class="layout">
+    <aside>
+      <div class="sidebar-section">Games</div>
+      <div class="sidebar-item" onclick="window.location.href='coinflip.html'">
+        <i class="sidebar-icon">◈</i><span>Coin Flip</span>
+      </div>
+      <div class="sidebar-item" onclick="window.location.href='mines.html'">
+        <i class="sidebar-icon">⬡</i><span>Mines</span>
+      </div>
+      <div class="sidebar-item active" onclick="window.location.href='roulette.html'">
+        <i class="sidebar-icon">◎</i><span>Roulette</span>
+      </div>
+    </aside>
+    <main>
+      <div class="game-header">
+        <h2>Roulette</h2>
+        <p>European roulette — numbers 0 through 36</p>
+      </div>
+      <div class="card">
+        <div class="roulette-wheel-wrap">
+          <div class="wheel-arrow">▼</div>
+          <svg class="wheel-svg" id="roulette-svg" viewBox="0 0 200 200"></svg>
+        </div>
+        <div class="roulette-num-display" id="roulette-number"></div>
+        <div class="card-title">Bet Type</div>
+        <div class="roulette-bets">
+          <button class="r-bet-btn" data-bet="red" onclick="selectRBet('red')">Red — 2×</button>
+          <button class="r-bet-btn" data-bet="black" onclick="selectRBet('black')">Black — 2×</button>
+          <button class="r-bet-btn" data-bet="green" onclick="selectRBet('green')">Green — 14×</button>
+          <button class="r-bet-btn" data-bet="odd" onclick="selectRBet('odd')">Odd — 2×</button>
+          <button class="r-bet-btn" data-bet="even" onclick="selectRBet('even')">Even — 2×</button>
+          <button class="r-bet-btn" data-bet="1-18" onclick="selectRBet('1-18')">1–18 — 2×</button>
+          <button class="r-bet-btn" data-bet="19-36" onclick="selectRBet('19-36')">19–36 — 2×</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Place Bet</div>
+        <span class="bet-label">Bet Amount</span>
+        <div class="bet-input-wrap">
+          <span class="bet-currency">$</span>
+          <input class="bet-input" id="r-bet" type="number" placeholder="0" min="1">
+        </div>
+        <div class="bet-quick">
+          <button onclick="setBet('r-bet',10)">$10</button>
+          <button onclick="setBet('r-bet',50)">$50</button>
+          <button onclick="setBet('r-bet',100)">$100</button>
+          <button onclick="setBet('r-bet',500)">$500</button>
+          <button onclick="halfBet('r-bet')">½</button>
+          <button onclick="doubleBet('r-bet')">2×</button>
+        </div>
+        <button class="play-btn" id="r-btn" onclick="spinRoulette()">SPIN</button>
+        <div class="result-box" id="r-result">
+          <div class="result-amount" id="r-result-amount"></div>
+          <div class="result-msg" id="r-result-msg"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+<script src="../js/auth.js"></script>
+<script>
+const RED_NUMS = [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36];
+let rBet = null;
+
+async function init() {
+  await Session.init();
+  if (!Session.isLoggedIn()) {
+    window.location.href = '../login.html';
+    return;
+  }
+  document.getElementById('app').style.display = 'flex';
+  document.getElementById('nav-user').textContent = window.currentUser.username;
+  updateBalanceUI(window.balance);
+  buildWheel();
+}
+
+function buildWheel() {
+  const svg = document.getElementById('roulette-svg');
+  const nums = [0,32,15,19,4,21,2,25,17,34,6,27,13,36,11,30,8,23,10,5,24,16,33,1,20,14,31,9,22,18,29,7,28,12,35,3,26];
+  const total = nums.length, r = 90, cx = 100, cy = 100;
+  let html = '';
+  nums.forEach((n, i) => {
+    const a1 = (i / total) * 2 * Math.PI - Math.PI / 2, a2 = ((i + 1) / total) * 2 * Math.PI - Math.PI / 2;
+    const x1 = cx + r * Math.cos(a1), y1 = cy + r * Math.sin(a1), x2 = cx + r * Math.cos(a2), y2 = cy + r * Math.sin(a2);
+    const color = n === 0 ? '#00a33e' : RED_NUMS.includes(n) ? '#c0392b' : '#1a2635';
+    html += `<path d="M${cx},${cy} L${x1},${y1} A${r},${r},0,0,1,${x2},${y2} Z" fill="${color}" stroke="#080e14" stroke-width="1.5"/>`;
+    const ma = (a1 + a2) / 2, tx = cx + (r * 0.66) * Math.cos(ma), ty = cy + (r * 0.66) * Math.sin(ma);
+    html += `<text x="${tx}" y="${ty}" fill="rgba(255,255,255,0.85)" font-size="5.5" text-anchor="middle" dominant-baseline="middle" font-family="Rajdhani,sans-serif" font-weight="600">${n}</text>`;
+  });
+  html += `<circle cx="${cx}" cy="${cy}" r="16" fill="#080e14" stroke="#1f3248" stroke-width="2"/>`;
+  html += `<circle cx="${cx}" cy="${cy}" r="6" fill="#00c74d"/>`;
+  svg.innerHTML = html;
+}
+
+function selectRBet(b) {
+  rBet = b;
+  document.querySelectorAll('.r-bet-btn').forEach(el => el.classList.toggle('active', el.dataset.bet === b));
+}
+
+async function spinRoulette() {
+  if (!rBet) { alert('Select a bet type first.'); return; }
+  const bet = getBet('r-bet');
+  if (!bet || bet < 1) { alert('Enter a valid bet.'); return; }
+  if (bet > window.balance) { alert('Not enough balance.'); return; }
+  const btn = document.getElementById('r-btn');
+  btn.disabled = true;
+  document.getElementById('r-result').className = 'result-box';
+  const numEl = document.getElementById('roulette-number');
+  numEl.className = 'roulette-num-display';
+  const svg = document.getElementById('roulette-svg');
+  svg.style.animation = 'none';
+  svg.offsetHeight;
+  svg.style.animation = 'spin 3s cubic-bezier(.15,.85,.2,1) forwards';
+  await sleep(3100);
+
+  const win = biasedWin();
+  let num;
+  if (win) {
+    const candidates = [];
+    for (let n = 0; n <= 36; n++) {
+      let ok = false;
+      if (rBet === 'red' && RED_NUMS.includes(n)) ok = true;
+      else if (rBet === 'black' && !RED_NUMS.includes(n) && n !== 0) ok = true;
+      else if (rBet === 'green' && n === 0) ok = true;
+      else if (rBet === 'odd' && n > 0 && n % 2 !== 0) ok = true;
+      else if (rBet === 'even' && n > 0 && n % 2 === 0) ok = true;
+      else if (rBet === '1-18' && n >= 1 && n <= 18) ok = true;
+      else if (rBet === '19-36' && n >= 19 && n <= 36) ok = true;
+      if (ok) candidates.push(n);
+    }
+    num = candidates[Math.floor(Math.random() * candidates.length)];
+  } else {
+    const losers = [];
+    for (let n = 0; n <= 36; n++) {
+      let ok = false;
+      if (rBet === 'red' && RED_NUMS.includes(n)) ok = true;
+      else if (rBet === 'black' && !RED_NUMS.includes(n) && n !== 0) ok = true;
+      else if (rBet === 'green' && n === 0) ok = true;
+      else if (rBet === 'odd' && n > 0 && n % 2 !== 0) ok = true;
+      else if (rBet === 'even' && n > 0 && n % 2 === 0) ok = true;
+      else if (rBet === '1-18' && n >= 1 && n <= 18) ok = true;
+      else if (rBet === '19-36' && n >= 19 && n <= 36) ok = true;
+      if (!ok) losers.push(n);
+    }
+    num = losers[Math.floor(Math.random() * losers.length)];
+  }
+
+  const isRed = RED_NUMS.includes(num);
+  const color = num === 0 ? 'green' : isRed ? 'red' : 'black';
+  let multi = 0;
+  if (rBet === 'red' && isRed) multi = 2;
+  else if (rBet === 'black' && !isRed && num !== 0) multi = 2;
+  else if (rBet === 'green' && num === 0) multi = 14;
+  else if (rBet === 'odd' && num > 0 && num % 2 !== 0) multi = 2;
+  else if (rBet === 'even' && num > 0 && num % 2 === 0) multi = 2;
+  else if (rBet === '1-18' && num >= 1 && num <= 18) multi = 2;
+  else if (rBet === '19-36' && num >= 19 && num <= 36) multi = 2;
+
+  numEl.className = 'roulette-num-display ' + color + ' show';
+  numEl.textContent = num;
+
+  if (win && multi > 0) {
+    const profit = bet * multi - bet;
+    updateBalanceUI(window.balance - bet + bet * multi);
+    showResult('r', true, profit, num + ' — ' + color);
+  } else {
+    updateBalanceUI(window.balance - bet);
+    showResult('r', false, bet, num + ' — ' + color);
+  }
+  await Session.saveBalance();
+  btn.disabled = false;
+}
+
+init();
+</script>
+</body>
+</html>
