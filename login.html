@@ -109,12 +109,19 @@ async function doLogin() {
 let pendingDiscordUser = null;
 
 async function doDiscordLogin() {
-  const { data, error } = await sb.auth.signInWithOAuth({ provider: 'discord' });
+  const { data, error } = await sb.auth.signInWithOAuth({ 
+    provider: 'discord',
+    options: { redirectTo: 'https://freshflip.vercel.app/login.html' }
+  });
   if (error) { setMsg(error.message, 'error'); }
 }
 
 async function doDiscordSignup() {
-  doDiscordLogin();
+  const { data, error } = await sb.auth.signInWithOAuth({ 
+    provider: 'discord',
+    options: { redirectTo: 'https://freshflip.vercel.app/login.html' }
+  });
+  if (error) { setMsg(error.message, 'error'); }
 }
 
 sb.auth.onAuthStateChange((event, session) => {
@@ -160,7 +167,7 @@ async function finishDiscordSignup(email) {
     if (refData) { referrerId = refData.id; newBalance = 11000; }
   }
   
-  const session = sb.auth.session();
+  const session = window.pendingDiscordSession;
   if (!session) { setMsg('Session expired. Try again.', 'error'); return; }
   
   const u = session.user;
