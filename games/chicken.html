@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FreshFlip - Chicken Cross</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0c0f12;--surface:#1a1f26;--bg2:#101418;--surface2:#222a34;--border:#343d4a;--accent:#00b060;--accent2:#009050;--text:#d0d8e0;--text2:#8898a8;--text3:#586878;--red:#d83848;--gold:#c89020}*{margin:0;padding:0;box-sizing:border-box}body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh}#app{display:none;flex-direction:column;min-height:100vh}nav{background:var(--surface);border-bottom:1px solid var(--border);padding:0 16px;height:54px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}.logo{font-family:'Rajdhani',sans-serif;font-size:1.25rem;font-weight:700;letter-spacing:2px;cursor:pointer}.logo b{color:var(--accent)}.nav-balance{display:flex;align-items:center;gap:8px;background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:5px 12px}.nav-balance span{color:var(--text2);font-size:0.65rem;font-weight:500;text-transform:uppercase}.nav-balance strong{color:var(--accent);font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:700}.nav-right{display:flex;align-items:center;gap:12px}.nav-user{color:var(--text2);font-size:0.78rem}.logout-btn{background:0 0;border:1px solid var(--border);color:var(--text2);padding:4px 10px;border-radius:4px;cursor:pointer;font-size:0.7rem}.logout-btn:hover{border-color:var(--red);color:var(--red)}.layout{display:flex;flex:1}aside{width:180px;background:var(--surface);border-right:1px solid var(--border);padding:8px 0;flex-shrink:0}.sidebar-section{color:#586878;font-size:0.55rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:0 12px;margin-bottom:5px;margin-top:8px}.sidebar-item{display:flex;align-items:center;gap:8px;padding:8px 12px;cursor:pointer;color:var(--text2);font-size:0.8rem;font-weight:500;transition:all .2s}.sidebar-item:hover{color:var(--text);background:var(--surface2)}.sidebar-item.active{color:var(--accent);background:rgba(0,176,96,0.1)}.sidebar-item .icon{width:22px;height:22px;background:var(--bg2);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700}main{flex:1;padding:16px;overflow-y:auto;background:var(--bg2)}.game-container{max-width:480px;margin:0 auto}.page-header{margin-bottom:16px}.page-header h2{font-family:'Rajdhani',sans-serif;font-size:1.4rem;font-weight:700}.page-header p{color:var(--text2);font-size:0.75rem}.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px}.card-title{font-size:0.6rem;font-weight:600;color:var(--text2);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px}.bet-label{color:var(--text2);font-size:0.65rem;font-weight:500;text-transform:uppercase;margin-bottom:5px;display:block}.bet-input-wrap{display:flex;align-items:center;background:var(--bg2);border:1px solid var(--border);border-radius:5px;margin-bottom:6px}.bet-input-wrap:focus-within{border-color:var(--accent)}.bet-currency{color:var(--text2);padding:0 8px;font-size:0.8rem;font-weight:600}.bet-input{flex:1;background:0 0;border:none;padding:8px 0;color:var(--text);font-size:0.85rem;outline:0}.bet-quick{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:10px}.bet-quick button{background:var(--surface2);border:1px solid var(--border);color:var(--text2);padding:4px 8px;border-radius:4px;cursor:pointer;font-size:0.65rem;font-weight:500}.bet-quick button:hover{border-color:var(--accent);color:var(--accent)}.play-btn{width:100%;padding:10px;background:var(--accent);border:none;border-radius:5px;color:#000;font-family:'Rajdhani',sans-serif;font-size:0.9rem;font-weight:700;cursor:pointer}.play-btn:hover:not(:disabled){background:var(--accent2)}.play-btn:disabled{opacity:.4;cursor:not-allowed}.result-box{margin-top:10px;padding:12px;border-radius:5px;text-align:center;display:none}.result-box.win{background:rgba(0,176,96,0.1);border:1px solid rgba(0,176,96,0.3);display:block}.result-box.lose{background:rgba(216,56,72,0.1);border:1px solid rgba(216,56,72,0.3);display:block}.result-amount{font-family:'Rajdhani',sans-serif;font-size:1.4rem;font-weight:700}.result-box.win .result-amount{color:var(--accent)}.result-box.lose .result-amount{color:var(--red)}.result-msg{color:var(--text2);font-size:0.7rem;margin-top:3px}.lane{background:var(--bg2);border:1px solid var(--border);border-radius:8px;height:50px;margin:8px 0;position:relative;overflow:hidden}.lane-line{position:absolute;width:100%;height:2px;background:var(--border);top:50%}.chicken{position:absolute;width:36px;height:36px;background:var(--red);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:700;transition:left 0.1s;left:10px}.chicken.safe{background:var(--accent)}.car{position:absolute;width:50px;height:30px;background:#8090a0;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:0.6rem;font-weight:700}.car.c2{background:#3870c8}.car.c3{background:#c89020}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px}.stat{background:var(--bg2);border:1px solid var(--border);border-radius:5px;padding:8px;text-align:center}.stat label{color:var(--text2);font-size:0.55rem;text-transform:uppercase;display:block}.stat strong{font-family:'Rajdhani',sans-serif;font-size:1rem;color:var(--accent)}.cashout-btn{width:100%;margin-top:6px;padding:8px;background:var(--gold);border:none;border-radius:5px;color:#000;font-family:'Rajdhani',sans-serif;font-size:0.85rem;font-weight:700;cursor:pointer}.cashout-btn:disabled{opacity:.3;cursor:not-allowed}@media(max-width:500px){aside{display:none}main{padding:12px}}
+</style>
+</head>
+<body>
+<div id="app">
+<nav>
+<div class="logo" onclick="location.href='../index.html'">FRESH<b>FLIP</b></div>
+<div class="nav-balance"><span>Balance</span><strong id="nav-balance">$0</strong></div>
+<div class="nav-right"><span class="nav-user" id="nav-user"></span><button class="logout-btn" onclick="Session.logout()">Sign Out</button></div>
+</nav>
+<div class="layout">
+<aside>
+<div class="sidebar-section">Games</div>
+<div class="sidebar-item" onclick="location.href='coinflip.html'"><span class="icon">C</span>Coin Flip</div>
+<div class="sidebar-item" onclick="location.href='mines.html'"><span class="icon">M</span>Mines</div>
+<div class="sidebar-item" onclick="location.href='wheel.html'"><span class="icon">W</span>Wheel</div>
+<div class="sidebar-item" onclick="location.href='dice.html'"><span class="icon">D</span>Dice</div>
+<div class="sidebar-item" onclick="location.href='tower.html'"><span class="icon">T</span>Dragon Tower</div>
+<div class="sidebar-item active"><span class="icon">K</span>Chicken Cross</div>
+<div class="sidebar-section">Account</div>
+<div class="sidebar-item" onclick="location.href='referral.html'"><span class="icon">+</span>Referral</div>
+</aside>
+<main>
+<div class="game-container">
+<div class="page-header"><h2>Chicken Cross</h2><p>Cross the road without getting hit</p></div>
+<div class="card">
+<span class="bet-label">Bet Amount</span>
+<div class="bet-input-wrap"><span class="bet-currency">$</span><input class="bet-input" id="chicken-bet" type="number" placeholder="0"></div>
+<div class="bet-quick"><button onclick="setBet('chicken-bet',10)">$10</button><button onclick="setBet('chicken-bet',50)">$50</button><button onclick="setBet('chicken-bet',100)">$100</button><button onclick="halfBet('chicken-bet')">1/2</button><button onclick="doubleBet('chicken-bet')">2x</button></div>
+<button class="play-btn" id="chicken-btn" onclick="startCross()">START</button>
+</div>
+<div class="card" id="cross-game" style="display:none">
+<div class="stats"><div class="stat"><label>Multiplier</label><strong id="cross-multi">1.00x</strong></div><div class="stat"><label>Profit</label><strong id="cross-profit">$0</strong></div><div class="stat"><label>Lives</label><strong id="cross-lives">1</strong></div></div>
+<div class="lane" id="lane0"><div class="lane-line"></div><div class="chicken" id="chicken0">K</div></div>
+<div class="lane" id="lane1"><div class="lane-line"></div></div>
+<div class="lane" id="lane2"><div class="lane-line"></div></div>
+<div class="lane" id="lane3"><div class="lane-line"></div></div>
+<div class="lane" id="lane4"><div class="lane-line"></div></div>
+<button class="cashout-btn" id="cashout-btn" onclick="cashOut()">CASH OUT</button>
+</div>
+<div class="result-box" id="chicken-result"><div class="result-amount" id="chicken-result-amount"></div><div class="result-msg" id="chicken-result-msg"></div></div>
+</div>
+</main>
+</div>
+</div>
+<script src="../js/auth.js"></script>
+<script>
+let gameActive=false,betAmount=0,progress=0,lives=1,cashOutMultiplier=1;
+async function init(){await Session.init();if(!Session.isLoggedIn()){location.href='../login.html';return}document.getElementById('app').style.display='flex';document.getElementById('nav-user').textContent=window.currentUser.username;updateBalanceUI(window.balance);}
+function startCross(){const bet=getBet('chicken-bet');if(!bet||bet<1){alert('Enter a valid bet.');return}if(bet>window.balance){alert('Insufficient balance.');return}betAmount=bet;progress=0;lives=1;gameActive=true;cashOutMultiplier=1;updateBalanceUI(window.balance-bet);document.getElementById('chicken-btn').disabled=true;document.getElementById('cross-game').style.display='block';document.getElementById('cashout-btn').disabled=false;updateCrossInfo();animateCross();}
+function animateCross(){if(!gameActive)return;progress+=15;const ch=document.getElementById('chicken0');ch.style.left=Math.min(progress,380)+'px';if(progress>=380){cashOut();return;}setTimeout(animateCross,80);}
+function cashOut(){if(!gameActive)return;gameActive=false;const won=Math.floor(betAmount*cashOutMultiplier);updateBalanceUI(window.balance+won);document.getElementById('chicken-btn').disabled=false;document.getElementById('cashout-btn').disabled=true;showResult('chicken',true,won,'Cashed out at '+cashOutMultiplier.toFixed(2)+'x!');}
+function updateCrossInfo(){cashOutMultiplier=1+(progress/380)*2;document.getElementById('cross-multi').textContent=cashOutMultiplier.toFixed(2)+'x';document.getElementById('cross-profit').textContent='$'+Math.floor(betAmount*cashOutMultiplier-betAmount);document.getElementById('cross-lives').textContent=lives;}
+init();
+</script>
+</body>
+</html>

@@ -11,62 +11,57 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
 
-.auth-container { width: 100%; max-width: 320px; padding: 20px; }
-.auth-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; box-shadow: 0 12px 24px rgba(0,0,0,0.4); }
-.auth-logo { text-align: center; margin-bottom: 20px; }
-.auth-logo h1 { font-family: 'Rajdhani', sans-serif; font-size: 1.5rem; font-weight: 700; letter-spacing: 2px; color: var(--text); }
+.auth-container { width: 100%; max-width: 360px; padding: 20px; }
+.auth-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 28px; box-shadow: 0 16px 48px rgba(0,0,0,0.5); }
+.auth-logo { text-align: center; margin-bottom: 24px; }
+.auth-logo h1 { font-family: 'Rajdhani', sans-serif; font-size: 2rem; font-weight: 700; letter-spacing: 3px; color: var(--text); }
 .auth-logo h1 b { color: var(--accent); }
-.auth-logo p { color: var(--text2); font-size: 0.6rem; letter-spacing: 2px; text-transform: uppercase; margin-top: 2px; }
+.auth-logo p { color: var(--text2); font-size: 0.55rem; letter-spacing: 3px; text-transform: uppercase; margin-top: 4px; }
+.auth-tagline { text-align: center; color: var(--text2); font-size: 0.8rem; margin-bottom: 20px; }
 
-.auth-tabs { display: flex; gap: 4px; background: var(--bg2); border-radius: 5px; padding: 3px; margin-bottom: 16px; }
-.auth-tab { flex: 1; padding: 6px; border: none; background: transparent; color: var(--text3); border-radius: 3px; cursor: pointer; font-size: 0.75rem; font-weight: 500; transition: all 0.2s; }
-.auth-tab.active { background: var(--surface); color: var(--text); }
-
-.auth-field { margin-bottom: 10px; }
-.auth-field label { display: block; color: var(--text2); font-size: 0.6rem; font-weight: 500; text-transform: uppercase; margin-bottom: 4px; }
-.auth-field input { width: 100%; background: var(--bg2); border: 1px solid var(--border); border-radius: 5px; padding: 8px 10px; color: var(--text); font-size: 0.8rem; outline: none; }
+.auth-field { margin-bottom: 14px; }
+.auth-field label { display: block; color: var(--text2); font-size: 0.6rem; font-weight: 500; text-transform: uppercase; margin-bottom: 6px; }
+.auth-field input { width: 100%; background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; color: var(--text); font-size: 0.9rem; outline: none; }
 .auth-field input:focus { border-color: var(--accent); }
 
-.auth-btn { width: 100%; padding: 10px; background: var(--accent); border: none; border-radius: 5px; color: #000; font-family: 'Rajdhani', sans-serif; font-size: 0.85rem; font-weight: 700; cursor: pointer; }
-.auth-btn:hover:not(:disabled) { background: var(--accent2); }
+.auth-btn { width: 100%; padding: 14px; background: var(--accent); border: none; border-radius: 8px; color: #000; font-family: 'Rajdhani', sans-serif; font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+.auth-btn:hover:not(:disabled) { background: var(--accent2); transform: translateY(-1px); }
 .auth-btn:disabled { opacity: 0.5; }
 
-.auth-msg { text-align: center; margin-top: 8px; padding: 6px; border-radius: 3px; font-size: 0.7rem; display: none; }
+.auth-btn.discord { background: #5865F2; color: #fff; margin-bottom: 12px; }
+.auth-btn.discord:hover:not(:disabled) { background: #4752C8; }
+.auth-btn.secondary { background: var(--bg2); color: var(--text); border: 1px solid var(--border); }
+.auth-btn.secondary:hover:not(:disabled) { border-color: var(--accent); color: var(--text); }
+
+.divider { display: flex; align-items: center; gap: 12px; margin: 16px 0; }
+.divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.divider span { color: var(--text3); font-size: 0.65rem; text-transform: uppercase; }
+
+.auth-msg { text-align: center; margin-top: 12px; padding: 10px; border-radius: 6px; font-size: 0.75rem; display: none; }
 .auth-msg.error { background: rgba(216,56,72,0.15); color: var(--red); display: block; }
 .auth-msg.success { background: rgba(0,176,96,0.15); color: var(--accent); display: block; }
-<.auth-btn.discord { background: #5865F2; color: #fff; margin-bottom: 8px; }
-.auth-btn.discord:hover:not(:disabled) { background: #4752C8; }
 </style>
 </head>
 <body>
 <div class="auth-container">
   <div class="auth-card">
-    <div class="auth-logo"><h1>FRESH<b>FLIP</b></h1><p>FreshSMP Casino</p></div>
-    <div class="auth-tabs">
-      <button class="auth-tab active" data-tab="login" onclick="switchTab('login')">Sign In</button>
-      <button class="auth-tab" data-tab="signup" onclick="switchTab('signup')">Register</button>
+    <div class="auth-logo"><h1>FRESH<b>FLIP</b></h1><p>Premium Casino</p></div>
+    <p class="auth-tagline">Sign in with Discord to play</p>
+    
+    <button class="auth-btn discord" onclick="doDiscordLogin()">CONTINUE WITH DISCORD</button>
+    
+    <div class="divider"><span>or</span></div>
+    
+    <div class="auth-field">
+      <label>Username</label>
+      <input type="text" id="login-user" placeholder="Your username">
     </div>
-    <div id="login-form">
-      <button class="auth-btn discord" id="discord-btn" onclick="doDiscordLogin()">SIGN IN WITH DISCORD</button>
-      <p style="text-align:center;color:var(--text3);font-size:0.6rem;margin:8px 0;">- or -</p>
-      <div class="auth-field"><label>Username</label><input type="text" id="login-user" placeholder="Enter username"></div>
-      <div class="auth-field"><label>Password</label><input type="password" id="login-pass" placeholder="Enter password"></div>
-      <button class="auth-btn" id="login-btn" onclick="doLogin()">SIGN IN</button>
+    <div class="auth-field">
+      <label>Password</label>
+      <input type="password" id="login-pass" placeholder="Your password">
     </div>
-    <div id="signup-form" style="display:none">
-      <button class="auth-btn discord" id="signup-discord-btn" onclick="doDiscordSignup()">REGISTER WITH DISCORD</button>
-      <p style="text-align:center;color:var(--text3);font-size:0.6rem;margin:8px 0;">- or -</p>
-      <div class="auth-field"><label>Username</label><input type="text" id="signup-user" placeholder="Choose username"></div>
-      <div class="auth-field"><label>Email</label><input type="email" id="signup-email" placeholder="your@email.com"></div>
-      <div class="auth-field"><label>Password</label><input type="password" id="signup-pass" placeholder="Min 6 characters"></div>
-      <div class="auth-field"><label>Referral Code (optional)</label><input type="text" id="signup-referral" placeholder="Enter code"></div>
-      <button class="auth-btn" id="signup-btn" onclick="doSignup()">CREATE ACCOUNT</button>
-    </div>
-    <div id="verify-form" style="display:none">
-      <div class="auth-field"><label>Verification Code</label><input type="text" id="verify-code" placeholder="Enter 6-digit code"></div>
-      <button class="auth-btn" id="verify-btn" onclick="doVerify()">VERIFY EMAIL</button>
-      <button class="auth-btn" style="background:var(--surface);margin-top:6px" id="resend-btn" onclick="resendCode()">RESEND CODE</button>
-    </div>
+    <button class="auth-btn secondary" onclick="doLogin()">SIGN IN</button>
+    
     <div class="auth-msg" id="auth-msg"></div>
   </div>
 </div>
@@ -74,19 +69,6 @@ body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-ser
 <script>
 const urlParams = new URLSearchParams(window.location.search);
 const refParam = urlParams.get('ref');
-
-if (refParam) {
-  document.getElementById('signup-referral').value = refParam.toUpperCase();
-  switchTab('signup');
-}
-
-function switchTab(tab) {
-  document.querySelectorAll('.auth-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
-  document.getElementById('login-form').style.display = tab === 'login' ? 'block' : 'none';
-  document.getElementById('signup-form').style.display = tab === 'signup' ? 'block' : 'none';
-  document.getElementById('verify-form').style.display = tab === 'verify' ? 'block' : 'none';
-  setMsg('', '');
-}
 
 function setMsg(msg, type) {
   const el = document.getElementById('auth-msg');
@@ -99,24 +81,14 @@ async function doLogin() {
   const u = document.getElementById('login-user').value.trim();
   const p = document.getElementById('login-pass').value;
   if (!u || !p) { setMsg('Fill all fields.', 'error'); return; }
-  const btn = document.getElementById('login-btn');
+  const btn = event.target;
   btn.disabled = true; btn.textContent = 'SIGNING IN...';
-  try { await Session.login(u, p); window.location.href = 'games/coinflip.html'; }
+  try { await Session.login(u, p); window.location.href = 'index.html'; }
   catch(e) { setMsg(e.message, 'error'); }
   finally { btn.disabled = false; btn.textContent = 'SIGN IN'; }
 }
 
-let pendingDiscordUser = null;
-
 async function doDiscordLogin() {
-  const { data, error } = await sb.auth.signInWithOAuth({ 
-    provider: 'discord',
-    options: { redirectTo: 'https://freshflip.vercel.app/login.html' }
-  });
-  if (error) { setMsg(error.message, 'error'); }
-}
-
-async function doDiscordSignup() {
   const { data, error } = await sb.auth.signInWithOAuth({ 
     provider: 'discord',
     options: { redirectTo: 'https://freshflip.vercel.app/login.html' }
@@ -132,7 +104,6 @@ sb.auth.onAuthStateChange((event, session) => {
 
 async function handleDiscordUser(session) {
   const email = session.user.email;
-  const username = session.user.user_metadata.name || session.user.user_metadata.full_name || 'DiscordUser';
   window.pendingDiscordSession = session;
   
   let { data: existing } = await sb.from('users').select('*').eq('email', email).maybeSingle();
@@ -140,26 +111,39 @@ async function handleDiscordUser(session) {
   if (existing) {
     await loginWithDiscord(existing);
   } else {
-    showDiscordUsernameModal(email, username);
+    showDiscordUsernameModal(email);
   }
 }
 
-function showDiscordUsernameModal(email, defaultUsername) {
-  document.getElementById('signup-form').innerHTML = `
-    <p style="color:var(--accent);font-size:0.7rem;margin-bottom:10px;">Verify Discord Account</p>
-    <p style="color:var(--text2);font-size:0.65rem;margin-bottom:10px;">${email}</p>
-    <div class="auth-field"><label>Choose Username</label><input type="text" id="discord-username" placeholder="Username" value="${defaultUsername}"></div>
-    <div class="auth-field"><label>Referral Code (optional)</label><input type="text" id="signup-referral" placeholder="Enter code"></div>
-    <button class="auth-btn" id="discord-finish-btn">COMPLETE SIGNUP</button>
+function showDiscordUsernameModal(email) {
+  document.querySelector('.auth-card').innerHTML = `
+    <div class="auth-logo"><h1>FRESH<b>FLIP</b></h1><p>Premium Casino</p></div>
+    <p class="auth-tagline" style="color:var(--accent);">New Discord Account</p>
+    <p class="auth-tagline">${email}</p>
+    <div class="auth-field">
+      <label>Choose Username</label>
+      <input type="text" id="discord-username" placeholder="Username">
+    </div>
+    <div class="auth-field">
+      <label>Create Password</label>
+      <input type="password" id="discord-pass" placeholder="Min 6 characters">
+    </div>
+    <div class="auth-field">
+      <label>Referral Code (optional)</label>
+      <input type="text" id="signup-referral" placeholder="Enter code">
+    </div>
+    <button class="auth-btn" id="discord-finish-btn">CREATE ACCOUNT</button>
   `;
   document.getElementById('discord-finish-btn').onclick = () => finishDiscordSignup(email);
-  switchTab('signup');
 }
 
 async function finishDiscordSignup(email) {
   const username = document.getElementById('discord-username').value.trim();
+  const password = document.getElementById('discord-pass').value;
   const ref = document.getElementById('signup-referral').value.trim().toUpperCase();
+  
   if (!username || username.length < 3) { setMsg('Username min 3 chars.', 'error'); return; }
+  if (!password || password.length < 6) { setMsg('Password min 6 chars.', 'error'); return; }
   
   let referrerId = null, newBalance = 1000;
   if (ref) {
@@ -170,12 +154,12 @@ async function finishDiscordSignup(email) {
   const session = window.pendingDiscordSession;
   if (!session) { setMsg('Session expired. Try again.', 'error'); return; }
   
-  const u = session.user;
-  
+  const hash = await hashPassword(password);
   const { error } = await sb.from('users').insert({
     username: username,
     email: email,
-    discord_id: u.id,
+    discord_id: session.user.id,
+    password: hash,
     balance: newBalance,
     referred_by: referrerId
   });
@@ -196,72 +180,10 @@ async function loginWithDiscord(user) {
   localStorage.setItem('ff_session', JSON.stringify(sessionData));
   window.currentUser = user;
   window.balance = user.balance;
-  window.location.href = 'games/coinflip.html';
+  window.location.href = 'index.html';
 }
 
-async function doSignup() {
-  const u = document.getElementById('signup-user').value.trim();
-  const email = document.getElementById('signup-email').value.trim();
-  const p = document.getElementById('signup-pass').value;
-  const ref = document.getElementById('signup-referral').value.trim().toUpperCase();
-  if (!u || !p || !email) { setMsg('Fill all fields.', 'error'); return; }
-  if (u.length < 3) { setMsg('Username min 3 chars.', 'error'); return; }
-  if (p.length < 6) { setMsg('Password min 6 chars.', 'error'); return; }
-  if (!email.includes('@')) { setMsg('Valid email required.', 'error'); return; }
-  const btn = document.getElementById('signup-btn');
-  btn.disabled = true; btn.textContent = 'CREATING...';
-  setMsg('', '');
-  try {
-    pendingEmail = email;
-    const hash = await hashPassword(p);
-    let referrerId = null, newBalance = 1000;
-    if (ref) {
-      const { data: refData } = await sb.from('users').select('id').eq('referral_code', ref).maybeSingle();
-      if (refData) { referrerId = refData.id; newBalance = 11000; }
-    }
-    const { data, error } = await sb.from('users').insert({ 
-      username: u, password: hash, email: email, balance: newBalance, referred_by: referrerId 
-    }).select().maybeSingle();
-    if (error) { 
-      console.log('Signup error:', error);
-      if (error.code === '23505' || error.message.includes('duplicate')) throw new Error('Username already taken.');
-      throw new Error('Error: ' + error.message); 
-    }
-    window.pendingUserId = data.id;
-    await sendVerificationEmail(email, data.id);
-    switchTab('verify');
-    setMsg('Code sent to ' + email, 'success');
-  } catch(e) { 
-    console.error(e);
-    setMsg(e.message || 'Error: ' + e, 'error'); 
-  }
-  finally { btn.disabled = false; btn.textContent = 'CREATE ACCOUNT'; }
-}
-
-let pendingEmail = '', pendingUserId = '';
-
-async function doVerify() {
-  const code = document.getElementById('verify-code').value.trim();
-  if (!code || code.length !== 6) { setMsg('Enter 6-digit code.', 'error'); return; }
-  const btn = document.getElementById('verify-btn');
-  btn.disabled = true; btn.textContent = 'VERIFYING...';
-  try {
-    await verifyEmailCode(window.pendingUserId, code);
-    setMsg('Email verified! Signing in...', 'success');
-    setTimeout(() => window.location.href = 'games/coinflip.html', 1000);
-  } catch(e) { setMsg(e.message, 'error'); }
-  finally { btn.disabled = false; btn.textContent = 'VERIFY EMAIL'; }
-}
-
-async function resendCode() {
-  if (!pendingEmail || !window.pendingUserId) return;
-  try {
-    await sendVerificationEmail(pendingEmail, window.pendingUserId);
-    setMsg('Code resent!', 'success');
-  } catch(e) { setMsg(e.message, 'error'); }
-}
-
-Session.init().then(() => { if (Session.isLoggedIn()) window.location.href = 'games/coinflip.html'; });
+Session.init().then(() => { if (Session.isLoggedIn()) window.location.href = 'index.html'; });
 </script>
 </body>
 </html>
