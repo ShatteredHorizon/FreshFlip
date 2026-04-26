@@ -55,14 +55,48 @@ const Session = {
     return data;
   },
   
-  async signup(username, password) {
+  async signup(username, password, referralCode = '') {
     const hash = await hashPassword(password);
-    const { error } = await sb.from('users').insert({ username: username, password: hash, balance: 1000 });
+    let referrerId = null;
+    
+    if (referralCode) {
+      const { data: refData } = await sb.from('users').select('id').eq('referral_code', referralCode).maybeSingle();
+      if (refData && refData.id !== window.currentUser?.id) {
+        referrerId = refData.id;
+      }
+    }
+    
+    const { data, error } = await sb.from('users').insert({ 
+      username: username, 
+      password: hash, 
+      balance: 1000,
+      referred_by: referrerId
+    }).select().maybeSingle();
+    
     if (error) {
       if (error.code === '23505') throw new Error('Username already taken.');
       throw new Error('Error: ' + error.message);
     }
+    
+    if (referrerId) {
+      const { data: refUser } = await sb.from('users').select('balance').eq('id', referrerId).maybeSingle();
+      if (refUser) {
+        await sb.from('users').update({ balance: refUser.balance + 100000 }).eq('id', referrerId);
+      }
+    }
+    
     return this.login(username, password);
+  },
+  
+  async generateReferralCode() {
+    if (!window.currentUser) return null;
+    const code = 'FF' + Math.random().toString(36).substring(2, 8).toUpperCase();
+    await sb.from('users').update({ referral_code: code }).eq('id', window.currentUser.id);
+    window.currentUser.referral_code = code;
+    const stored = JSON.parse(localStorage.getItem(this.KEY) || '{}');
+    stored.user.referral_code = code;
+    localStorage.setItem(this.KEY, JSON.stringify(stored));
+    return code;
   },
   
   async logout() {
@@ -141,6 +175,8 @@ function updateBalanceUI(b) {
   window.balance = Math.max(0, Math.round(b));
   const el = document.getElementById('nav-balance');
   if (el) el.textContent = '$' + window.balance.toLocaleString();
+  const el2 = document.getElementById('user-balance');
+  if (el2) el2.textContent = '$' + window.balance.toLocaleString();
 }
 
 function setBet(id, v) { document.getElementById(id).value = v; }

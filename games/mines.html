@@ -3,140 +3,460 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FreshFlip Casino - Mines</title>
+<title>FreshFlip - Mines</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+
 :root {
-  --bg: #080e14;
-  --bg2: #0c1520;
-  --surface: #111d2b;
-  --surface2: #162333;
-  --surface3: #1c2d40;
-  --border: #1f3248;
-  --border2: #264060;
-  --accent: #00c74d;
-  --accent2: #00a33e;
-  --accent-glow: rgba(0,199,77,0.15);
-  --text: #ddeeff;
-  --text2: #8aaec8;
-  --red: #e84545;
-  --red-glow: rgba(232,69,69,0.15);
-  --gold: #e8a020;
+  --bg: #0a0e14;
+  --bg2: #0d1117;
+  --bg3: #111820;
+  --surface: #161f2a;
+  --surface2: #1a2633;
+  --surface3: #1e2d3d;
+  --border: #252f3f;
+  --border2: #2d3a4a;
+  --accent: #00ff88;
+  --accent2: #00cc6a;
+  --accent-glow: rgba(0,255,136,0.15);
+  --text: #e8f0f8;
+  --text2: #8a9ab0;
+  --text3: #5a6a7a;
+  --red: #ff4466;
+  --gold: #ffcc00;
+  --blue: #4488ff;
 }
-* { margin:0; padding:0; box-sizing:border-box; }
-body { background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; min-height:100vh; overflow-x:hidden; }
-::-webkit-scrollbar { width:6px; }
-::-webkit-scrollbar-track { background:var(--bg); }
-::-webkit-scrollbar-thumb { background:var(--border2); border-radius:3px; }
 
-#app { display:none; flex-direction:column; min-height:100vh; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
-nav { background:var(--surface); border-bottom:1px solid var(--border); padding:0 28px; height:62px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:50; backdrop-filter:blur(10px); }
-.nav-logo { font-family:'Rajdhani',sans-serif; font-size:1.4rem; font-weight:700; color:var(--text); letter-spacing:3px; display:flex; align-items:center; gap:8px; cursor:pointer; }
-.nav-logo .dot { color:var(--accent); font-size:1.8rem; line-height:1; }
-.nav-center { display:flex; align-items:center; gap:8px; }
-.nav-balance { display:flex; align-items:center; gap:10px; background:var(--bg2); border:1px solid var(--border); border-radius:10px; padding:8px 18px; }
-.nav-balance .bal-label { color:var(--text2); font-size:0.72rem; font-weight:500; letter-spacing:1px; text-transform:uppercase; }
-.nav-balance .bal-amount { color:var(--accent); font-family:'Rajdhani',sans-serif; font-size:1.25rem; font-weight:700; min-width:80px; }
-.nav-right { display:flex; align-items:center; gap:12px; }
-.nav-user { color:var(--text2); font-size:0.85rem; font-weight:500; }
-.logout-btn { background:transparent; border:1px solid var(--border); color:var(--text2); padding:7px 16px; border-radius:9px; cursor:pointer; font-size:0.82rem; font-weight:500; transition:all .2s; }
-.logout-btn:hover { border-color:var(--red); color:var(--red); }
+body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; min-height: 100vh; overflow-x: hidden; }
 
-.layout { display:flex; flex:1; }
+#app { display: none; flex-direction: column; min-height: 100vh; }
 
-aside { width:210px; background:var(--surface); border-right:1px solid var(--border); padding:20px 12px; flex-shrink:0; }
-.sidebar-section { color:var(--text2); font-size:0.68rem; font-weight:600; letter-spacing:2px; text-transform:uppercase; padding:0 10px; margin-bottom:8px; margin-top:16px; }
-.sidebar-section:first-child { margin-top:0; }
-.sidebar-item { display:flex; align-items:center; gap:12px; padding:11px 14px; cursor:pointer; color:var(--text2); font-size:0.88rem; font-weight:500; transition:all .2s; border-radius:10px; margin-bottom:2px; border:1px solid transparent; }
-.sidebar-item:hover { color:var(--text); background:var(--surface2); }
-.sidebar-item.active { color:var(--accent); background:var(--accent-glow); border-color:rgba(0,199,77,0.2); }
-.sidebar-icon { width:28px; height:28px; border-radius:7px; display:flex; align-items:center; justify-content:center; font-size:0.9rem; background:var(--surface3); flex-shrink:0; font-style:normal; }
-.sidebar-item.active .sidebar-icon { background:rgba(0,199,77,0.2); }
+nav {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
 
-main { flex:1; padding:32px; overflow-y:auto; background:var(--bg2); }
+.nav-logo {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: var(--accent);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 
-.game-header { margin-bottom:24px; }
-.game-header h2 { font-family:'Rajdhani',sans-serif; font-size:2rem; font-weight:700; letter-spacing:1px; margin-bottom:4px; }
-.game-header p { color:var(--text2); font-size:0.84rem; }
+.nav-logo span { font-size: 1.6rem; }
 
-.card { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:24px; margin-bottom:16px; }
-.card-title { font-size:0.72rem; font-weight:600; color:var(--text2); letter-spacing:2px; text-transform:uppercase; margin-bottom:16px; }
+.nav-balance {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 20px;
+}
 
-.bet-label { color:var(--text2); font-size:0.75rem; font-weight:500; letter-spacing:0.5px; text-transform:uppercase; margin-bottom:8px; display:block; }
-.bet-input-wrap { display:flex; align-items:center; background:var(--bg2); border:1px solid var(--border); border-radius:10px; margin-bottom:10px; overflow:hidden; transition:all .2s; }
-.bet-input-wrap:focus-within { border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-glow); }
-.bet-currency { color:var(--text2); padding:0 14px; font-size:0.9rem; font-weight:600; }
-.bet-input { flex:1; background:transparent; border:none; padding:13px 0; color:var(--text); font-family:'Inter',sans-serif; font-size:1rem; outline:none; }
-.bet-quick { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:0; }
-.bet-quick button { background:var(--surface3); border:1px solid var(--border); color:var(--text2); padding:6px 13px; border-radius:8px; cursor:pointer; font-size:0.78rem; font-weight:500; transition:all .2s; }
-.bet-quick button:hover { border-color:var(--accent); color:var(--accent); background:var(--accent-glow); }
+.nav-balance span {
+  color: var(--text2);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
 
-.play-btn { width:100%; padding:15px; background:var(--accent); border:none; border-radius:12px; color:#000; font-family:'Rajdhani',sans-serif; font-size:1.15rem; font-weight:700; letter-spacing:2px; cursor:pointer; transition:all .25s; margin-top:16px; }
-.play-btn:hover:not(:disabled) { background:var(--accent2); transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,199,77,0.3); }
-.play-btn:disabled { opacity:.4; cursor:not-allowed; transform:none; box-shadow:none; }
+.nav-balance strong {
+  color: var(--accent);
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+}
 
-.result-box { margin-top:16px; padding:18px 20px; border-radius:12px; text-align:center; display:none; }
-.result-box.win { background:var(--accent-glow); border:1px solid rgba(0,199,77,0.3); display:block; }
-.result-box.lose { background:var(--red-glow); border:1px solid rgba(232,69,69,0.3); display:block; }
-.result-amount { font-family:'Rajdhani',sans-serif; font-size:2rem; font-weight:700; line-height:1; }
-.result-box.win .result-amount { color:var(--accent); }
-.result-box.lose .result-amount { color:var(--red); }
-.result-msg { color:var(--text2); font-size:0.84rem; margin-top:6px; }
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
 
-.mines-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:7px; margin:16px 0; }
-.mine-cell { aspect-ratio:1; background:var(--surface3); border:1px solid var(--border); border-radius:10px; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:1.2rem; transition:all .15s; font-style:normal; }
-.mine-cell:hover:not(.revealed) { border-color:var(--accent); background:var(--accent-glow); transform:scale(1.06); }
-.mine-cell.gem { border-color:var(--accent); background:rgba(0,199,77,0.12); color:var(--accent); }
-.mine-cell.bomb { border-color:var(--red); background:rgba(232,69,69,0.12); color:var(--red); }
-.mine-cell.revealed { cursor:default; transform:none!important; }
-.mines-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:16px; }
-.mines-stat { background:var(--bg2); border:1px solid var(--border); border-radius:10px; padding:12px; text-align:center; }
-.mines-stat label { color:var(--text2); font-size:0.68rem; letter-spacing:1px; text-transform:uppercase; display:block; margin-bottom:4px; }
-.mines-stat strong { font-family:'Rajdhani',sans-serif; font-size:1.3rem; color:var(--accent); }
-.mines-select { width:100%; background:var(--bg2); border:1px solid var(--border); border-radius:10px; padding:12px 14px; color:var(--text); font-family:'Inter',sans-serif; font-size:0.9rem; outline:none; margin-bottom:12px; cursor:pointer; }
-.mines-select:focus { border-color:var(--accent); }
-.cashout-btn { width:100%; margin-top:10px; padding:14px; background:transparent; border:2px solid var(--gold); color:var(--gold); border-radius:12px; font-family:'Rajdhani',sans-serif; font-size:1.1rem; font-weight:700; letter-spacing:2px; cursor:pointer; transition:all .2s; }
-.cashout-btn:hover:not(:disabled) { background:rgba(232,160,32,0.1); transform:translateY(-1px); }
-.cashout-btn:disabled { opacity:.3; cursor:not-allowed; transform:none; }
+.nav-user {
+  color: var(--text2);
+  font-size: 0.88rem;
+  font-weight: 500;
+}
 
-@media(max-width:700px){ aside{display:none;} main{padding:16px;} }
+.logout-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text2);
+  padding: 8px 18px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.logout-btn:hover {
+  border-color: var(--red);
+  color: var(--red);
+}
+
+.layout { display: flex; flex: 1; }
+
+aside {
+  width: 220px;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  padding: 16px 0;
+  flex-shrink: 0;
+}
+
+.sidebar-section {
+  color: var(--text3);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 0 20px;
+  margin-bottom: 8px;
+  margin-top: 16px;
+}
+
+.sidebar-section:first-child { margin-top: 0; }
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 20px;
+  cursor: pointer;
+  color: var(--text2);
+  font-size: 0.92rem;
+  font-weight: 500;
+  transition: all 0.2s;
+  border-left: 3px solid transparent;
+}
+
+.sidebar-item:hover {
+  color: var(--text);
+  background: var(--surface2);
+}
+
+.sidebar-item.active {
+  color: var(--accent);
+  background: var(--accent-glow);
+  border-left-color: var(--accent);
+}
+
+.sidebar-item .icon {
+  width: 32px;
+  height: 32px;
+  background: var(--bg3);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+
+.sidebar-item.active .icon {
+  background: rgba(0,255,136,0.2);
+}
+
+main { flex: 1; padding: 28px; overflow-y: auto; background: var(--bg2); }
+
+.game-header { margin-bottom: 24px; }
+
+.game-header h2 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  margin-bottom: 6px;
+}
+
+.game-header p { color: var(--text2); font-size: 0.85rem; }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 16px;
+}
+
+.card-title {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text2);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.bet-label {
+  color: var(--text2);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.bet-input-wrap {
+  display: flex;
+  align-items: center;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  margin-bottom: 12px;
+  overflow: hidden;
+  transition: all 0.2s;
+}
+
+.bet-input-wrap:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.bet-currency {
+  color: var(--text2);
+  padding: 0 16px;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.bet-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: 14px 0;
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  outline: none;
+}
+
+.bet-quick {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.bet-quick button {
+  background: var(--surface3);
+  border: 1px solid var(--border);
+  color: var(--text2);
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.bet-quick button:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-glow);
+}
+
+.play-btn {
+  width: 100%;
+  padding: 18px;
+  background: linear-gradient(135deg, #00ff88, #00cc6a);
+  border: none;
+  border-radius: 14px;
+  color: #000;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+
+.play-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(0,255,136,0.3);
+}
+
+.play-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.result-box {
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 14px;
+  text-align: center;
+  display: none;
+}
+
+.result-box.win {
+  background: var(--accent-glow);
+  border: 1px solid rgba(0,255,136,0.3);
+  display: block;
+}
+
+.result-box.lose {
+  background: rgba(255,68,102,0.15);
+  border: 1px solid rgba(255,68,102,0.3);
+  display: block;
+}
+
+.result-amount {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.result-box.win .result-amount { color: var(--accent); }
+.result-box.lose .result-amount { color: var(--red); }
+
+.result-msg {
+  color: var(--text2);
+  font-size: 0.88rem;
+  margin-top: 8px;
+}
+
+.mines-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 20px 0; }
+
+.mine-cell {
+  aspect-ratio: 1;
+  background: var(--surface3);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  transition: all 0.15s;
+}
+
+.mine-cell:hover:not(.revealed) {
+  border-color: var(--accent);
+  background: var(--accent-glow);
+  transform: scale(1.05);
+}
+
+.mine-cell.gem {
+  border-color: var(--accent);
+  background: rgba(0,255,136,0.15);
+  color: var(--accent);
+}
+
+.mine-cell.bomb {
+  border-color: var(--red);
+  background: rgba(255,68,102,0.15);
+  color: var(--red);
+}
+
+.mine-cell.revealed { cursor: default; transform: none !important; }
+
+.mines-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
+
+.mines-stat { background: var(--bg3); border: 1px solid var(--border); border-radius: 12px; padding: 14px; text-align: center; }
+
+.mines-stat label { color: var(--text2); font-size: 0.7rem; letter-spacing: 1px; text-transform: uppercase; display: block; margin-bottom: 4px; }
+
+.mines-stat strong { font-family: 'Orbitron', sans-serif; font-size: 1.4rem; color: var(--accent); }
+
+.mines-select {
+  width: 100%;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  outline: none;
+  margin-bottom: 12px;
+  cursor: pointer;
+}
+
+.mines-select:focus { border-color: var(--accent); }
+
+.cashout-btn {
+  width: 100%;
+  margin-top: 12px;
+  padding: 16px;
+  background: var(--gold);
+  border: none;
+  border-radius: 12px;
+  color: #000;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cashout-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(255,204,0,0.3);
+}
+
+.cashout-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  transform: none;
+}
+
+@media(max-width: 700px) { aside { display: none; } main { padding: 16px; } }
 </style>
 </head>
 <body>
 <div id="app">
   <nav>
-    <div class="nav-logo" onclick="window.location.href='coinflip.html'"><span class="dot">◆</span>FRESHFLIP</div>
-    <div class="nav-center">
-      <div class="nav-balance">
-        <span class="bal-label">Balance</span>
-        <span class="bal-amount" id="nav-balance">$0</span>
-      </div>
-    </div>
+    <div class="nav-logo" onclick="window.location.href='coinflip.html'"><span>◆</span>FRESHFLIP</div>
+    <div class="nav-balance"><span>Balance</span><strong id="nav-balance">$0</strong></div>
     <div class="nav-right">
       <span class="nav-user" id="nav-user"></span>
       <button class="logout-btn" onclick="Session.logout()">Sign Out</button>
     </div>
   </nav>
+  
   <div class="layout">
     <aside>
       <div class="sidebar-section">Games</div>
-      <div class="sidebar-item" onclick="window.location.href='coinflip.html'">
-        <i class="sidebar-icon">◈</i><span>Coin Flip</span>
-      </div>
-      <div class="sidebar-item active" onclick="window.location.href='mines.html'">
-        <i class="sidebar-icon">⬡</i><span>Mines</span>
-      </div>
-      <div class="sidebar-item" onclick="window.location.href='roulette.html'">
-        <i class="sidebar-icon">◎</i><span>Roulette</span>
-      </div>
+      <div class="sidebar-item" onclick="window.location.href='coinflip.html'"><span class="icon">🪙</span>Coin Flip</div>
+      <div class="sidebar-item active" onclick="window.location.href='mines.html'"><span class="icon">💣</span>Mines</div>
+      <div class="sidebar-item" onclick="window.location.href='plinko.html'"><span class="icon">🎯</span>Plinko</div>
+      <div class="sidebar-item" onclick="window.location.href='roulette.html'"><span class="icon">🎰</span>Roulette</div>
+      <div class="sidebar-item" onclick="window.location.href='case.html'"><span class="icon">📦</span>Case Open</div>
     </aside>
+    
     <main>
       <div class="game-header">
-        <h2>Mines</h2>
-        <p>Reveal gems and cash out before hitting a mine</p>
+        <h2>💣 Mines</h2>
+        <p>Reveal gems and cash out before hitting a mine!</p>
       </div>
+      
       <div class="card">
         <div class="card-title">Game Settings</div>
         <span class="bet-label">Number of Mines</span>
@@ -160,6 +480,7 @@ main { flex:1; padding:32px; overflow-y:auto; background:var(--bg2); }
         </div>
         <button class="play-btn" id="mines-start-btn" onclick="startMines()">START GAME</button>
       </div>
+      
       <div class="card" id="mines-game-card" style="display:none">
         <div class="mines-stats">
           <div class="mines-stat"><label>Multiplier</label><strong id="mines-multi">1.00×</strong></div>
@@ -176,6 +497,7 @@ main { flex:1; padding:32px; overflow-y:auto; background:var(--bg2); }
     </main>
   </div>
 </div>
+
 <script src="../js/auth.js"></script>
 <script>
 let minesActive = false, minesBoard = [], minesGemsFound = 0, minesBet = 0, minesCount = 0;
@@ -202,7 +524,7 @@ function buildMinesGrid(locked) {
   minesBoard.forEach((cell, i) => {
     const el = document.createElement('div');
     el.className = 'mine-cell' + (cell.revealed ? ' revealed ' + (cell.isMine ? 'bomb' : 'gem') : '');
-    el.textContent = cell.revealed ? (cell.isMine ? '✕' : '◆') : '';
+    el.textContent = cell.revealed ? (cell.isMine ? '💣' : '💎') : '';
     if (!cell.revealed && !locked) el.onclick = () => revealCell(i);
     grid.appendChild(el);
   });
@@ -212,15 +534,18 @@ async function startMines() {
   const bet = getBet('mines-bet');
   if (!bet || bet < 1) { alert('Enter a valid bet.'); return; }
   if (bet > window.balance) { alert('Not enough balance.'); return; }
+  
   minesBet = bet;
   minesCount = parseInt(document.getElementById('mines-count').value);
   minesGemsFound = 0;
+  
   minesBoard = Array(25).fill(null).map(() => ({ isMine: false, revealed: false }));
   let placed = 0;
   while (placed < minesCount) {
     const i = Math.floor(Math.random() * 25);
     if (!minesBoard[i].isMine) { minesBoard[i].isMine = true; placed++; }
   }
+  
   minesActive = true;
   updateBalanceUI(window.balance - minesBet);
   document.getElementById('mines-start-btn').disabled = true;
@@ -233,14 +558,20 @@ async function startMines() {
 
 function revealCell(i) {
   if (!minesActive || minesBoard[i].revealed) return;
+  
   const forceLose = !biasedWin() && minesGemsFound === 0;
   if (forceLose && !minesBoard[i].isMine) {
     minesBoard[i].isMine = true;
     for (let j = 0; j < 25; j++) {
-      if (j !== i && minesBoard[j].isMine && !minesBoard[j].revealed) { minesBoard[j].isMine = false; break; }
+      if (j !== i && minesBoard[j].isMine && !minesBoard[j].revealed) {
+        minesBoard[j].isMine = false;
+        break;
+      }
     }
   }
+  
   minesBoard[i].revealed = true;
+  
   if (minesBoard[i].isMine) {
     minesBoard.forEach(c => c.revealed = true);
     buildMinesGrid(true);
@@ -275,7 +606,7 @@ async function cashoutMines() {
   document.getElementById('mines-cashout').disabled = true;
   minesBoard.forEach(c => c.revealed = true);
   buildMinesGrid(true);
-  showResult('mines', true, won - minesBet, 'Cashed out at ' + multi.toFixed(2) + '×');
+  showResult('mines', true, won - minesBet, 'Cashed out at ' + multi.toFixed(2) + '×!');
   await Session.saveBalance();
 }
 
