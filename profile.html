@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FreshFlip - Profile</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root { --bg: #0f0f13; --bg2: #1a1a23; --bg3: #222230; --accent: #00ff88; --red: #ff4757; --gold: #ffd700; --text: #fff; --text2: #888; --border: #2a2a35; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: 'Space Grotesk', sans-serif; min-height: 100vh; }
+.app { display: flex; min-height: 100vh; }
+.sidebar { width: 240px; background: var(--bg2); border-right: 1px solid var(--border); padding: 20px 0; flex-shrink: 0; }
+.logo { font-size: 1.5rem; font-weight: 700; padding: 0 20px 20px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+.logo span { color: var(--accent); }
+.nav-section { padding: 0 16px; margin-bottom: 20px; }
+.nav-label { font-size: 0.65rem; color: var(--text2); text-transform: uppercase; margin-bottom: 8px; }
+.nav-link { display: block; padding: 10px 12px; border-radius: 8px; color: var(--text); text-decoration: none; font-size: 0.9rem; transition: all 0.2s; cursor: pointer; }
+.nav-link:hover { background: var(--bg3); }
+.nav-link.active { background: var(--accent); color: #000; }
+.main { flex: 1; padding: 30px; overflow-y: auto; }
+
+.profile-header { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 30px; margin-bottom: 20px; display: flex; align-items: center; gap: 24px; }
+.profile-avatar { width: 100px; height: 100px; background: var(--accent); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; font-weight: 700; color: #000; }
+.profile-info { flex: 1; }
+.profile-name { font-size: 1.8rem; font-weight: 700; margin-bottom: 4px; }
+.profile-username { color: var(--text2); font-size: 0.95rem; margin-bottom: 8px; }
+.profile-badges { display: flex; gap: 8px; flex-wrap: wrap; }
+.badge { padding: 4px 10px; background: var(--bg3); border-radius: 20px; font-size: 0.75rem; }
+.badge.vip { background: var(--gold); color: #000; }
+.badge.verified { background: var(--accent); color: #000; }
+
+.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
+.stat-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; text-align: center; }
+.stat-value { font-size: 1.5rem; font-weight: 700; color: var(--accent); }
+.stat-label { font-size: 0.8rem; color: var(--text2); margin-top: 4px; }
+
+.tabs { display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+.tab-btn { padding: 10px 20px; background: transparent; border: none; color: var(--text2); cursor: pointer; font-size: 0.95rem; font-weight: 600; }
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--accent); border-bottom: 2px solid var(--accent); }
+
+.section { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+.section h3 { font-size: 1.1rem; margin-bottom: 16px; }
+
+.form-group { margin-bottom: 16px; }
+.form-label { display: block; margin-bottom: 8px; color: var(--text2); font-size: 0.85rem; }
+.form-input { width: 100%; padding: 12px; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 0.95rem; }
+.form-input:focus { outline: none; border-color: var(--accent); }
+.save-btn { padding: 12px 24px; background: var(--accent); border: none; border-radius: 8px; color: #000; font-weight: 700; cursor: pointer; }
+
+.settings-section { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+.settings-section h3 { margin-bottom: 16px; }
+.setting-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); }
+.setting-item:last-child { border-bottom: none; }
+.setting-label { font-weight: 600; }
+.setting-desc { font-size: 0.85rem; color: var(--text2); margin-top: 2px; }
+.toggle { width: 48px; height: 24px; background: var(--bg3); border-radius: 12px; cursor: pointer; position: relative; transition: background 0.2s; }
+.toggle.on { background: var(--accent); }
+.toggle::after { content: ''; position: absolute; width: 20px; height: 20px; background: #fff; border-radius: 50%; top: 2px; left: 2px; transition: left 0.2s; }
+.toggle.on::after { left: 26px; }
+
+.game-history { display: flex; flex-direction: column; gap: 12px; }
+.history-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: var(--bg3); border-radius: 8px; }
+.history-game { font-weight: 600; }
+.history-amount { font-weight: 700; }
+.history-amount.win { color: var(--accent); }
+.history-amount.loss { color: var(--red); }
+
+@media(max-width: 768px) { .sidebar { display: none; } .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="sidebar">
+    <div class="logo">FRESH<span>FLIP</span></div>
+    <div class="nav-section">
+      <div class="nav-label">Menu</div>
+      <a class="nav-link" href="index.html">Home</a>
+      <a class="nav-link active" href="profile.html">Profile</a>
+      <a class="nav-link" href="wallet.html">Wallet</a>
+      <a class="nav-link" href="vip.html">VIP</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Games</div>
+      <a class="nav-link" href="games/mines.html">Mines</a>
+      <a class="nav-link" href="games/crash.html">Crash</a>
+    </div>
+  </div>
+  <div class="main">
+    <div class="profile-header">
+      <div class="profile-avatar" id="avatar">U</div>
+      <div class="profile-info">
+        <div class="profile-name" id="display-name">User</div>
+        <div class="profile-username">@<span id="username">user</span> · Joined <span id="joined">April 2026</span></div>
+        <div class="profile-badges">
+          <div class="badge vip">Gold VIP</div>
+          <div class="badge verified">Verified</div>
+        </div>
+      </div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-value" id="total-bets">0</div><div class="stat-label">Total Bets</div></div>
+      <div class="stat-card"><div class="stat-value" id="total-wagered">$0</div><div class="stat-label">Wagered</div></div>
+      <div class="stat-card"><div class="stat-value" id="total-won">$0</div><div class="stat-label">Total Won</div></div>
+      <div class="stat-card"><div class="stat-value" id="win-rate">0%</div><div class="stat-label">Win Rate</div></div>
+    </div>
+    <div class="tabs">
+      <button class="tab-btn active" onclick="setTab('settings')">Settings</button>
+      <button class="tab-btn" onclick="setTab('history')">History</button>
+      <button class="tab-btn" onclick="setTab('security')">Security</button>
+    </div>
+    <div class="section" id="settings-tab">
+      <h3>Profile Settings</h3>
+      <div class="form-group">
+        <label class="form-label">Display Name</label>
+        <input type="text" class="form-input" id="input-display-name" value="User">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input type="email" class="form-input" id="input-email" value="user@example.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Timezone</label>
+        <input type="text" class="form-input" id="input-timezone" value="UTC">
+      </div>
+      <button class="save-btn" onclick="saveProfile()">Save Changes</button>
+    </div>
+    <div class="section" id="history-tab" style="display: none;">
+      <h3>Recent Game History</h3>
+      <div class="game-history">
+        <div class="history-item"><div class="history-game">Mines (3)</div><div class="history-amount win">+$250</div></div>
+        <div class="history-item"><div class="history-game">Dice 75</div><div class="history-amount loss">-$100</div></div>
+        <div class="history-item"><div class="history-game">Crash 2.5x</div><div class="history-amount win">+$150</div></div>
+        <div class="history-item"><div class="history-game">Coinflip</div><div class="history-amount loss">-$50</div></div>
+        <div class="history-item"><div class="history-game">Plinko</div><div class="history-amount win">+$500</div></div>
+      </div>
+    </div>
+    <div class="settings-section" id="security-tab" style="display: none;">
+      <h3>Security Settings</h3>
+      <div class="setting-item">
+        <div><div class="setting-label">Two-Factor Authentication</div><div class="setting-desc">Add extra security to your account</div></div>
+        <div class="toggle" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div class="setting-item">
+        <div><div class="setting-label">Email Notifications</div><div class="setting-desc">Receive updates about your account</div></div>
+        <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div class="setting-item">
+        <div><div class="setting-label">Marketing Emails</div><div class="setting-desc">Receive promotional offers</div></div>
+        <div class="toggle" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div class="setting-item">
+        <div><div class="setting-label">Session History</div><div class="setting-desc">View and manage active sessions</div></div>
+        <button class="save-btn" style="padding: 8px 16px; font-size: 0.85rem;">View</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="js/auth.js"></script>
+<script>
+async function init() {
+  await Session.init();
+  if (!Session.isLoggedIn()) { location.href = 'login.html'; return; }
+  const user = window.currentUser;
+  document.getElementById('username').textContent = user.username;
+  document.getElementById('display-name').textContent = user.username;
+  document.getElementById('avatar').textContent = user.username.charAt(0).toUpperCase();
+  document.getElementById('input-display-name').value = user.username;
+  document.getElementById('input-email').value = user.email || 'Not set';
+}
+
+function setTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('settings-tab').style.display = 'none';
+  document.getElementById('history-tab').style.display = 'none';
+  document.getElementById('security-tab').style.display = 'none';
+  document.getElementById(tab + '-tab').style.display = 'block';
+}
+
+function saveProfile() {
+  alert('Profile saved!');
+}
+
+init();
+</script>
+</body>
+</html>

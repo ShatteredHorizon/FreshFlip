@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FreshFlip - Achievements</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root { --bg: #0f0f13; --bg2: #1a1a23; --bg3: #222230; --accent: #00ff88; --red: #ff4757; --gold: #ffd700; --text: #fff; --text2: #888; --border: #2a2a35; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: 'Space Grotesk', sans-serif; min-height: 100vh; }
+.app { display: flex; min-height: 100vh; }
+.sidebar { width: 240px; background: var(--bg2); border-right: 1px solid var(--border); padding: 20px 0; flex-shrink: 0; }
+.logo { font-size: 1.5rem; font-weight: 700; padding: 0 20px 20px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+.logo span { color: var(--accent); }
+.nav-section { padding: 0 16px; margin-bottom: 20px; }
+.nav-label { font-size: 0.65rem; color: var(--text2); text-transform: uppercase; margin-bottom: 8px; }
+.nav-link { display: block; padding: 10px 12px; border-radius: 8px; color: var(--text); text-decoration: none; font-size: 0.9rem; transition: all 0.2s; }
+.nav-link:hover { background: var(--bg3); }
+.nav-link.active { background: var(--accent); color: #000; }
+.main { flex: 1; padding: 30px; overflow-y: auto; }
+.page-header { margin-bottom: 30px; }
+.page-header h1 { font-size: 2rem; margin-bottom: 8px; }
+.page-header p { color: var(--text2); }
+
+.progress-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+.progress-info { display: flex; align-items: center; gap: 16px; }
+.progress-icon { width: 50px; height: 50px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+.progress-details h3 { font-size: 1.1rem; margin-bottom: 4px; }
+.progress-details p { color: var(--text2); font-size: 0.9rem; }
+.progress-bar { width: 200px; height: 8px; background: var(--bg3); border-radius: 4px; overflow: hidden; margin-top: 8px; }
+.progress-fill { height: 100%; background: var(--gold); border-radius: 4px; }
+.progress-text { font-size: 0.85rem; color: var(--text2); margin-top: 4px; }
+
+.achievements-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 20px; }
+.achievement-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; text-align: center; transition: all 0.3s; cursor: pointer; }
+.achievement-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3); }
+.achievement-card.unlocked { border-color: var(--accent); background: rgba(0, 255, 136, 0.1); }
+.achievement-card.locked { opacity: 0.5; }
+.achievement-card.rare { border-color: var(--gold); }
+.achievement-card.epic { border-color: #a55eea; }
+.achievement-card.legendary { border-color: var(--red); }
+.achievement-icon { font-size: 2rem; margin-bottom: 12px; }
+.achievement-name { font-weight: 700; margin-bottom: 4px; }
+.achievement-desc { font-size: 0.8rem; color: var(--text2); margin-bottom: 8px; }
+.achievement-progress { font-size: 0.85rem; color: var(--accent); }
+.achievement-badge { display: inline-block; padding: 4px 8px; background: var(--bg3); border-radius: 20px; font-size: 0.65rem; margin-top: 8px; }
+.achievement-badge.common { background: var(--text2); }
+.achievement-badge.rare { background: var(--gold); color: #000; }
+.achievement-badge.epic { background: #a55eea; }
+.achievement-badge.legendary { background: var(--red); }
+
+.stats-section { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+.stats-section h3 { margin-bottom: 16px; }
+.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.stat-item { text-align: center; }
+.stat-value { font-size: 1.5rem; font-weight: 700; color: var(--accent); }
+.stat-label { font-size: 0.8rem; color: var(--text2); }
+
+.badges-section { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+.badges-section h3 { margin-bottom: 16px; }
+.badges-grid { display: flex; gap: 12px; flex-wrap: wrap; }
+.badge-item { width: 60px; height: 60px; background: var(--bg3); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; cursor: pointer; position: relative; }
+.badge-item.unlocked { background: var(--accent); color: #000; }
+.badge-item::after { content: attr(data-tooltip); position: absolute; bottom: -30px; left: 50%; transform: translateX(-50%); background: var(--bg); padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; white-space: nowrap; opacity: 0; transition: opacity 0.2s; pointer-events: none; }
+.badge-item:hover::after { opacity: 1; }
+
+@media(max-width: 768px) { .sidebar { display: none; } .achievements-grid { grid-template-columns: repeat(2, 1fr); } }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="sidebar">
+    <div class="logo">FRESH<span>FLIP</span></div>
+    <div class="nav-section">
+      <div class="nav-label">Menu</div>
+      <a class="nav-link" href="index.html">Home</a>
+      <a class="nav-link" href="profile.html">Profile</a>
+      <a class="nav-link active" href="achievements.html">Achievements</a>
+      <a class="nav-link" href="vip.html">VIP</a>
+    </div>
+  </div>
+  <div class="main">
+    <div class="page-header">
+      <h1>Achievements</h1>
+      <p>Unlock badges and track your progress</p>
+    </div>
+    <div class="progress-card">
+      <div class="progress-info">
+        <div class="progress-icon">🏆</div>
+        <div class="progress-details">
+          <h3>Achievement Hunter</h3>
+          <p>Unlock 50 achievements</p>
+          <div class="progress-bar"><div class="progress-fill" style="width: 42%;"></div></div>
+          <div class="progress-text">21/50 unlocked</div>
+        </div>
+      </div>
+    </div>
+    <div class="achievements-grid">
+      <div class="achievement-card unlocked">
+        <div class="achievement-icon">🎯</div>
+        <div class="achievement-name">First Win</div>
+        <div class="achievement-desc">Win your first bet</div>
+        <div class="achievement-progress">Completed</div>
+        <div class="achievement-badge common">Common</div>
+      </div>
+      <div class="achievement-card unlocked">
+        <div class="achievement-icon">🔥</div>
+        <div class="achievement-name">Hot Streak</div>
+        <div class="achievement-desc">Win 10 bets in a row</div>
+        <div class="achievement-progress">Completed</div>
+        <div class="achievement-badge rare">Rare</div>
+      </div>
+      <div class="achievement-card unlocked">
+        <div class="achievement-icon">💰</div>
+        <div class="achievement-name">Big Winner</div>
+        <div class="achievement-desc">Win $10,000 total</div>
+        <div class="achievement-progress">Completed</div>
+        <div class="achievement-badge rare">Rare</div>
+      </div>
+      <div class="achievement-card unlocked">
+        <div class="achievement-icon">🎲</div>
+        <div class="achievement-name">Dice Master</div>
+        <div class="achievement-desc">Play 1000 Dice games</div>
+        <div class="achievement-progress">847/1000</div>
+        <div class="achievement-badge epic">Epic</div>
+      </div>
+      <div class="achievement-card unlocked">
+        <div class="achievement-icon">💎</div>
+        <div class="achievement-name">VIP Gold</div>
+        <div class="achievement-desc">Reach Gold VIP tier</div>
+        <div class="achievement-progress">Completed</div>
+        <div class="achievement-badge epic">Epic</div>
+      </div>
+      <div class="achievement-card">
+        <div class="achievement-icon">👑</div>
+        <div class="achievement-name">High Roller</div>
+        <div class="achievement-desc">Bet $100,000 in one day</div>
+        <div class="achievement-progress">$45,000/$100,000</div>
+        <div class="achievement-badge legendary">Legendary</div>
+      </div>
+      <div class="achievement-card">
+        <div class="achievement-icon">🚀</div>
+        <div class="achievement-name">Moon</div>
+        <div class="achievement-desc">Cash out at 100x multiplier</div>
+        <div class="achievement-progress">0/100x</div>
+        <div class="achievement-badge legendary">Legendary</div>
+      </div>
+      <div class="achievement-card">
+        <div class="achievement-icon">🏦</div>
+        <div class="achievement-name">Millionaire</div>
+        <div class="achievement-desc">Win $1,000,000 total</div>
+        <div class="achievement-progress">$125,000/$1,000,000</div>
+        <div class="achievement-badge legendary">Legendary</div>
+      </div>
+      <div class="achievement-card">
+        <div class="achievement-icon">🤝</div>
+        <div class="achievement-name">Referral Pro</div>
+        <div class="achievement-desc">Refer 50 friends</div>
+        <div class="achievement-progress">12/50</div>
+        <div class="achievement-badge epic">Epic</div>
+      </div>
+    </div>
+    <div class="stats-section">
+      <h3>Your Stats</h3>
+      <div class="stats-grid">
+        <div class="stat-item"><div class="stat-value">21</div><div class="stat-label">Unlocked</div></div>
+        <div class="stat-item"><div class="stat-value">29</div><div class="stat-label">Remaining</div></div>
+        <div class="stat-item"><div class="stat-value">2</div><div class="stat-label">Legendary</div></div>
+        <div class="stat-item"><div class="stat-value">42%</div><div class="stat-label">Complete</div></div>
+      </div>
+    </div>
+    <div class="badges-section">
+      <h3>Collected Badges</h3>
+      <div class="badges-grid">
+        <div class="badge-item unlocked" data-tooltip="First Win">🎯</div>
+        <div class="badge-item unlocked" data-tooltip="Hot Streak">🔥</div>
+        <div class="badge-item unlocked" data-tooltip="Big Winner">💰</div>
+        <div class="badge-item unlocked" data-tooltip="Dice Master">🎲</div>
+        <div class="badge-item unlocked" data-tooltip="VIP Gold">💎</div>
+        <div class="badge-item" data-tooltip="High Roller">👑</div>
+        <div class="badge-item" data-tooltip="Moon">🚀</div>
+        <div class="badge-item" data-tooltip="Millionaire">🏦</div>
+        <div class="badge-item" data-tooltip="Referral Pro">🤝</div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

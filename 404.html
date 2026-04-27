@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FreshFlip - Error</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root { --bg: #0f0f13; --bg2: #1a1a23; --bg3: #222230; --accent: #00ff88; --red: #ff4757; --gold: #ffd700; --text: #fff; --text2: #888; --border: #2a2a35; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: 'Space Grotesk', sans-serif; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+.error-container { text-align: center; padding: 40px; max-width: 500px; }
+.error-code { font-size: 8rem; font-weight: 700; color: var(--red); line-height: 1; margin-bottom: 20px; }
+.error-title { font-size: 2rem; margin-bottom: 12px; }
+.error-message { color: var(--text2); margin-bottom: 30px; line-height: 1.7; }
+.error-btn { padding: 14px 28px; background: var(--accent); border: none; border-radius: 8px; color: #000; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-block; }
+.error-btn:hover { transform: scale(1.02); }
+</style>
+</head>
+<body>
+<div class="error-container">
+  <div class="error-code">404</div>
+  <h1 class="error-title">Page Not Found</h1>
+  <p class="error-message">Oops! The page you're looking for doesn't exist or has been moved. Let's get you back to the action.</p>
+  <a class="error-btn" href="index.html">Back to Home</a>
+</div>
+</body>
+</html>

@@ -247,17 +247,36 @@ body {
       <a class="nav-link" onclick="play('crash')">Crash</a>
       <a class="nav-link" onclick="play('hilo')">HiLo</a>
       <a class="nav-link" onclick="play('dice')">Dice</a>
-      <a class="nav-link active" onclick="play('coinflip')">Coinflip</a>
-      <a class="nav-link" onclick="play('limbo')">Limbo</a>
+      <a class="nav-link" onclick="play('coinflip')">Coinflip</a>
+      <a class="nav-link" onclick="play('chicken')">Chicken</a>
       <a class="nav-link" onclick="play('tower')">Dragon Tower</a>
       <a class="nav-link" onclick="play('wheel')">Wheel</a>
+      <a class="nav-link" onclick="play('plinko')">Plinko</a>
+      <a class="nav-link" onclick="play('blackjack')">Blackjack</a>
+      <a class="nav-link" onclick="play('keno')">Keno</a>
+      <a class="nav-link" onclick="play('limbo')">Limbo</a>
     </div>
     
     <div class="nav-section">
       <div class="nav-label">Menu</div>
-      <a class="nav-link" onclick="play('livebets')">Live Bets</a>
+      <a class="nav-link" onclick="play('wallet')">Wallet</a>
+      <a class="nav-link" onclick="play('leaderboard')">Leaderboard</a>
+      <a class="nav-link" onclick="play('tournaments')">Tournaments</a>
+      <a class="nav-link" onclick="play('vip')">VIP</a>
+      <a class="nav-link" onclick="play('bonuses')">Bonuses</a>
       <a class="nav-link" onclick="play('referral')">Referrals</a>
       <a class="nav-link" onclick="play('daily')">Daily Rewards</a>
+      <a class="nav-link" onclick="play('history')">Bet History</a>
+      <a class="nav-link" onclick="play('achievements')">Achievements</a>
+      <a class="nav-link" onclick="play('chat')">Chat</a>
+    </div>
+    
+    <div class="nav-section">
+      <div class="nav-label">Support</div>
+      <a class="nav-link" onclick="play('settings')">Settings</a>
+      <a class="nav-link" onclick="play('sound')">Sound</a>
+      <a class="nav-link" onclick="play('faq')">FAQ</a>
+      <a class="nav-link" onclick="play('support')">Support</a>
     </div>
   </div>
   
@@ -346,11 +365,32 @@ const gameUrls = {
   hilo: 'games/hilo.html',
   referral: 'games/referral.html',
   daily: 'games/daily.html',
-  livebets: 'games/livebets.html'
+  livebets: 'games/livebets.html',
+  plinko: 'games/plinko.html',
+  blackjack: 'games/blackjack.html',
+  keno: 'games/keno.html',
+  chicken: 'games/chicken.html',
+  provablyfair: 'games/provablyfair.html',
+  roulette: 'games/roulette.html',
+  profile: 'profile.html',
+  wallet: 'wallet.html',
+  vip: 'vip.html',
+  leaderboard: 'leaderboard.html',
+  tournaments: 'tournaments.html',
+  chat: 'chat.html',
+  history: 'history.html',
+  achievements: 'achievements.html',
+  bonuses: 'bonuses.html',
+  notifications: 'notifications.html',
+  settings: 'settings.html',
+  sound: 'sound.html',
+  support: 'support.html',
+  faq: 'faq.html'
 };
 
 function play(game) {
   if (gameUrls[game]) location.href = gameUrls[game];
+  else if (game.startsWith('games/')) location.href = game;
 }
 
 async function init() {

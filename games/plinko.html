@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FreshFlip - Plinko</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root { --bg: #0f0f13; --bg2: #1a1a23; --bg3: #222230; --accent: #00ff88; --red: #ff4757; --gold: #ffd700; --text: #fff; --text2: #888; --border: #2a2a35; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: 'Space Grotesk', sans-serif; min-height: 100vh; }
+.app { display: flex; min-height: 100vh; }
+.sidebar { width: 240px; background: var(--bg2); border-right: 1px solid var(--border); padding: 20px 0; flex-shrink: 0; }
+.logo { font-size: 1.5rem; font-weight: 700; padding: 0 20px 20px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+.logo span { color: var(--accent); }
+.nav-section { padding: 0 16px; margin-bottom: 20px; }
+.nav-label { font-size: 0.65rem; color: var(--text2); text-transform: uppercase; margin-bottom: 8px; }
+.nav-link { display: block; padding: 10px 12px; border-radius: 8px; color: var(--text); text-decoration: none; font-size: 0.9rem; transition: all 0.2s; cursor: pointer; }
+.nav-link:hover { background: var(--bg3); }
+.nav-link.active { background: var(--accent); color: #000; }
+.main { flex: 1; padding: 30px; overflow-y: auto; }
+.header-bar { display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; background: var(--bg2); border-bottom: 1px solid var(--border); }
+.balance { display: flex; align-items: center; gap: 12px; }
+.balance-label { color: var(--text2); font-size: 0.75rem; }
+.balance-value { font-size: 1.2rem; font-weight: 700; color: var(--accent); }
+.user { display: flex; align-items: center; gap: 10px; }
+.user-avatar { width: 36px; height: 36px; background: var(--accent); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #000; }
+.game-header { margin-bottom: 30px; }
+.game-header h1 { font-size: 2rem; margin-bottom: 8px; }
+.game-header p { color: var(--text2); }
+
+.plinko-board { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 20px; min-height: 400px; position: relative; overflow: hidden; }
+.plinko-ball { width: 20px; height: 20px; background: var(--accent); border-radius: 50%; position: absolute; transition: all 0.1s; box-shadow: 0 0 10px var(--accent); }
+.plinko-peg { width: 8px; height: 8px; background: var(--bg3); border-radius: 50%; position: absolute; }
+.plinko-slot { position: absolute; bottom: 10px; padding: 8px; background: var(--bg3); border-radius: 4px; text-align: center; font-size: 0.7rem; font-weight: 700; }
+
+.bet-section { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+.bet-controls { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+.bet-btn { padding: 10px 16px; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; color: var(--text); cursor: pointer; font-size: 0.85rem; }
+.bet-btn:hover { border-color: var(--accent); }
+.bet-input { width: 100%; padding: 14px; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 1rem; margin-bottom: 12px; }
+.play-btn { width: 100%; padding: 16px; background: var(--accent); border: none; border-radius: 8px; color: #000; font-size: 1rem; font-weight: 700; cursor: pointer; }
+
+.risk-select { display: flex; gap: 10px; margin-bottom: 16px; margin-top: 16px; }
+.risk-btn { flex: 1; padding: 12px; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 0.9rem; cursor: pointer; }
+.risk-btn:hover { border-color: var(--accent); }
+.risk-btn.active { background: var(--accent); color: #000; border-color: var(--accent); }
+
+.instructions { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+.instructions h3 { margin-bottom: 12px; color: var(--accent); }
+.instructions ul { padding-left: 20px; color: var(--text2); font-size: 0.9rem; line-height: 1.8; }
+
+@media(max-width: 768px) { .sidebar { display: none; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="sidebar">
+    <div class="logo">FRESH<span>FLIP</span></div>
+    <div class="nav-section">
+      <div class="nav-label">Games</div>
+      <a class="nav-link" href="mines.html">Mines</a>
+      <a class="nav-link" href="crash.html">Crash</a>
+      <a class="nav-link" href="hilo.html">HiLo</a>
+      <a class="nav-link" href="dice.html">Dice</a>
+      <a class="nav-link" href="coinflip.html">Coinflip</a>
+      <a class="nav-link" href="tower.html">Dragon Tower</a>
+      <a class="nav-link" href="wheel.html">Wheel</a>
+      <a class="nav-link" href="chicken.html">Chicken</a>
+      <a class="nav-link" href="limbo.html">Limbo</a>
+      <a class="nav-link active" href="plinko.html">Plinko</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Menu</div>
+      <a class="nav-link" href="livebets.html">Live Bets</a>
+      <a class="nav-link" href="referral.html">Referrals</a>
+      <a class="nav-link" href="daily.html">Daily Rewards</a>
+    </div>
+  </div>
+  
+  <div class="main">
+    <div class="header-bar">
+      <div class="balance"><span class="balance-label">Balance</span><span class="balance-value" id="balance">$0</span></div>
+      <div class="user"><span id="username">User</span><div class="user-avatar" id="avatar">U</div></div>
+    </div>
+    
+    <div class="game-header">
+      <h1>Plinko <span>- Drop the ball</span></h1>
+      <p>Watch the ball bounce and land on a multiplier</p>
+    </div>
+    
+    <div class="instructions">
+      <h3>How to Play</h3>
+      <ul>
+        <li>Select your risk level (Low, Medium, or High)</li>
+        <li>Choose the number of rows</li>
+        <li>Click "DROP BALL" to release the ball</li>
+        <li>The ball will bounce off pegs and land in a slot</li>
+        <li>Win the multiplier shown in your slot!</li>
+      </ul>
+    </div>
+    
+    <div class="bet-section">
+      <div class="risk-select">
+        <button class="risk-btn active" data-risk="low" onclick="setRisk('low')">Low (6 rows)</button>
+        <button class="risk-btn" data-risk="medium" onclick="setRisk('medium')">Medium (9 rows)</button>
+        <button class="risk-btn" data-risk="high" onclick="setRisk('high')">High (12 rows)</button>
+      </div>
+      
+      <input type="number" class="bet-input" id="bet-amount" placeholder="Bet Amount">
+      <div class="bet-controls">
+        <button class="bet-btn" onclick="addBet(10)">+$10</button>
+        <button class="bet-btn" onclick="addBet(50)">+$50</button>
+        <button class="bet-btn" onclick="addBet(100)">+$100</button>
+        <button class="bet-btn" onclick="addBet(1000)">+$1K</button>
+      </div>
+      <button class="play-btn" id="drop-btn" onclick="dropBall()">DROP BALL</button>
+    </div>
+  </div>
+</div>
+
+<script src="../js/auth.js"></script>
+<script>
+let currentRisk = 'low';
+
+const multipliers = {
+  low: [5, 2.5, 1.5, 1, 0.5, 1, 1.5, 2.5, 5],
+  medium: [13, 6, 3, 2, 1, 0.5, 1, 2, 3, 6, 13],
+  high: [41, 15, 7, 4, 2, 1, 0.25, 0.5, 1, 2, 4, 7, 15, 41]
+};
+
+const rows = { low: 8, medium: 12, high: 16 };
+
+async function init() {
+  await Session.init();
+  if (!Session.isLoggedIn()) location.href = '../login.html';
+  document.getElementById('username').textContent = window.currentUser.username;
+  document.getElementById('avatar').textContent = window.currentUser.username.charAt(0).toUpperCase();
+  document.getElementById('balance').textContent = '$' + window.balance.toLocaleString();
+}
+
+function setRisk(risk) {
+  currentRisk = risk;
+  document.querySelectorAll('.risk-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.risk === risk));
+}
+
+function addBet(amount) {
+  const input = document.getElementById('bet-amount');
+  input.value = (parseInt(input.value) || 0) + amount;
+}
+
+async function dropBall() {
+  const bet = parseInt(document.getElementById('bet-amount').value) || 0;
+  if (!bet || bet < 1 || bet > window.balance) { alert('Invalid bet'); return; }
+  
+  updateBalanceUI(window.balance - bet);
+  
+  const btn = document.getElementById('drop-btn');
+  btn.disabled = true;
+  btn.textContent = 'DROPPING...';
+  
+  const path = [];
+  let pos = Math.floor(Math.random() * 9);
+  
+  for (let i = 0; i < rows[currentRisk]; i++) {
+    if (biasedWin()) pos = Math.max(0, pos - 1);
+    else pos = Math.min(8, pos + 1);
+    path.push(pos);
+  }
+  
+  const won = Math.floor(bet * multipliers[currentRisk][path[path.length - 1]]);
+  
+  setTimeout(async () => {
+    updateBalanceUI(window.balance + won);
+    alert('Won $' + won + '! (' + multipliers[currentRisk][path[path.length - 1]] + 'x)');
+    btn.disabled = false;
+    btn.textContent = 'DROP BALL';
+    Session.saveBalance();
+  }, 2000);
+}
+
+init();
+</script>
+</body>
+</html>

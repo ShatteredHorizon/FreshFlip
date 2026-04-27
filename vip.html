@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FreshFlip - VIP Program</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root { --bg: #0f0f13; --bg2: #1a1a23; --bg3: #222230; --accent: #00ff88; --red: #ff4757; --gold: #ffd700; --text: #fff; --text2: #888; --border: #2a2a35; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: 'Space Grotesk', sans-serif; min-height: 100vh; }
+.app { display: flex; min-height: 100vh; }
+.sidebar { width: 240px; background: var(--bg2); border-right: 1px solid var(--border); padding: 20px 0; flex-shrink: 0; }
+.logo { font-size: 1.5rem; font-weight: 700; padding: 0 20px 20px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+.logo span { color: var(--accent); }
+.nav-section { padding: 0 16px; margin-bottom: 20px; }
+.nav-label { font-size: 0.65rem; color: var(--text2); text-transform: uppercase; margin-bottom: 8px; }
+.nav-link { display: block; padding: 10px 12px; border-radius: 8px; color: var(--text); text-decoration: none; font-size: 0.9rem; transition: all 0.2s; cursor: pointer; }
+.nav-link:hover { background: var(--bg3); }
+.nav-link.active { background: var(--accent); color: #000; }
+.main { flex: 1; padding: 30px; overflow-y: auto; }
+.header-bar { display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; background: var(--bg2); border-bottom: 1px solid var(--border); }
+.balance { display: flex; align-items: center; gap: 12px; }
+.balance-label { color: var(--text2); font-size: 0.75rem; }
+.balance-value { font-size: 1.2rem; font-weight: 700; color: var(--accent); }
+.user { display: flex; align-items: center; gap: 10px; }
+.user-avatar { width: 36px; height: 36px; background: var(--accent); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #000; }
+.page-header { margin-bottom: 30px; }
+.page-header h1 { font-size: 2rem; margin-bottom: 8px; }
+.page-header p { color: var(--text2); }
+
+.vip-hero { background: linear-gradient(135deg, rgba(255, 215, 0, 0.15) 0%, rgba(255, 71, 87, 0.1) 100%); border: 2px solid var(--gold); border-radius: 16px; padding: 40px; text-align: center; margin-bottom: 30px; position: relative; overflow: hidden; }
+.vip-hero::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle at 50% 50%, rgba(255, 215, 0, 0.1) 0%, transparent 70%); }
+.vip-badge { width: 100px; height: 100px; background: var(--gold); border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; font-weight: 700; color: #000; position: relative; z-index: 1; }
+.vip-title { font-size: 2rem; font-weight: 700; margin-bottom: 8px; position: relative; z-index: 1; }
+.vip-subtitle { color: var(--text2); position: relative; z-index: 1; }
+
+.tiers-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 30px; }
+.tier-card { background: var(--bg2); border: 2px solid var(--border); border-radius: 12px; padding: 20px 12px; text-align: center; cursor: pointer; transition: all 0.3s; }
+.tier-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3); }
+.tier-card.current { border-color: var(--accent); background: rgba(0, 255, 136, 0.1); }
+.tier-card.bronze { border-color: #cd7f32; }
+.tier-card.silver { border-color: #c0c0c0; }
+.tier-card.gold { border-color: var(--gold); }
+.tier-card.platinum { border-color: #e5e4e2; }
+.tier-card.diamond { border-color: #b9f2ff; }
+.tier-card.vip { border-color: #ff00ff; }
+.tier-icon { font-size: 1.8rem; margin-bottom: 8px; }
+.tier-name { font-weight: 700; font-size: 0.9rem; margin-bottom: 4px; }
+.tier-requirement { font-size: 0.7rem; color: var(--text2); }
+
+.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 30px; }
+.stat-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; text-align: center; }
+.stat-value { font-size: 1.5rem; font-weight: 700; color: var(--accent); }
+.stat-label { font-size: 0.8rem; color: var(--text2); margin-top: 4px; }
+
+.benefits-section { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 20px; }
+.benefits-section h3 { margin-bottom: 16px; color: var(--gold); }
+.benefit-item { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+.benefit-item:last-child { border-bottom: none; }
+.benefit-icon { width: 32px; height: 32px; background: var(--bg3); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--accent); }
+.benefit-text { flex: 1; }
+.benefit-name { font-weight: 600; margin-bottom: 2px; }
+.benefit-desc { font-size: 0.85rem; color: var(--text2); }
+.benefit-status { font-size: 0.75rem; padding: 4px 10px; border-radius: 20px; }
+.benefit-status.unlocked { background: rgba(0, 255, 136, 0.2); color: var(--accent); }
+.benefit-status.locked { background: var(--bg3); color: var(--text2); }
+
+.progress-section { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 20px; }
+.progress-section h3 { margin-bottom: 16px; }
+.progress-bar { height: 16px; background: var(--bg3); border-radius: 8px; overflow: hidden; margin-bottom: 12px; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent) 0%, var(--gold) 100%); border-radius: 8px; transition: width 0.5s; }
+.progress-text { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text2); }
+
+@media(max-width: 768px) { .sidebar { display: none; } .tiers-grid { grid-template-columns: repeat(3, 1fr); } .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="sidebar">
+    <div class="logo">FRESH<span>FLIP</span></div>
+    <div class="nav-section">
+      <div class="nav-label">Games</div>
+      <a class="nav-link" href="games/mines.html">Mines</a>
+      <a class="nav-link" href="games/crash.html">Crash</a>
+      <a class="nav-link" href="games/hilo.html">HiLo</a>
+      <a class="nav-link" href="games/dice.html">Dice</a>
+      <a class="nav-link" href="games/coinflip.html">Coinflip</a>
+      <a class="nav-link" href="games/chicken.html">Chicken</a>
+      <a class="nav-link" href="games/tower.html">Dragon Tower</a>
+      <a class="nav-link" href="games/wheel.html">Wheel</a>
+      <a class="nav-link" href="games/plinko.html">Plinko</a>
+      <a class="nav-link" href="games/blackjack.html">Blackjack</a>
+      <a class="nav-link" href="games/keno.html">Keno</a>
+      <a class="nav-link" href="games/limbo.html">Limbo</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Menu</div>
+      <a class="nav-link" href="index.html">Home</a>
+      <a class="nav-link" href="games/referral.html">Referrals</a>
+      <a class="nav-link" href="games/daily.html">Daily Rewards</a>
+      <a class="nav-link active" href="vip.html">VIP</a>
+    </div>
+  </div>
+  <div class="main">
+    <div class="header-bar">
+      <div class="balance"><span class="balance-label">Balance</span><span class="balance-value" id="balance">$0</span></div>
+      <div class="user"><span id="username">User</span><div class="user-avatar" id="avatar">U</div></div>
+    </div>
+    <div class="page-header">
+      <h1>VIP Program</h1>
+      <p>Exclusive benefits for loyal players</p>
+    </div>
+    <div class="vip-hero">
+      <div class="vip-badge" id="current-tier-icon">G</div>
+      <div class="vip-title" id="current-tier-name">Gold VIP</div>
+      <div class="vip-subtitle">Level 3 of 6 · $0 to next tier</div>
+    </div>
+    <div class="tiers-grid">
+      <div class="tier-card bronze">
+        <div class="tier-icon">🥉</div>
+        <div class="tier-name">Bronze</div>
+        <div class="tier-requirement">$0 wagered</div>
+      </div>
+      <div class="tier-card silver">
+        <div class="tier-icon">🥈</div>
+        <div class="tier-name">Silver</div>
+        <div class="tier-requirement">$5,000</div>
+      </div>
+      <div class="tier-card gold current">
+        <div class="tier-icon">🥇</div>
+        <div class="tier-name">Gold</div>
+        <div class="tier-requirement">$25,000</div>
+      </div>
+      <div class="tier-card platinum">
+        <div class="tier-icon">💎</div>
+        <div class="tier-name">Platinum</div>
+        <div class="tier-requirement">$100,000</div>
+      </div>
+      <div class="tier-card diamond">
+        <div class="tier-icon">💠</div>
+        <div class="tier-name">Diamond</div>
+        <div class="tier-requirement">$500,000</div>
+      </div>
+      <div class="tier-card vip">
+        <div class="tier-icon">👑</div>
+        <div class="tier-name">VIP</div>
+        <div class="tier-requirement">$1,000,000</div>
+      </div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-value" id="total-wagered">$0</div><div class="stat-label">Total Wagered</div></div>
+      <div class="stat-card"><div class="stat-value" id="current-tier">Gold</div><div class="stat-label">Current Tier</div></div>
+      <div class="stat-card"><div class="stat-value" id="rakeback">5%</div><div class="stat-label">Rakeback</div></div>
+      <div class="stat-card"><div class="stat-value" id="vip-points">0</div><div class="stat-label">VIP Points</div></div>
+    </div>
+    <div class="progress-section">
+      <h3>Progress to Platinum</h3>
+      <div class="progress-bar"><div class="progress-fill" id="tier-progress" style="width: 25%"></div></div>
+      <div class="progress-text"><span id="current-progress">$25,000 / $100,000</span><span>+Silver tier unlocked</span></div>
+    </div>
+    <div class="benefits-section">
+      <h3>Your Benefits</h3>
+      <div class="benefit-item">
+        <div class="benefit-icon">%</div>
+        <div class="benefit-text"><div class="benefit-name">5% Rakeback</div><div class="benefit-desc">Get back 5% of house edge</div></div>
+        <div class="benefit-status unlocked">Unlocked</div>
+      </div>
+      <div class="benefit-item">
+        <div class="benefit-icon">💰</div>
+        <div class="benefit-text"><div class="benefit-name">Priority Withdrawals</div><div class="benefit-desc">Fast-track your withdrawals</div></div>
+        <div class="benefit-status unlocked">Unlocked</div>
+      </div>
+      <div class="benefit-item">
+        <div class="benefit-icon">🎁</div>
+        <div class="benefit-text"><div class="benefit-name">Weekly Bonus</div><div class="benefit-desc">$500 bonus every week</div></div>
+        <div class="benefit-status unlocked">Unlocked</div>
+      </div>
+      <div class="benefit-item">
+        <div class="benefit-icon">🎫</div>
+        <div class="benefit-text"><div class="benefit-name">VIP Support</div><div class="benefit-desc">Dedicated account manager</div></div>
+        <div class="benefit-status locked">Locked</div>
+      </div>
+      <div class="benefit-item">
+        <div class="benefit-icon">🚀</div>
+        <div class="benefit-text"><div class="benefit-name">10% Rakeback</div><div class="benefit-desc">Double the standard rakeback</div></div>
+        <div class="benefit-status locked">Locked</div>
+      </div>
+      <div class="benefit-item">
+        <div class="benefit-icon">✈️</div>
+        <div class="benefit-text"><div class="benefit-name">VIP Events</div><div class="benefit-desc">Exclusive tournaments and events</div></div>
+        <div class="benefit-status locked">Locked</div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="js/auth.js"></script>
+<script>
+const tierRequirements = [0, 5000, 25000, 100000, 500000, 1000000];
+const tierNames = ['Bronze', 'Silver', 'Gold', 'Platinum', 'Diamond', 'VIP'];
+const tierIcons = ['🥉', '🥈', '🥇', '💎', '💠', '👑'];
+
+let totalWagered = 0;
+let currentTier = 2;
+
+async function init() {
+  await Session.init();
+  if (!Session.isLoggedIn()) { location.href = 'login.html'; return; }
+  document.getElementById('username').textContent = window.currentUser.username;
+  document.getElementById('avatar').textContent = window.currentUser.username.charAt(0).toUpperCase();
+  document.getElementById('balance').textContent = '$' + window.balance.toLocaleString();
+  updateTierDisplay();
+}
+
+function updateTierDisplay() {
+  totalWagered = totalWagered;
+  for (let i = tierRequirements.length - 1; i >= 0; i--) {
+    if (totalWagered >= tierRequirements[i]) {
+      currentTier = i;
+      break;
+    }
+  }
+  document.getElementById('current-tier-icon').textContent = tierIcons[currentTier];
+  document.getElementById('current-tier-name').textContent = tierNames[currentTier] + ' VIP';
+  document.getElementById('current-tier').textContent = tierNames[currentTier];
+  document.getElementById('total-wagered').textContent = '$' + totalWagered.toLocaleString();
+  document.getElementById('rakeback').textContent = (currentTier * 2.5 + 2.5) + '%';
+  const nextTier = Math.min(currentTier + 1, 5);
+  const progress = (totalWagered - tierRequirements[currentTier]) / (tierRequirements[nextTier] - tierRequirements[currentTier]) * 100;
+  document.getElementById('tier-progress').style.width = Math.min(progress, 100) + '%';
+  document.getElementById('current-progress').textContent = '$' + totalWagered.toLocaleString() + ' / $' + tierRequirements[nextTier].toLocaleString();
+  document.getElementById('vip-points').textContent = Math.floor(totalWagered / 1000);
+}
+
+init();
+</script>
+</body>
+</html>

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FreshFlip - Tournaments</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root { --bg: #0f0f13; --bg2: #1a1a23; --bg3: #222230; --accent: #00ff88; --red: #ff4757; --gold: #ffd700; --text: #fff; --text2: #888; --border: #2a2a35; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: 'Space Grotesk', sans-serif; min-height: 100vh; }
+.app { display: flex; min-height: 100vh; }
+.sidebar { width: 240px; background: var(--bg2); border-right: 1px solid var(--border); padding: 20px 0; flex-shrink: 0; }
+.logo { font-size: 1.5rem; font-weight: 700; padding: 0 20px 20px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+.logo span { color: var(--accent); }
+.nav-section { padding: 0 16px; margin-bottom: 20px; }
+.nav-label { font-size: 0.65rem; color: var(--text2); text-transform: uppercase; margin-bottom: 8px; }
+.nav-link { display: block; padding: 10px 12px; border-radius: 8px; color: var(--text); text-decoration: none; font-size: 0.9rem; transition: all 0.2s; cursor: pointer; }
+.nav-link:hover { background: var(--bg3); }
+.nav-link.active { background: var(--accent); color: #000; }
+.main { flex: 1; padding: 30px; overflow-y: auto; }
+.page-header { margin-bottom: 30px; }
+.page-header h1 { font-size: 2rem; margin-bottom: 8px; }
+.page-header p { color: var(--text2); }
+
+.active-tournament { background: linear-gradient(135deg, rgba(255, 71, 87, 0.15) 0%, rgba(255, 215, 0, 0.1) 100%); border: 2px solid var(--red); border-radius: 16px; padding: 30px; margin-bottom: 30px; position: relative; overflow: hidden; }
+.active-tournament::before { content: 'LIVE'; position: absolute; top: 16px; right: 16px; background: var(--red); color: #fff; padding: 6px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; animation: pulse 2s infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+.tournament-badge { display: inline-block; padding: 6px 12px; background: var(--gold); color: #000; border-radius: 20px; font-size: 0.7rem; font-weight: 700; margin-bottom: 12px; }
+.tournament-name { font-size: 1.8rem; font-weight: 700; margin-bottom: 8px; }
+.tournament-desc { color: var(--text2); margin-bottom: 16px; }
+.tournament-meta { display: flex; gap: 24px; margin-bottom: 20px; flex-wrap: wrap; }
+.meta-item { display: flex; align-items: center; gap: 8px; }
+.meta-label { color: var(--text2); font-size: 0.85rem; }
+.meta-value { font-weight: 700; }
+.tournament-progress { margin-bottom: 20px; }
+.progress-bar { height: 12px; background: var(--bg3); border-radius: 6px; overflow: hidden; margin-bottom: 8px; }
+.progress-fill { height: 100%; background: var(--accent); border-radius: 6px; }
+.progress-text { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text2); }
+.join-btn { padding: 14px 32px; background: var(--red); border: none; border-radius: 8px; color: #fff; font-size: 1rem; font-weight: 700; cursor: pointer; }
+
+.tabs { display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+.tab-btn { padding: 10px 20px; background: transparent; border: none; color: var(--text2); cursor: pointer; font-size: 0.95rem; font-weight: 600; }
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--accent); border-bottom: 2px solid var(--accent); }
+
+.tournament-list { display: flex; flex-direction: column; gap: 16px; }
+.tournament-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; cursor: pointer; transition: all 0.2s; }
+.tournament-card:hover { border-color: var(--accent); }
+.tournament-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+.tournament-title { font-size: 1.1rem; font-weight: 700; }
+.tournament-game { font-size: 0.8rem; color: var(--text2); }
+.tournament-prize { font-size: 1.3rem; font-weight: 700; color: var(--accent); }
+.tournament-dates { font-size: 0.85rem; color: var(--text2); }
+.tournament-status { padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+.tournament-status.soon { background: var(--bg3); color: var(--text2); }
+.tournament-status.active { background: rgba(0, 255, 136, 0.2); color: var(--accent); }
+.tournament-status.ended { background: var(--bg3); color: var(--text2); }
+
+.prize-breakdown { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-top: 20px; }
+.prize-breakdown h3 { margin-bottom: 16px; }
+.prize-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border); }
+.prize-row:last-child { border-bottom: none; }
+.prize-rank { color: var(--gold); font-weight: 700; }
+.prize-amount { color: var(--accent); font-weight: 700; }
+
+.history-section { margin-top: 40px; }
+.history-section h2 { font-size: 1.3rem; margin-bottom: 16px; }
+.winner-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+.winner-info { display: flex; align-items: center; gap: 12px; }
+.winner-rank { width: 36px; height: 36px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #000; }
+.winner-name { font-weight: 600; }
+.winner-prize { color: var(--accent); font-weight: 700; }
+
+@media(max-width: 768px) { .sidebar { display: none; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="sidebar">
+    <div class="logo">FRESH<span>FLIP</span></div>
+    <div class="nav-section">
+      <div class="nav-label">Games</div>
+      <a class="nav-link" href="games/mines.html">Mines</a>
+      <a class="nav-link" href="games/crash.html">Crash</a>
+      <a class="nav-link" href="games/hilo.html">HiLo</a>
+      <a class="nav-link" href="games/dice.html">Dice</a>
+      <a class="nav-link" href="games/coinflip.html">Coinflip</a>
+      <a class="nav-link" href="games/chicken.html">Chicken</a>
+      <a class="nav-link" href="games/tower.html">Dragon Tower</a>
+      <a class="nav-link" href="games/wheel.html">Wheel</a>
+      <a class="nav-link" href="games/plinko.html">Plinko</a>
+      <a class="nav-link" href="games/blackjack.html">Blackjack</a>
+      <a class="nav-link" href="games/keno.html">Keno</a>
+      <a class="nav-link" href="games/limbo.html">Limbo</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Menu</div>
+      <a class="nav-link" href="index.html">Home</a>
+      <a class="nav-link active" href="tournaments.html">Tournaments</a>
+      <a class="nav-link" href="vip.html">VIP</a>
+      <a class="nav-link" href="leaderboard.html">Leaderboard</a>
+    </div>
+  </div>
+  <div class="main">
+    <div class="page-header">
+      <h1>Tournaments</h1>
+      <p>Compete for massive prize pools</p>
+    </div>
+    <div class="active-tournament">
+      <div class="tournament-badge">FEATURED</div>
+      <div class="tournament-name">Mines Master Championship</div>
+      <div class="tournament-desc">The ultimate test of nerve! Navigate through mines to claim the crown.</div>
+      <div class="tournament-meta">
+        <div class="meta-item"><span class="meta-label">Prize Pool</span><span class="meta-value" style="color: var(--accent);">$25,000</span></div>
+        <div class="meta-item"><span class="meta-label">Entries</span><span class="meta-value">247/500</span></div>
+        <div class="meta-item"><span class="meta-label">Time Left</span><span class="meta-value" style="color: var(--red);">4h 32m</span></div>
+      </div>
+      <div class="tournament-progress">
+        <div class="progress-bar"><div class="progress-fill" style="width: 49%;"></div></div>
+        <div class="progress-text"><span>247 players</span><span>500 max</span></div>
+      </div>
+      <button class="join-btn">JOIN TOURNAMENT</button>
+    </div>
+    <div class="tabs">
+      <button class="tab-btn active" onclick="setTab('active')">Active</button>
+      <button class="tab-btn" onclick="setTab('upcoming')">Upcoming</button>
+      <button class="tab-btn" onclick="setTab('completed')">Completed</button>
+    </div>
+    <div class="tournament-list">
+      <div class="tournament-card">
+        <div class="tournament-header">
+          <div>
+            <div class="tournament-title">Crash Rush</div>
+            <div class="tournament-game">Crash</div>
+          </div>
+          <div class="tournament-status soon">Starts in 2h</div>
+        </div>
+        <div class="tournament-meta">
+          <div class="tournament-prize">$10,000</div>
+          <div class="tournament-dates">Apr 28, 2026</div>
+        </div>
+        <div class="prize-breakdown" style="display: none;">
+          <h3>Prize Breakdown</h3>
+          <div class="prize-row"><span class="prize-rank">#1</span><span class="prize-amount">$3,000</span></div>
+          <div class="prize-row"><span class="prize-rank">#2</span><span class="prize-amount">$2,000</span></div>
+          <div class="prize-row"><span class="prize-rank">#3</span><span class="prize-amount">$1,000</span></div>
+        </div>
+      </div>
+      <div class="tournament-card">
+        <div class="tournament-header">
+          <div>
+            <div class="tournament-title">Dice Duel</div>
+            <div class="tournament-game">Dice</div>
+          </div>
+          <div class="tournament-status soon">Tomorrow</div>
+        </div>
+        <div class="tournament-meta">
+          <div class="tournament-prize">$5,000</div>
+          <div class="tournament-dates">Apr 29, 2026</div>
+        </div>
+      </div>
+      <div class="tournament-card">
+        <div class="tournament-header">
+          <div>
+            <div class="tournament-title">Wheel Wizard</div>
+            <div class="tournament-game">Wheel</div>
+          </div>
+          <div class="tournament-status active">Live Now</div>
+        </div>
+        <div class="tournament-meta">
+          <div class="tournament-prize">$7,500</div>
+          <div class="tournament-dates">Apr 27, 2026</div>
+        </div>
+      </div>
+    </div>
+    <div class="history-section">
+      <h2>Past Winners</h2>
+      <div class="winner-card">
+        <div class="winner-info">
+          <div class="winner-rank">1</div>
+          <div class="winner-name">CryptoKing</div>
+        </div>
+        <div class="winner-prize">$5,000</div>
+      </div>
+      <div class="winner-card">
+        <div class="winner-info">
+          <div class="winner-rank">2</div>
+          <div class="winner-name">DiamondHands</div>
+        </div>
+        <div class="winner-prize">$5,000</div>
+      </div>
+      <div class="winner-card">
+        <div class="winner-info">
+          <div class="winner-rank">3</div>
+          <div class="winner-name">LuckyStar</div>
+        </div>
+        <div class="winner-prize">$5,000</div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+function setTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+setTab('active');
+</script>
+</body>
+</html>

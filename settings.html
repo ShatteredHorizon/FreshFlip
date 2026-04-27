@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FreshFlip - Settings</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root { --bg: #0f0f13; --bg2: #1a1a23; --bg3: #222230; --accent: #00ff88; --red: #ff4757; --gold: #ffd700; --text: #fff; --text2: #888; --border: #2a2a35; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: 'Space Grotesk', sans-serif; min-height: 100vh; }
+.app { display: flex; min-height: 100vh; }
+.sidebar { width: 240px; background: var(--bg2); border-right: 1px solid var(--border); padding: 20px 0; flex-shrink: 0; }
+.logo { font-size: 1.5rem; font-weight: 700; padding: 0 20px 20px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+.logo span { color: var(--accent); }
+.nav-section { padding: 0 16px; margin-bottom: 20px; }
+.nav-label { font-size: 0.65rem; color: var(--text2); text-transform: uppercase; margin-bottom: 8px; }
+.nav-link { display: block; padding: 10px 12px; border-radius: 8px; color: var(--text); text-decoration: none; font-size: 0.9rem; transition: all 0.2s; cursor: pointer; }
+.nav-link:hover { background: var(--bg3); }
+.nav-link.active { background: var(--accent); color: #000; }
+.main { flex: 1; padding: 30px; overflow-y: auto; }
+.page-header { margin-bottom: 30px; }
+.page-header h1 { font-size: 2rem; margin-bottom: 8px; }
+.page-header p { color: var(--text2); }
+
+.tabs { display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 12px; flex-wrap: wrap; }
+.tab-btn { padding: 10px 20px; background: transparent; border: none; color: var(--text2); cursor: pointer; font-size: 0.95rem; font-weight: 600; }
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--accent); border-bottom: 2px solid var(--accent); }
+
+.settings-section { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 20px; }
+.settings-section h3 { margin-bottom: 20px; color: var(--accent); }
+.setting-row { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid var(--border); }
+.setting-row:last-child { border-bottom: none; }
+.setting-label { font-weight: 600; }
+.setting-desc { font-size: 0.85rem; color: var(--text2); margin-top: 2px; }
+.setting-input { padding: 10px 14px; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; color: var(--text); width: 200px; }
+.setting-input:focus { outline: none; border-color: var(--accent); }
+.toggle { width: 48px; height: 24px; background: var(--bg3); border-radius: 12px; cursor: pointer; position: relative; transition: background 0.2s; }
+.toggle.on { background: var(--accent); }
+.toggle::after { content: ''; position: absolute; width: 20px; height: 20px; background: #fff; border-radius: 50%; top: 2px; left: 2px; transition: left 0.2s; }
+.toggle.on::after { left: 26px; }
+.select-wrap { position: relative; }
+.setting-select { padding: 10px 14px; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; color: var(--text); width: 200px; appearance: none; cursor: pointer; }
+
+.danger-zone { background: rgba(255, 71, 87, 0.1); border: 1px solid var(--red); border-radius: 12px; padding: 24px; }
+.danger-zone h3 { color: var(--red); margin-bottom: 16px; }
+.danger-btn { padding: 12px 24px; background: var(--red); border: none; border-radius: 8px; color: #fff; font-weight: 700; cursor: pointer; }
+.danger-btn:hover { opacity: 0.9; }
+
+.save-bar { position: fixed; bottom: 0; left: 240px; right: 0; background: var(--bg2); border-top: 1px solid var(--border); padding: 16px 30px; display: flex; justify-content: flex-end; gap: 12px; }
+.save-btn { padding: 12px 28px; background: var(--accent); border: none; border-radius: 8px; color: #000; font-weight: 700; cursor: pointer; }
+.discard-btn { padding: 12px 28px; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; color: var(--text); cursor: pointer; }
+
+.session-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: var(--bg3); border-radius: 8px; margin-bottom: 8px; }
+.session-info { display: flex; align-items: center; gap: 12px; }
+.session-icon { width: 36px; height: 36px; background: var(--bg); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+.session-detail { font-size: 0.85rem; color: var(--text2); }
+.session-current { padding: 4px 10px; background: var(--accent); color: #000; border-radius: 20px; font-size: 0.7rem; font-weight: 700; }
+.revoke-btn { padding: 8px 16px; background: var(--red); border: none; border-radius: 6px; color: #fff; font-size: 0.85rem; cursor: pointer; }
+
+@media(max-width: 768px) { .sidebar { display: none; } .save-bar { left: 0; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="sidebar">
+    <div class="logo">FRESH<span>FLIP</span></div>
+    <div class="nav-section">
+      <div class="nav-label">Menu</div>
+      <a class="nav-link" href="index.html">Home</a>
+      <a class="nav-link" href="profile.html">Profile</a>
+      <a class="nav-link active" href="settings.html">Settings</a>
+      <a class="nav-link" href="sound.html">Sound</a>
+    </div>
+  </div>
+  <div class="main">
+    <div class="page-header">
+      <h1>Settings</h1>
+      <p>Customize your experience</p>
+    </div>
+    <div class="tabs">
+      <button class="tab-btn active" onclick="setTab('account')">Account</button>
+      <button class="tab-btn" onclick="setTab('privacy')">Privacy</button>
+      <button class="tab-btn" onclick="setTab('game')">Game</button>
+      <button class="tab-btn" onclick="setTab('notifications')">Notifications</button>
+      <button class="tab-btn" onclick="setTab('sessions')">Sessions</button>
+    </div>
+    
+    <div class="settings-section" id="account-tab">
+      <h3>Account Settings</h3>
+      <div class="setting-row">
+        <div><div class="setting-label">Username</div><div class="setting-desc">Your unique username</div></div>
+        <input type="text" class="setting-input" value="Player1">
+      </div>
+      <div class="setting-row">
+        <div><div class="setting-label">Email</div><div class="setting-desc">Your email address</div></div>
+        <input type="email" class="setting-input" value="player@example.com">
+      </div>
+      <div class="setting-row">
+        <div><div class="setting-label">Timezone</div><div class="setting-desc">Display times in your timezone</div></div>
+        <select class="setting-select"><option>UTC</option><option>EST</option><option>PST</option></select>
+      </div>
+      <div class="setting-row">
+        <div><div class="setting-label">Language</div><div class="setting-desc">Interface language</div></div>
+        <select class="setting-select"><option>English</option><option>Spanish</option><option>German</option></select>
+      </div>
+      <div class="setting-row">
+        <div><div class="setting-label">Currency</div><div class="setting-desc">Display currency</div></div>
+        <select class="setting-select"><option>USD</option><option>EUR</option><option>GBP</option></select>
+      </div>
+    </div>
+    
+    <div class="settings-section" id="privacy-tab" style="display: none;">
+      <h3>Privacy Settings</h3>
+      <div class="setting-row">
+        <div><div class="setting-label">Show Profile</div><div class="setting-desc">Allow others to view your profile</div></div>
+        <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div class="setting-row">
+        <div><div class="setting-label">Show Stats</div><div class="setting-desc">Display your stats on leaderboard</div></div>
+        <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div class="setting-row">
+        <div><div class="setting-label">Chat Visibility</div><div class="setting-desc">Appear in chat rooms</div></div>
+        <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div class="setting-row">
+        <div><div class="setting-label">Incognito Mode</div><div class="setting-desc">Hide your bets from others</div></div>
+        <div class="toggle" onclick="this.classList.toggle('on')"></div>
+      </div>
+    </div>
+    
+    <div class="settings-section" id="game-tab" style="display: none;">
+      <h3>Game Settings</h3>
+      <div class="setting-row">
+        <div><div class="setting-label">Auto Cashout</div><div class="setting-desc">Auto cashout at multiplier</div></div>
+        <input type="number" class="setting-input" value="2.0">
+      </div>
+      <div class="setting-row">
+        <div><div class="setting-label">Bet Confirmation</div><div class="setting-desc">Confirm bet before placing</div></div>
+        <div class="toggle" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div class="setting-row">
+        <div><div class="setting-label">Sound Effects</div><div class="setting-desc">Play game sounds</div></div>
+        <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div class="setting-row">
+        <div><div class="setting-label">Animation</div><div class="setting-desc">Enable game animations</div></div>
+        <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+      </div>
+    </div>
+    
+    <div class="settings-section" id="notifications-tab" style="display: none;">
+      <h3>Notification Settings</h3>
+      <div class="setting-row">
+        <div><div class="setting-label">Email Notifications</div><div class="setting-desc">Receive updates via email</div></div>
+        <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div class="setting-row">
+        <div><div class="setting-label">Push Notifications</div><div class="setting-desc">Browser push notifications</div></div>
+        <div class="toggle" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div class="setting-row">
+        <div><div class="setting-label">Bet Notifications</div><div class="setting-desc">Notify on win/loss</div></div>
+        <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div class="setting-row">
+        <div><div class="setting-label">Promotional</div><div class="setting-desc">Receive offers and bonuses</div></div>
+        <div class="toggle" onclick="this.classList.toggle('on')"></div>
+      </div>
+    </div>
+    
+    <div class="settings-section" id="sessions-tab" style="display: none;">
+      <h3>Active Sessions</h3>
+      <div class="session-item">
+        <div class="session-info">
+          <div class="session-icon">💻</div>
+          <div><div class="setting-label">Chrome on Windows</div><div class="session-detail">Current session · IP: 192.168.1.1</div></div>
+        </div>
+        <span class="session-current">CURRENT</span>
+      </div>
+      <div class="session-item">
+        <div class="session-info">
+          <div class="session-icon">📱</div>
+          <div><div class="setting-label">Mobile App</div><div class="session-detail">Last active: 2 hours ago</div></div>
+        </div>
+        <button class="revoke-btn" onclick="this.parentElement.remove()">Revoke</button>
+      </div>
+      <div class="session-item">
+        <div class="session-info">
+          <div class="session-icon">💻</div>
+          <div><div class="setting-label">Firefox on Linux</div><div class="session-detail">Last active: 3 days ago</div></div>
+        </div>
+        <button class="revoke-btn" onclick="this.parentElement.remove()">Revoke</button>
+      </div>
+    </div>
+    
+    <div class="settings-section" id="password-tab" style="display: none;">
+      <h3>Change Password</h3>
+      <div class="setting-row">
+        <div><div class="setting-label">Current Password</div></div>
+        <input type="password" class="setting-input" placeholder="Enter current">
+      </div>
+      <div class="setting-row">
+        <div><div class="setting-label">New Password</div></div>
+        <input type="password" class="setting-input" placeholder="Enter new">
+      </div>
+      <div class="setting-row">
+        <div><div class="setting-label">Confirm Password</div></div>
+        <input type="password" class="setting-input" placeholder="Confirm">
+      </div>
+    </div>
+    
+    <div class="danger-zone">
+      <h3>Danger Zone</h3>
+      <div class="setting-row">
+        <div><div class="setting-label">Delete Account</div><div class="setting-desc">Permanently delete your account and all data</div></div>
+        <button class="danger-btn" onclick="confirm('Are you sure? This cannot be undone.')">Delete Account</button>
+      </div>
+    </div>
+  </div>
+  <div class="save-bar">
+    <button class="discard-btn" onclick="location.reload()">Discard</button>
+    <button class="save-btn" onclick="alert('Settings saved!')">Save Changes</button>
+  </div>
+</div>
+<script>
+function setTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
+  document.querySelectorAll('.settings-section').forEach(section => section.style.display = 'none');
+  document.getElementById(tab + '-tab').style.display = 'block';
+}
+setTab('account');
+</script>
+</body>
+</html>

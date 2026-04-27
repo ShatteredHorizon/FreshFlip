@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FreshFlip - Sound Settings</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root { --bg: #0f0f13; --bg2: #1a1a23; --bg3: #222230; --accent: #00ff88; --red: #ff4757; --gold: #ffd700; --text: #fff; --text2: #888; --border: #2a2a35; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: 'Space Grotesk', sans-serif; min-height: 100vh; }
+.app { display: flex; min-height: 100vh; }
+.sidebar { width: 240px; background: var(--bg2); border-right: 1px solid var(--border); padding: 20px 0; flex-shrink: 0; }
+.logo { font-size: 1.5rem; font-weight: 700; padding: 0 20px 20px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+.logo span { color: var(--accent); }
+.nav-section { padding: 0 16px; margin-bottom: 20px; }
+.nav-label { font-size: 0.65rem; color: var(--text2); text-transform: uppercase; margin-bottom: 8px; }
+.nav-link { display: block; padding: 10px 12px; border-radius: 8px; color: var(--text); text-decoration: none; font-size: 0.9rem; transition: all 0.2s; cursor: pointer; }
+.nav-link:hover { background: var(--bg3); }
+.nav-link.active { background: var(--accent); color: #000; }
+.main { flex: 1; padding: 30px; overflow-y: auto; }
+.page-header { margin-bottom: 30px; }
+.page-header h1 { font-size: 2rem; margin-bottom: 8px; }
+.page-header p { color: var(--text2); }
+
+.sound-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 30px; }
+.sound-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 24px; }
+.sound-card h3 { margin-bottom: 16px; }
+
+.setting-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); }
+.setting-row:last-child { border-bottom: none; }
+.setting-label { font-weight: 600; }
+.setting-desc { font-size: 0.8rem; color: var(--text2); margin-top: 2px; }
+.toggle { width: 48px; height: 24px; background: var(--bg3); border-radius: 12px; cursor: pointer; position: relative; transition: background 0.2s; }
+.toggle.on { background: var(--accent); }
+.toggle::after { content: ''; position: absolute; width: 20px; height: 20px; background: #fff; border-radius: 50%; top: 2px; left: 2px; transition: left 0.2s; }
+.toggle.on::after { left: 26px; }
+
+.volume-slider { display: flex; align-items: center; gap: 12px; }
+.volume-slider input[type="range"] { flex: 1; height: 8px; background: var(--bg3); border-radius: 4px; appearance: none; cursor: pointer; }
+.volume-slider input[type="range"]::-webkit-slider-thumb { appearance: none; width: 20px; height: 20px; background: var(--accent); border-radius: 50%; cursor: pointer; }
+.volume-value { font-weight: 700; min-width: 40px; text-align: right; }
+
+.music-section { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 20px; }
+.music-section h3 { margin-bottom: 16px; }
+.playlist { display: flex; flex-direction: column; gap: 8px; }
+.playlist-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: var(--bg3); border-radius: 8px; cursor: pointer; }
+.playlist-item:hover { background: var(--border); }
+.playlist-item.active { border: 1px solid var(--accent); }
+.playlist-info { display: flex; align-items: center; gap: 12px; }
+.playlist-icon { width: 32px; height: 32px; background: var(--accent); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+.playlist-name { font-weight: 600; }
+.playlist-duration { color: var(--text2); font-size: 0.85rem; }
+
+.keybindings { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 24px; }
+.keybindings h3 { margin-bottom: 16px; }
+.binding-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border); }
+.binding-row:last-child { border-bottom: none; }
+.binding-action { font-weight: 600; }
+.binding-keys { display: flex; gap: 8px; }
+.key { padding: 6px 12px; background: var(--bg3); border: 1px solid var(--border); border-radius: 4px; font-family: monospace; font-size: 0.85rem; }
+
+.sound-test { padding: 14px 28px; background: var(--accent); border: none; border-radius: 8px; color: #000; font-weight: 700; cursor: pointer; margin-top: 16px; }
+.sound-test:hover { transform: scale(1.02); }
+
+@media(max-width: 768px) { .sidebar { display: none; } .sound-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="sidebar">
+    <div class="logo">FRESH<span>FLIP</span></div>
+    <div class="nav-section">
+      <div class="nav-label">Menu</div>
+      <a class="nav-link" href="index.html">Home</a>
+      <a class="nav-link" href="settings.html">Settings</a>
+      <a class="nav-link active" href="sound.html">Sound</a>
+    </div>
+  </div>
+  <div class="main">
+    <div class="page-header">
+      <h1>Sound Settings</h1>
+      <p>Customize your audio experience</p>
+    </div>
+    <div class="sound-grid">
+      <div class="sound-card">
+        <h3>Game Sounds</h3>
+        <div class="setting-row">
+          <div><div class="setting-label">Win Sounds</div><div class="setting-desc">Celebration on big wins</div></div>
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+        <div class="setting-row">
+          <div><div class="setting-label">Bet Placed</div><div class="setting-desc">Sound when placing a bet</div></div>
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+        <div class="setting-row">
+          <div><div class="setting-label">Game Start</div><div class="setting-desc">Sound when round starts</div></div>
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+        <div class="setting-row">
+          <div><div class="setting-label">Crash Alert</div><div class="setting-desc">Warning before crash</div></div>
+          <div class="toggle" onclick="this.classList.toggle('on')"></div>
+        </div>
+      </div>
+      <div class="sound-card">
+        <h3>Interface Sounds</h3>
+        <div class="setting-row">
+          <div><div class="setting-label">Button Clicks</div><div class="setting-desc">Sound on button clicks</div></div>
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+        <div class="setting-row">
+          <div><div class="setting-label">Notifications</div><div class="setting-desc">Chat and system alerts</div></div>
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+        <div class="setting-row">
+          <div><div class="setting-label">Error Sounds</div><div class="setting-desc">Sound on errors</div></div>
+          <div class="toggle" onclick="this.classList.toggle('on')"></div>
+        </div>
+      </div>
+    </div>
+    <div class="sound-card" style="margin-bottom: 20px;">
+      <h3>Volume Levels</h3>
+      <div class="setting-row">
+        <div><div class="setting-label">Master Volume</div></div>
+        <div class="volume-slider"><input type="range" min="0" max="100" value="80"><span class="volume-value">80%</span></div>
+      </div>
+      <div class="setting-row">
+        <div><div class="setting-label">Game Sounds</div></div>
+        <div class="volume-slider"><input type="range" min="0" max="100" value="100"><span class="volume-value">100%</span></div>
+      </div>
+      <div class="setting-row">
+        <div><div class="setting-label">Music</div></div>
+        <div class="volume-slider"><input type="range" min="0" max="100" value="50"><span class="volume-value">50%</span></div>
+      </div>
+      <div class="setting-row">
+        <div><div class="setting-label">Voice Chat</div></div>
+        <div class="volume-slider"><input type="range" min="0" max="100" value="90"><span class="volume-value">90%</span></div>
+      </div>
+    </div>
+    <div class="music-section">
+      <h3>Background Music</h3>
+      <div class="setting-row" style="border: none; padding-bottom: 16px;">
+        <div><div class="setting-label">Ambient Music</div><div class="setting-desc">Play background music during games</div></div>
+        <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div class="playlist">
+        <div class="playlist-item active">
+          <div class="playlist-info"><div class="playlist-icon">🎵</div><div class="playlist-name">Casino Lounge</div></div>
+          <div class="playlist-duration">3:45</div>
+        </div>
+        <div class="playlist-item">
+          <div class="playlist-info"><div class="playlist-icon">🎵</div><div class="playlist-name">High Stakes</div></div>
+          <div class="playlist-duration">4:12</div>
+        </div>
+        <div class="playlist-item">
+          <div class="playlist-info"><div class="playlist-icon">🎵</div><div class="playlist-name">Night Vibes</div></div>
+          <div class="playlist-duration">3:30</div>
+        </div>
+      </div>
+    </div>
+    <div class="keybindings">
+      <h3>Keyboard Shortcuts</h3>
+      <div class="binding-row"><span class="binding-action">Place Bet</span><div class="binding-keys"><span class="key">Enter</span></div></div>
+      <div class="binding-row"><span class="binding-action">Cash Out</span><div class="binding-keys"><span class="key">Space</span></div></div>
+      <div class="binding-row"><span class="binding-action">Double Bet</span><div class="binding-keys"><span class="key">D</span></div></div>
+      <div class="binding-row"><span class="binding-action">Halve Bet</span><div class="binding-keys"><span class="key">H</span></div></div>
+      <div class="binding-row"><span class="binding-action">Mute All</span><div class="binding-keys"><span class="key">M</span></div></div>
+    </div>
+    <button class="sound-test" onclick="alert('Testing sounds...')">🔊 Test Sounds</button>
+  </div>
+</div>
+</body>
+</html>

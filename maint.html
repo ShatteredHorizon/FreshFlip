@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FreshFlip - Promo</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root { --bg: #0f0f13; --bg2: #1a1a23; --bg3: #222230; --accent: #00ff88; --red: #ff4757; --gold: #ffd700; --text: #fff; --text2: #888; --border: #2a2a35; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: 'Space Grotesk', sans-serif; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+.error-container { text-align: center; padding: 40px; max-width: 600px; }
+.error-code { font-size: 10rem; font-weight: 700; color: var(--gold); line-height: 1; margin-bottom: 20px; }
+.error-title { font-size: 2.5rem; margin-bottom: 16px; }
+.error-message { color: var(--text2); margin-bottom: 30px; line-height: 1.8; font-size: 1.1rem; }
+.error-btn { padding: 16px 32px; background: var(--accent); border: none; border-radius: 8px; color: #000; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-block; font-size: 1.1rem; }
+.error-btn:hover { transform: scale(1.02); }
+.promo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 40px; }
+.promo-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 24px; }
+.promo-icon { font-size: 2rem; margin-bottom: 12px; }
+.promo-name { font-weight: 700; margin-bottom: 8px; }
+.promo-desc { color: var(--text2); font-size: 0.9rem; margin-bottom: 12px; }
+.promo-link { color: var(--accent); font-weight: 600; cursor: pointer; }
+</style>
+</head>
+<body>
+<div class="error-container">
+  <div class="error-code">💸</div>
+  <h1 class="error-title">Maintenance Mode</h1>
+  <p class="error-message">FreshFlip is currently undergoing scheduled maintenance. We'll be back shortly with improvements and new features. Check our Discord for updates!</p>
+  <a class="error-btn" href="index.html">Back to Home</a>
+  <div class="promo-grid">
+    <div class="promo-card">
+      <div class="promo-icon">💬</div>
+      <div class="promo-name">Discord</div>
+      <div class="promo-desc">Join our community for instant updates</div>
+      <div class="promo-link">Join Now →</div>
+    </div>
+    <div class="promo-card">
+      <div class="promo-icon">🐦</div>
+      <div class="promo-name">Twitter</div>
+      <div class="promo-desc">Follow us for the latest news</div>
+      <div class="promo-link">Follow Now →</div>
+    </div>
+    <div class="promo-card">
+      <div class="promo-icon">📱</div>
+      <div class="promo-name">Telegram</div>
+      <div class="promo-desc">Get instant notifications</div>
+      <div class="promo-link">Join Now →</div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FreshFlip - FAQ & Help</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root { --bg: #0f0f13; --bg2: #1a1a23; --bg3: #222230; --accent: #00ff88; --red: #ff4757; --gold: #ffd700; --text: #fff; --text2: #888; --border: #2a2a35; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: 'Space Grotesk', sans-serif; min-height: 100vh; }
+.app { display: flex; min-height: 100vh; }
+.sidebar { width: 240px; background: var(--bg2); border-right: 1px solid var(--border); padding: 20px 0; flex-shrink: 0; }
+.logo { font-size: 1.5rem; font-weight: 700; padding: 0 20px 20px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+.logo span { color: var(--accent); }
+.nav-section { padding: 0 16px; margin-bottom: 20px; }
+.nav-label { font-size: 0.65rem; color: var(--text2); text-transform: uppercase; margin-bottom: 8px; }
+.nav-link { display: block; padding: 10px 12px; border-radius: 8px; color: var(--text); text-decoration: none; font-size: 0.9rem; transition: all 0.2s; }
+.nav-link:hover { background: var(--bg3); }
+.nav-link.active { background: var(--accent); color: #000; }
+.main { flex: 1; padding: 30px; overflow-y: auto; }
+.page-header { margin-bottom: 30px; }
+.page-header h1 { font-size: 2rem; margin-bottom: 8px; }
+.page-header p { color: var(--text2); }
+
+.help-section { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+.help-section h2 { font-size: 1.3rem; margin-bottom: 16px; color: var(--accent); }
+.help-section p { color: var(--text2); line-height: 1.7; margin-bottom: 12px; }
+.help-section ul { padding-left: 20px; color: var(--text2); line-height: 1.8; }
+.help-section strong { color: var(--text); }
+
+.faq-item { background: var(--bg3); border-radius: 8px; padding: 16px; margin-bottom: 12px; cursor: pointer; }
+.faq-question { font-weight: 600; margin-bottom: 8px; }
+.faq-answer { color: var(--text2); font-size: 0.9rem; display: none; }
+.faq-item.open .faq-answer { display: block; }
+
+.contact-form { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+.form-group { margin-bottom: 16px; }
+.form-label { display: block; margin-bottom: 8px; color: var(--text2); font-size: 0.85rem; }
+.form-input { width: 100%; padding: 12px; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 0.95rem; }
+.form-textarea { width: 100%; padding: 12px; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 0.95rem; min-height: 120px; resize: vertical; }
+.submit-btn { padding: 14px 28px; background: var(--accent); border: none; border-radius: 8px; color: #000; font-weight: 700; cursor: pointer; }
+
+.guide-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+.guide-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 12px; color: var(--accent); }
+.guide-title span { color: var(--text2); font-size: 0.9rem; font-weight: 400; }
+.guide-content { color: var(--text2); font-size: 0.9rem; line-height: 1.7; }
+
+.glossary { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+.glossary-item { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border); }
+.glossary-item:last-child { border-bottom: none; }
+.glossary-term { color: var(--accent); font-weight: 600; }
+.glossary-def { color: var(--text2); font-size: 0.9rem; }
+
+@media(max-width: 768px) { .sidebar { display: none; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="sidebar">
+    <div class="logo">FRESH<span>FLIP</span></div>
+    <div class="nav-section">
+      <div class="nav-label">Menu</div>
+      <a class="nav-link" href="index.html">Home</a>
+      <a class="nav-link active" href="faq.html">FAQ & Help</a>
+      <a class="nav-link" href="tos.html">Terms of Service</a>
+      <a class="nav-link" href="privacy.html">Privacy Policy</a>
+    </div>
+  </div>
+  <div class="main">
+    <div class="page-header">
+      <h1>FAQ & Help</h1>
+      <p>Everything you need to know about FreshFlip</p>
+    </div>
+    
+    <div class="help-section">
+      <h2>Getting Started</h2>
+      <p>Welcome to FreshFlip! Here's how to begin your gaming journey:</p>
+      <ul>
+        <li>Create an account using Discord OAuth or email/password</li>
+        <li>Complete your profile with a username and avatar</li>
+        <li>Make your first deposit using supported cryptocurrencies</li>
+        <li>Choose from 12 exciting games to play</li>
+        <li>Claim daily rewards and refer friends for bonuses</li>
+      </ul>
+    </div>
+    
+    <div class="help-section">
+      <h2>Frequently Asked Questions</h2>
+      <div class="faq-item" onclick="this.classList.toggle('open')">
+        <div class="faq-question">How do I deposit funds?</div>
+        <div class="faq-answer">Navigate to your wallet section and click deposit. We support BTC, ETH, USDT, and other major cryptocurrencies. Copy the deposit address and send funds from your wallet.</div>
+      </div>
+      <div class="faq-item" onclick="this.classList.toggle('open')">
+        <div class="faq-question">What is the minimum bet amount?</div>
+        <div class="faq-answer">Minimum bets vary by game. For most games, the minimum is $1 or equivalent in your currency. Some games allow bets as low as $0.10.</div>
+      </div>
+      <div class="faq-item" onclick="this.classList.toggle('open')">
+        <div class="faq-question">How do I withdraw winnings?</div>
+        <div class="faq-answer">Go to Wallet > Withdraw, enter your wallet address and amount, then confirm. Withdrawals are processed within 24 hours.</div>
+      </div>
+      <div class="faq-item" onclick="this.classList.toggle('open')">
+        <div class="faq-question">Is FreshFlip provably fair?</div>
+        <div class="faq-answer">Yes! All games use cryptographic seeds that you can verify. Check our Provably Fair page for verification tools.</div>
+      </div>
+      <div class="faq-item" onclick="this.classList.toggle('open')">
+        <div class="faq-question">How does the referral program work?</div>
+        <div class="faq-answer">Share your referral code with friends. When they sign up and play, you earn 30% of their house edge. They also get a starting bonus!</div>
+      </div>
+      <div class="faq-item" onclick="this.classList.toggle('open')">
+        <div class="faq-question">What happens if I disconnect during a game?</div>
+        <div class="faq-answer">Your bet is secured. If disconnected, the game auto-completes and winnings are credited to your balance automatically.</div>
+      </div>
+      <div class="faq-item" onclick="this.classList.toggle('open')">
+        <div class="faq-question">How do I contact support?</div>
+        <div class="faq-answer">Use the contact form below or join our Discord server for real-time help.</div>
+      </div>
+    </div>
+    
+    <div class="help-section">
+      <h2>Game Guides</h2>
+      <div class="guide-card">
+        <div class="guide-title">Mines <span>- Find gems, avoid bombs</span></div>
+        <div class="guide-content">Select how many mines (1-5). Click tiles to reveal. Each gem multiplies your bet. Cash out anytime before hitting a mine!</div>
+      </div>
+      <div class="guide-card">
+        <div class="guide-title">Crash <span>- Cash out before crash</span></div>
+        <div class="guide-content">Watch the multiplier rise. Cash out before it crashes! Later cash out = bigger multiplier but more risk.</div>
+      </div>
+      <div class="guide-card">
+        <div class="guide-title">HiLo <span>- Higher or lower?</span></div>
+        <div class="guide-content">Guess if the next card is higher or lower than yours. Each correct guess increases your multiplier by 1.25x!</div>
+      </div>
+      <div class="guide-card">
+        <div class="guide-title">Dice <span>- Roll over target</span></div>
+        <div class="guide-content">Set your target number (1-100). Roll the dice - if roll is below your target, you win with the selected multiplier!</div>
+      </div>
+      <div class="guide-card">
+        <div class="guide-title">Blackjack <span>- Beat the dealer</span></div>
+        <div class="guide-content">Get cards closer to 21 than the dealer without going over. Blackjack (21 on first two cards) pays 3:2!</div>
+      </div>
+      <div class="guide-card">
+        <div class="guide-title">Plinko <span>- Ball drop</span></div>
+        <div class="guide-content">Drop balls and watch them bounce through pegs. Where they land determines your multiplier!</div>
+      </div>
+    </div>
+    
+    <div class="help-section">
+      <h2>Glossary</h2>
+      <div class="glossary">
+        <div class="glossary-item"><span class="glossary-term">House Edge</span><span class="glossary-def">Casino's mathematical advantage</span></div>
+        <div class="glossary-item"><span class="glossary-term">RTP</span><span class="glossary-def">Return to Player percentage</span></div>
+        <div class="glossary-item"><span class="glossary-term">Provably Fair</span><span class="glossary-def">Verifiable game fairness</span></div>
+        <div class="glossary-item"><span class="glossary-term">Wager</span><span class="glossary-def">Total amount bet</span></div>
+        <div class="glossary-item"><span class="glossary-term">Rollback</span><span class="glossary-def">Cancelled bet reversal</span></div>
+        <div class="glossary-item"><span class="glossary-term">KYC</span><span class="glossary-def">Know Your Customer verification</span></div>
+      </div>
+    </div>
+    
+    <div class="contact-form">
+      <h2>Contact Support</h2>
+      <div class="form-group">
+        <label class="form-label">Subject</label>
+        <select class="form-input">
+          <option>General Question</option>
+          <option>Deposit Issue</option>
+          <option>Withdrawal Issue</option>
+          <option>Game Dispute</option>
+          <option>Account Issue</option>
+          <option>Bug Report</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Message</label>
+        <textarea class="form-textarea" placeholder="Describe your issue in detail..."></textarea>
+      </div>
+      <button class="submit-btn" onclick="alert('Message sent! We will respond within 24 hours.')">Send Message</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>

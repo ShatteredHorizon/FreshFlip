@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FreshFlip - Chicken</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root { --bg: #0f0f13; --bg2: #1a1a23; --bg3: #222230; --accent: #00ff88; --red: #ff4757; --gold: #ffd700; --text: #fff; --text2: #888; --border: #2a2a35; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: 'Space Grotesk', sans-serif; min-height: 100vh; }
+.app { display: flex; min-height: 100vh; }
+.sidebar { width: 240px; background: var(--bg2); border-right: 1px solid var(--border); padding: 20px 0; flex-shrink: 0; }
+.logo { font-size: 1.5rem; font-weight: 700; padding: 0 20px 20px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+.logo span { color: var(--accent); }
+.nav-section { padding: 0 16px; margin-bottom: 20px; }
+.nav-label { font-size: 0.65rem; color: var(--text2); text-transform: uppercase; margin-bottom: 8px; }
+.nav-link { display: block; padding: 10px 12px; border-radius: 8px; color: var(--text); text-decoration: none; font-size: 0.9rem; transition: all 0.2s; cursor: pointer; }
+.nav-link:hover { background: var(--bg3); }
+.nav-link.active { background: var(--accent); color: #000; }
+.main { flex: 1; padding: 30px; overflow-y: auto; }
+.header-bar { display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; background: var(--bg2); border-bottom: 1px solid var(--border); }
+.balance { display: flex; align-items: center; gap: 12px; }
+.balance-label { color: var(--text2); font-size: 0.75rem; }
+.balance-value { font-size: 1.2rem; font-weight: 700; color: var(--accent); }
+.user { display: flex; align-items: center; gap: 10px; }
+.user-avatar { width: 36px; height: 36px; background: var(--accent); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #000; }
+.game-header { margin-bottom: 30px; }
+.game-header h1 { font-size: 2rem; margin-bottom: 8px; }
+.game-header p { color: var(--text2); }
+.game-header span { color: var(--gold); font-weight: 700; }
+
+.chicken-game { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 40px; text-align: center; margin-bottom: 20px; min-height: 300px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.chicken-visual { width: 120px; height: 120px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 3rem; margin: 0 auto 20px; }
+.chicken-status { font-size: 1.5rem; font-weight: 700; margin-bottom: 10px; }
+.multiplier-display { font-size: 1.2rem; color: var(--accent); font-weight: 700; }
+
+.chicken-controls { display: flex; gap: 10px; justify-content: center; margin-top: 20px; }
+.chicken-btn { padding: 16px 32px; border-radius: 8px; font-size: 1rem; font-weight: 700; cursor: pointer; border: none; }
+.chicken-btn.cashout { background: var(--accent); color: #000; }
+.chicken-btn.play { background: var(--bg3); color: var(--text); border: 1px solid var(--border); }
+.chicken-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.bet-section { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+.bet-input { width: 100%; padding: 14px; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 1rem; margin-bottom: 12px; }
+.bet-controls { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+.bet-btn { padding: 10px 16px; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; color: var(--text); cursor: pointer; font-size: 0.85rem; }
+.bet-btn:hover { border-color: var(--accent); }
+
+.instructions { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+.instructions h3 { margin-bottom: 12px; color: var(--accent); }
+.instructions ul { padding-left: 20px; color: var(--text2); font-size: 0.9rem; line-height: 1.8; }
+
+@media(max-width: 768px) { .sidebar { display: none; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="sidebar">
+    <div class="logo">FRESH<span>FLIP</span></div>
+    <div class="nav-section">
+      <div class="nav-label">Games</div>
+      <a class="nav-link" href="mines.html">Mines</a>
+      <a class="nav-link" href="crash.html">Crash</a>
+      <a class="nav-link" href="hilo.html">HiLo</a>
+      <a class="nav-link" href="dice.html">Dice</a>
+      <a class="nav-link" href="coinflip.html">Coinflip</a>
+      <a class="nav-link active" href="chicken.html">Chicken</a>
+      <a class="nav-link" href="tower.html">Dragon Tower</a>
+      <a class="nav-link" href="wheel.html">Wheel</a>
+      <a class="nav-link" href="plinko.html">Plinko</a>
+      <a class="nav-link" href="blackjack.html">Blackjack</a>
+      <a class="nav-link" href="keno.html">Keno</a>
+      <a class="nav-link" href="limbo.html">Limbo</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Menu</div>
+      <a class="nav-link" href="livebets.html">Live Bets</a>
+      <a class="nav-link" href="referral.html">Referrals</a>
+      <a class="nav-link" href="daily.html">Daily Rewards</a>
+    </div>
+  </div>
+  <div class="main">
+    <div class="header-bar">
+      <div class="balance"><span class="balance-label">Balance</span><span class="balance-value" id="balance">$0</span></div>
+      <div class="user"><span id="username">User</span><div class="user-avatar" id="avatar">U</div></div>
+    </div>
+    <div class="game-header">
+      <h1>Chicken <span>- Don't crack the egg!</span></h1>
+      <p>Keep your chicken alive to multiply your bet!</p>
+    </div>
+    <div class="chicken-game">
+      <div class="chicken-visual" id="chicken-visual">🐔</div>
+      <div class="chicken-status" id="chicken-status">Press START to play</div>
+      <div class="multiplier-display">Multiplier: <span id="multiplier">1.00x</span></div>
+      <div class="chicken-controls">
+        <button class="chicken-btn play" id="play-btn" onclick="startGame()">START</button>
+        <button class="chicken-btn cashout" id="cashout-btn" onclick="cashOut()" disabled>CASHOUT</button>
+      </div>
+    </div>
+    <div class="instructions">
+      <h3>How to Play</h3>
+      <ul>
+        <li>Place your bet and click START</li>
+        <li>Watch your chicken grow in value</li>
+        <li>Click CASHOUT anytime to bank your winnings</li>
+        <li>If the chicken "cracks", you lose your bet</li>
+        <li>The longer you wait, the higher the multiplier!</li>
+      </ul>
+    </div>
+    <div class="bet-section">
+      <input type="number" class="bet-input" id="bet-amount" placeholder="Bet Amount">
+      <div class="bet-controls">
+        <button class="bet-btn" onclick="addBet(10)">+$10</button>
+        <button class="bet-btn" onclick="addBet(50)">+$50</button>
+        <button class="bet-btn" onclick="addBet(100)">+$100</button>
+        <button class="bet-btn" onclick="addBet(1000)">+$1K</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="../js/auth.js"></script>
+<script>
+let bet = 0;
+let multiplier = 1;
+let gameActive = false;
+let gameInterval = null;
+
+async function init() {
+  await Session.init();
+  if (!Session.isLoggedIn()) location.href = '../login.html';
+  document.getElementById('username').textContent = window.currentUser.username;
+  document.getElementById('avatar').textContent = window.currentUser.username.charAt(0).toUpperCase();
+  document.getElementById('balance').textContent = '$' + window.balance.toLocaleString();
+}
+
+function addBet(amount) {
+  const input = document.getElementById('bet-amount');
+  input.value = (parseInt(input.value) || 0) + amount;
+}
+
+function startGame() {
+  bet = parseInt(document.getElementById('bet-amount').value) || 0;
+  if (!bet || bet < 1 || bet > window.balance) { alert('Invalid bet'); return; }
+  updateBalanceUI(window.balance - bet);
+  multiplier = 1;
+  gameActive = true;
+  document.getElementById('multiplier').textContent = '1.00x';
+  document.getElementById('chicken-status').textContent = 'Chicken is growing...';
+  document.getElementById('play-btn').disabled = true;
+  document.getElementById('cashout-btn').disabled = false;
+  gameInterval = setInterval(gameLoop, 100);
+}
+
+function gameLoop() {
+  if (!gameActive) return;
+  if (Math.random() < 0.01) {
+    crackEgg();
+    return;
+  }
+  multiplier += 0.01 + Math.random() * 0.02;
+  document.getElementById('multiplier').textContent = multiplier.toFixed(2) + 'x';
+  const scale = 1 + multiplier * 0.1;
+  document.getElementById('chicken-visual').style.transform = 'scale(' + scale + ')';
+}
+
+function crackEgg() {
+  gameActive = false;
+  clearInterval(gameInterval);
+  document.getElementById('chicken-visual').textContent = '🥚';
+  document.getElementById('chicken-status').textContent = 'Egg cracked! You lost $' + bet;
+  document.getElementById('play-btn').disabled = false;
+  document.getElementById('cashout-btn').disabled = true;
+  alert('Egg cracked! You lost $' + bet);
+  Session.saveBalance();
+}
+
+function cashOut() {
+  if (!gameActive) return;
+  gameActive = false;
+  clearInterval(gameInterval);
+  const winnings = Math.floor(bet * multiplier);
+  updateBalanceUI(window.balance + winnings);
+  document.getElementById('chicken-status').textContent = 'Cashed out at ' + multiplier.toFixed(2) + 'x';
+  document.getElementById('play-btn').disabled = false;
+  document.getElementById('cashout-btn').disabled = true;
+  alert('Cashed out $' + winnings + '!');
+  Session.saveBalance();
+}
+
+init();
+</script>
+</body>
+</html>

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FreshFlip - Bonuses</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root { --bg: #0f0f13; --bg2: #1a1a23; --bg3: #222230; --accent: #00ff88; --red: #ff4757; --gold: #ffd700; --text: #fff; --text2: #888; --border: #2a2a35; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font-family: 'Space Grotesk', sans-serif; min-height: 100vh; }
+.app { display: flex; min-height: 100vh; }
+.sidebar { width: 240px; background: var(--bg2); border-right: 1px solid var(--border); padding: 20px 0; flex-shrink: 0; }
+.logo { font-size: 1.5rem; font-weight: 700; padding: 0 20px 20px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+.logo span { color: var(--accent); }
+.nav-section { padding: 0 16px; margin-bottom: 20px; }
+.nav-label { font-size: 0.65rem; color: var(--text2); text-transform: uppercase; margin-bottom: 8px; }
+.nav-link { display: block; padding: 10px 12px; border-radius: 8px; color: var(--text); text-decoration: none; font-size: 0.9rem; transition: all 0.2s; cursor: pointer; }
+.nav-link:hover { background: var(--bg3); }
+.nav-link.active { background: var(--accent); color: #000; }
+.main { flex: 1; padding: 30px; overflow-y: auto; }
+.page-header { margin-bottom: 30px; }
+.page-header h1 { font-size: 2rem; margin-bottom: 8px; }
+.page-header p { color: var(--text2); }
+
+.banner { background: linear-gradient(135deg, rgba(0, 255, 136, 0.15) 0%, rgba(255, 215, 0, 0.1) 100%); border: 2px solid var(--accent); border-radius: 16px; padding: 30px; margin-bottom: 30px; text-align: center; }
+.banner-badge { display: inline-block; padding: 6px 14px; background: var(--accent); color: #000; border-radius: 20px; font-size: 0.75rem; font-weight: 700; margin-bottom: 12px; }
+.banner-title { font-size: 2rem; font-weight: 700; margin-bottom: 8px; }
+.banner-desc { color: var(--text2); margin-bottom: 16px; }
+.banner-code { background: var(--bg3); padding: 12px 20px; border-radius: 8px; font-family: monospace; font-size: 1.1rem; margin-bottom: 16px; display: inline-block; }
+.claim-btn { padding: 14px 32px; background: var(--accent); border: none; border-radius: 8px; color: #000; font-size: 1rem; font-weight: 700; cursor: pointer; }
+
+.bonus-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 30px; }
+.bonus-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 24px; }
+.bonus-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+.bonus-icon { width: 48px; height: 48px; background: var(--bg3); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+.bonus-badge { padding: 4px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; }
+.bonus-badge.new { background: var(--accent); color: #000; }
+.bonus-badge.expired { background: var(--bg3); color: var(--text2); }
+.bonus-name { font-size: 1.2rem; font-weight: 700; margin-bottom: 8px; }
+.bonus-desc { color: var(--text2); font-size: 0.9rem; line-height: 1.6; margin-bottom: 16px; }
+.bonus-details { background: var(--bg3); border-radius: 8px; padding: 12px; margin-bottom: 16px; }
+.bonus-detail { display: flex; justify-content: space-between; font-size: 0.85rem; padding: 8px 0; border-bottom: 1px solid var(--border); }
+.bonus-detail:last-child { border-bottom: none; }
+.bonus-label { color: var(--text2); }
+.bonus-value { font-weight: 700; }
+.bonus-value.active { color: var(--accent); }
+.usage-bar { height: 8px; background: var(--bg); border-radius: 4px; overflow: hidden; margin-bottom: 8px; }
+.usage-fill { height: 100%; background: var(--accent); border-radius: 4px; }
+.usage-text { font-size: 0.8rem; color: var(--text2); }
+
+.ongoing-bonuses { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 20px; }
+.ongoing-bonuses h3 { margin-bottom: 16px; }
+.ongoing-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid var(--border); }
+.ongoing-item:last-child { border-bottom: none; }
+.ongoing-name { font-weight: 600; }
+.ongoing expiry { color: var(--text2); font-size: 0.85rem; }
+.ongoing-amount { color: var(--accent); font-weight: 700; }
+
+.vip-rewards { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 20px; }
+.vip-rewards h3 { margin-bottom: 16px; }
+.vip-tier { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid var(--border); }
+.vip-tier:last-child { border-bottom: none; }
+.vip-name { display: flex; align-items: center; gap: 12px; }
+.vip-icon { width: 32px; height: 32px; background: var(--bg3); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.vip-perk { color: var(--accent); font-weight: 700; }
+
+@media(max-width: 768px) { .sidebar { display: none; } .bonus-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="sidebar">
+    <div class="logo">FRESH<span>FLIP</span></div>
+    <div class="nav-section">
+      <div class="nav-label">Menu</div>
+      <a class="nav-link" href="index.html">Home</a>
+      <a class="nav-link active" href="bonuses.html">Bonuses</a>
+      <a class="nav-link" href="wallet.html">Wallet</a>
+      <a class="nav-link" href="vip.html">VIP</a>
+    </div>
+  </div>
+  <div class="main">
+    <div class="page-header">
+      <h1>Bonuses & Promotions</h1>
+      <p>Special offers and rewards</p>
+    </div>
+    <div class="banner">
+      <div class="banner-badge">LIMITED TIME</div>
+      <div class="banner-title">100% First Deposit Bonus</div>
+      <div class="banner-desc">Get up to $500 bonus on your first deposit!</div>
+      <div class="banner-code">FIRST100</div>
+      <br>
+      <button class="claim-btn" onclick="alert('Bonus claimed!')">CLAIM NOW</button>
+    </div>
+    <div class="bonus-grid">
+      <div class="bonus-card">
+        <div class="bonus-header">
+          <div class="bonus-icon">🎰</div>
+          <div class="bonus-badge new">NEW</div>
+        </div>
+        <div class="bonus-name">Reload Bonus</div>
+        <div class="bonus-desc">50% extra on every deposit over $100</div>
+        <div class="bonus-details">
+          <div class="bonus-detail"><span class="bonus-label">Bonus %</span><span class="bonus-value">50%</span></div>
+          <div class="bonus-detail"><span class="bonus-label">Max Bonus</span><span class="bonus-value">$250</span></div>
+          <div class="bonus-detail"><span class="bonus-label">Min Deposit</span><span class="bonus-value">$100</span></div>
+          <div class="bonus-detail"><span class="bonus-label">Wager Req</span><span class="bonus-value">10x</span></div>
+        </div>
+        <button class="claim-btn" style="width: 100%;">CLAIM</button>
+      </div>
+      <div class="bonus-card">
+        <div class="bonus-header">
+          <div class="bonus-icon">🎲</div>
+          <div class="bonus-badge">DAILY</div>
+        </div>
+        <div class="bonus-name">Daily Spin</div>
+        <div class="bonus-desc">Free spin on wheel every 24 hours</div>
+        <div class="bonus-details">
+          <div class="bonus-detail"><span class="bonus-label">Bonus %</span><span class="bonus-value">Random</span></div>
+          <div class="bonus-detail"><span class="bonus-label">Max Prize</span><span class="bonus-value">$1,000</span></div>
+          <div class="bonus-detail"><span class="bonus-label">Frequency</span><span class="bonus-value">Daily</span></div>
+          <div class="bonus-detail"><span class="bonus-label">Wager Req</span><span class="bonus-value">None</span></div>
+        </div>
+        <button class="claim-btn" style="width: 100%;">SPIN NOW</button>
+      </div>
+      <div class="bonus-card">
+        <div class="bonus-header">
+          <div class="bonus-icon">👥</div>
+          <div class="bonus-badge">ONGOING</div>
+        </div>
+        <div class="bonus-name">Referral Bonus</div>
+        <div class="bonus-desc">30% of house edge from referred friends</div>
+        <div class="bonus-details">
+          <div class="bonus-detail"><span class="bonus-label">Bonus %</span><span class="bonus-value">30%</span></div>
+          <div class="bonus-detail"><span class="bonus-label">Max Earn</span><span class="bonus-value">Unlimited</span></div>
+          <div class="bonus-detail"><span class="bonus-label">Friend Bonus</span><span class="bonus-value">$50</span></div>
+          <div class="bonus-detail"><span class="bonus-label">Wager Req</span><span class="bonus-value">5x</span></div>
+        </div>
+        <button class="claim-btn" style="width: 100%;">INVITE</button>
+      </div>
+      <div class="bonus-card">
+        <div class="bonus-header">
+          <div class="bonus-icon">🏆</div>
+          <div class="bonus-badge">WEEKLY</div>
+        </div>
+        <div class="bonus-name">Tournament Prize</div>
+        <div class="bonus-desc">Compete for share of $50k weekly</div>
+        <div class="bonus-details">
+          <div class="bonus-detail"><span class="bonus-label">Prize Pool</span><span class="bonus-value">$50,000</span></div>
+          <div class="bonus-detail"><span class="bonus-label">Top Prize</span><span class="bonus-value">$15,000</span></div>
+          <div class="bonus-detail"><span class="bonus-label">Format</span><span class="bonus-value">Winnings</span></div>
+          <div class="bonus-detail"><span class="bonus-label">Entry</span><span class="bonus-value">Free</span></div>
+        </div>
+        <button class="claim-btn" style="width: 100%;">VIEW</button>
+      </div>
+    </div>
+    <div class="ongoing-bonuses">
+      <h3>Active Bonuses Used</h3>
+      <div class="on:going-item">
+        <div class="on:going-name">Welcome Bonus</div>
+        <div class="on:going-amount">$250 / $500</div>
+      </div>
+      <div class="usage-bar"><div class="usage-fill" style="width: 50%;"></div></div>
+      <div class="usage-text">$250 used of $500 max</div>
+    </div>
+    <div class="vip-rewards">
+      <h3>VIP Weekly Rewards</h3>
+      <div class="vip-tier">
+        <div class="vip-name"><div class="vip-icon">🥉</div><span>Bronze</span></div>
+        <div class="vip-perk">2.5% Rakeback</div>
+      </div>
+      <div class="vip-tier">
+        <div class="vip-name"><div class="vip-icon">🥈</div><span>Silver</span></div>
+        <div class="vip-perk">5% Rakeback</div>
+      </div>
+      <div class="vip-tier">
+        <div class="vip-name"><div class="vip-icon">🥇</div><span>Gold</span></div>
+        <div class="vip-perk">7.5% Rakeback</div>
+      </div>
+      <div class="vip-tier">
+        <div class="vip-name"><div class="vip-icon">💎</div><span>Platinum</span></div>
+        <div class="vip-perk">10% Rakeback</div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
