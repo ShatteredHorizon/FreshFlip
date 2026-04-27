@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FreshFlip - Daily Rewards</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root { --bg: #0f0f13; --bg2: #1a1a23; --bg3: #222230; --accent: #00ff88; --red: #ff4757; --gold: #ffd700; --text: #fff; --text2: #888; --border: #2a2a35; }
@@ -16,7 +15,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Space Grotesk', 
 .logo span { color: var(--accent); }
 .nav-section { padding: 0 16px; margin-bottom: 20px; }
 .nav-label { font-size: 0.65rem; color: var(--text2); text-transform: uppercase; margin-bottom: 8px; }
-.nav-link { display: block; padding: 10px 12px; border-radius: 8px; color: var(--text); text-decoration: none; font-size: 0.9rem; transition: all 0.2s; cursor: pointer; }
+.nav-link { display: block; padding: 10px 12px; border-radius: 8px; color: var(--text); text-decoration: none; font-size: 0.9rem; transition: all 0.2s; }
 .nav-link:hover { background: var(--bg3); }
 .nav-link.active { background: var(--accent); color: #000; }
 .main { flex: 1; padding: 30px; overflow-y: auto; }
@@ -27,34 +26,21 @@ body { background: var(--bg); color: var(--text); font-family: 'Space Grotesk', 
 .page-header { margin-bottom: 30px; }
 .page-header h1 { font-size: 2rem; margin-bottom: 8px; }
 .page-header p { color: var(--text2); }
-
-.timer-section { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 20px; text-align: center; }
-.timer-label { font-size: 0.9rem; color: var(--text2); margin-bottom: 10px; }
-.timer-value { font-size: 2rem; font-weight: 700; color: var(--accent); }
-
-.rewards-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 12px; margin-bottom: 30px; }
-.reward-day { background: var(--bg2); border: 2px solid var(--border); border-radius: 12px; padding: 20px 10px; text-align: center; cursor: pointer; transition: all 0.2s; }
-.reward-day:hover { border-color: var(--accent); }
-.reward-day.claimed { background: var(--accent); border-color: var(--accent); color: #000; }
-.reward-day.current { border-color: var(--gold); }
-.reward-day.locked { opacity: 0.5; cursor: not-allowed; }
-.day-number { font-size: 0.8rem; color: var(--text2); margin-bottom: 8px; }
+.timer-box { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; text-align: center; margin-bottom: 20px; }
+.timer { font-size: 2rem; font-weight: 700; color: var(--accent); }
+.rewards { display: grid; grid-template-columns: repeat(7, 1fr); gap: 12px; margin-bottom: 30px; }
+.day { background: var(--bg2); border: 2px solid var(--border); border-radius: 12px; padding: 16px; text-align: center; cursor: pointer; }
+.day:hover { border-color: var(--accent); }
+.day.claimed { background: var(--accent); border-color: var(--accent); color: #000; }
+.day.current { border-color: var(--gold); }
+.day.locked { opacity: 0.5; }
+.day-num { font-size: 0.8rem; color: var(--text2); margin-bottom: 8px; }
 .day-reward { font-size: 1.2rem; font-weight: 700; }
-
-.progress-section { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 20px; }
-.progress-title { font-size: 1rem; margin-bottom: 12px; }
-.progress-bar { height: 12px; background: var(--bg3); border-radius: 6px; overflow: hidden; margin-bottom: 8px; }
-.progress-fill { height: 100%; background: var(--accent); border-radius: 6px; transition: width 0.3s; }
-.progress-text { font-size: 0.85rem; color: var(--text2); }
-
-.streak-info { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
-.streak-info h3 { margin-bottom: 12px; color: var(--accent); }
-.streak-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
-.streak-stat { text-align: center; }
-.streak-stat .value { font-size: 1.5rem; font-weight: 700; color: var(--gold); }
-.streak-stat .label { font-size: 0.8rem; color: var(--text2); }
-
-@media(max-width: 768px) { .sidebar { display: none; } .rewards-grid { grid-template-columns: repeat(4, 1fr); } }
+.streak { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; display: flex; justify-content: space-around; }
+.streak-item { text-align: center; }
+.streak-value { font-size: 1.5rem; font-weight: 700; color: var(--gold); }
+.streak-label { font-size: 0.85rem; color: var(--text2); }
+@media(max-width: 768px) { .sidebar { display: none; } .rewards { grid-template-columns: repeat(4, 1fr); } }
 </style>
 </head>
 <body>
@@ -78,105 +64,45 @@ body { background: var(--bg); color: var(--text); font-family: 'Space Grotesk', 
     </div>
     <div class="nav-section">
       <div class="nav-label">Menu</div>
-      <a class="nav-link" href="livebets.html">Live Bets</a>
+      <a class="nav-link" href="../wallet.html">Wallet</a>
+      <a class="nav-link" href="../leaderboard.html">Leaderboard</a>
+      <a class="nav-link" href="../tournaments.html">Tournaments</a>
+      <a class="nav-link" href="../vip.html">VIP</a>
+      <a class="nav-link" href="../bonuses.html">Bonuses</a>
       <a class="nav-link" href="referral.html">Referrals</a>
       <a class="nav-link active" href="daily.html">Daily Rewards</a>
+      <a class="nav-link" href="../history.html">Bet History</a>
+      <a class="nav-link" href="../achievements.html">Achievements</a>
+      <a class="nav-link" href="../chat.html">Chat</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Support</div>
+      <a class="nav-link" href="../settings.html">Settings</a>
+      <a class="nav-link" href="../faq.html">FAQ</a>
+      <a class="nav-link" href="../support.html">Support</a>
     </div>
   </div>
   <div class="main">
+    <div class="header-bar">
+      <div class="balance"><span class="balance-label">Balance</span><span class="balance-value" id="balance">$0</span></div>
+    </div>
     <div class="page-header">
       <h1>Daily Rewards</h1>
       <p>Claim your free coins every day!</p>
     </div>
-    <div class="timer-section">
-      <div class="timer-label">Next reward in</div>
-      <div class="timer-value" id="timer">23:59:59</div>
-    </div>
-    <div class="rewards-grid" id="rewards-grid"></div>
-    <div class="progress-section">
-      <div class="progress-title">Weekly Progress</div>
-      <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width: 0%"></div></div>
-      <div class="progress-text" id="progress-text">0/7 days claimed</div>
-    </div>
-    <div class="streak-info">
-      <h3>Your Streak</h3>
-      <div class="streak-stats">
-        <div class="streak-stat"><div class="value" id="current-streak">0</div><div class="label">Current Streak</div></div>
-        <div class="streak-stat"><div class="value" id="best-streak">0</div><div class="label">Best Streak</div></div>
-      </div>
-    </div>
+    <div class="timer-box"><div class="timer" id="timer">23:59:59</div></div>
+    <div class="rewards" id="rewards"></div>
+    <div class="streak"><div class="streak-item"><div class="streak-value" id="current-streak">0</div><div class="streak-label">Current Streak</div></div><div class="streak-item"><div class="streak-value" id="best-streak">0</div><div class="streak-label">Best Streak</div></div></div>
   </div>
 </div>
 <script src="../js/auth.js"></script>
 <script>
-const rewards = [
-  { day: 1, reward: 50 },
-  { day: 2, reward: 75 },
-  { day: 3, reward: 100 },
-  { day: 4, reward: 150 },
-  { day: 5, reward: 200 },
-  { day: 6, reward: 300 },
-  { day: 7, reward: 500 }
-];
-
-let currentDay = 1;
-let claimed = [false, false, false, false, false, false, false];
-
-async function init() {
-  await Session.init();
-  if (!Session.isLoggedIn()) location.href = '../login.html';
-  document.getElementById('balance').textContent = '$' + window.balance.toLocaleString();
-  renderRewards();
-  updateTimer();
-}
-
-function renderRewards() {
-  const grid = document.getElementById('rewards-grid');
-  grid.innerHTML = '';
-  rewards.forEach((r, i) => {
-    const day = document.createElement('div');
-    day.className = 'reward-day';
-    if (claimed[i]) day.classList.add('claimed');
-    if (i === currentDay - 1) day.classList.add('current');
-    if (i > currentDay - 1) day.classList.add('locked');
-    day.innerHTML = `<div class="day-number">Day ${r.day}</div><div class="day-reward">$${r.reward}</div>`;
-    day.onclick = () => claimReward(i);
-    grid.appendChild(day);
-  });
-  updateProgress();
-}
-
-function claimReward(index) {
-  if (index !== currentDay - 1 || claimed[index]) return;
-  claimed[index] = true;
-  window.balance += rewards[index].reward;
-  updateBalanceUI(window.balance);
-  alert('Claimed $' + rewards[index].reward + '!');
-  currentDay = currentDay < 7 ? currentDay + 1 : 1;
-  renderRewards();
-  Session.saveBalance();
-}
-
-function updateProgress() {
-  const claimedCount = claimed.filter(c => c).length;
-  document.getElementById('progress-fill').style.width = (claimedCount / 7 * 100) + '%';
-  document.getElementById('progress-text').textContent = claimedCount + '/7 days claimed';
-  document.getElementById('current-streak').textContent = currentDay - 1;
-  document.getElementById('best-streak').textContent = Math.max(currentDay - 1, parseInt(document.getElementById('best-streak').textContent) || 0);
-}
-
-function updateTimer() {
-  let time = 23 * 3600 + 59 * 60 + 59;
-  setInterval(() => {
-    time--;
-    if (time < 0) { time = 24 * 3600 - 1; currentDay = currentDay < 7 ? currentDay + 1 : 1; renderRewards(); }
-    const h = Math.floor(time / 3600);
-    const m = Math.floor((time % 3600) / 60);
-    const s = time % 60;
-    document.getElementById('timer').textContent = h.toString().padStart(2, '0') + ':' + m.toString().padStart(2, '0') + ':' + s.toString().padStart(2, '0');
-  }, 1000);
-}
-
+const rewards = [50, 75, 100, 150, 200, 300, 500];
+let day = 1, claimed = [], timer;
+async function init() { await Session.init(); if (!Session.isLoggedIn()) location.href = '../login.html'; document.getElementById('balance').textContent = '$' + window.balance.toLocaleString(); render(); startTimer(); }
+function render() { const r = document.getElementById('rewards'); r.innerHTML = ''; rewards.forEach((v, i) => { const d = document.createElement('div'); d.className = 'day'; if (claimed.includes(i)) d.classList.add('claimed'); if (i === day - 1) d.classList.add('current'); d.innerHTML = '<div class="day-num">Day ' + (i + 1) + '</div><div class="day-reward">$' + v + '</div>'; d.onclick = () => claim(i); r.appendChild(d); }); }
+function claim(i) { if (i !== day - 1 || claimed.includes(i)) return; claimed.push(i); window.balance += rewards[i]; updateBalanceUI(window.balance); alert('Claimed $' + rewards[i] + '!'); day = day < 7 ? day + 1 : 1; render(); Session.saveBalance(); }
+function startTimer() { let t = 23 * 3600 + 59 * 60 + 59; timer = setInterval(() => { t--; if (t < 0) { t = 24 * 3600 - 1; day = day < 7 ? day + 1 : 1; claimed = []; render(); } const h = Math.floor(t / 3600), m = Math.floor((t % 3600) / 60), s = t % 60; document.getElementById('timer').textContent = h + ':' + (m + '').padStart(2, '0') + ':' + (s + '').padStart(2, '0'); }, 1000); }
 init();
 </script>
 </body>

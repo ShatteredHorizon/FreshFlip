@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FreshFlip - Keno</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root { --bg: #0f0f13; --bg2: #1a1a23; --bg3: #222230; --accent: #00ff88; --red: #ff4757; --gold: #ffd700; --text: #fff; --text2: #888; --border: #2a2a35; }
@@ -16,7 +15,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Space Grotesk', 
 .logo span { color: var(--accent); }
 .nav-section { padding: 0 16px; margin-bottom: 20px; }
 .nav-label { font-size: 0.65rem; color: var(--text2); text-transform: uppercase; margin-bottom: 8px; }
-.nav-link { display: block; padding: 10px 12px; border-radius: 8px; color: var(--text); text-decoration: none; font-size: 0.9rem; transition: all 0.2s; cursor: pointer; }
+.nav-link { display: block; padding: 10px 12px; border-radius: 8px; color: var(--text); text-decoration: none; font-size: 0.9rem; transition: all 0.2s; }
 .nav-link:hover { background: var(--bg3); }
 .nav-link.active { background: var(--accent); color: #000; }
 .main { flex: 1; padding: 30px; overflow-y: auto; }
@@ -29,39 +28,26 @@ body { background: var(--bg); color: var(--text); font-family: 'Space Grotesk', 
 .game-header { margin-bottom: 30px; }
 .game-header h1 { font-size: 2rem; margin-bottom: 8px; }
 .game-header p { color: var(--text2); }
-.game-header span { color: var(--gold); font-weight: 700; }
-
-.keno-board { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 20px; }
+.game-area { display: grid; grid-template-columns: 1fr 350px; gap: 24px; }
+.keno-board { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 20px; }
 .keno-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 8px; margin-bottom: 20px; }
-.keno-number { aspect-ratio: 1; background: var(--bg3); border: 2px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; cursor: pointer; transition: all 0.2s; }
-.keno-number:hover { border-color: var(--accent); }
-.keno-number.selected { background: var(--accent); border-color: var(--accent); color: #000; }
-.keno-number.hit { background: var(--gold); border-color: var(--gold); color: #000; }
-.keno-number.missed { background: var(--red); border-color: var(--red); opacity: 0.5; }
-
-.drawn-numbers { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
-.drawn-ball { width: 36px; height: 36px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #000; }
-
-.keno-info { display: flex; justify-content: space-between; margin-bottom: 20px; }
-.keno-stats { font-size: 0.9rem; color: var(--text2); }
-.keno-stats span { color: var(--accent); font-weight: 700; }
-
-.paytable { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 20px; }
-.paytable h3 { margin-bottom: 12px; color: var(--accent); }
-.paytable-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; font-size: 0.8rem; }
-.pay-row { background: var(--bg3); padding: 8px; text-align: center; border-radius: 4px; }
-.pay-hits { color: var(--accent); }
-.pay-multiplier { color: var(--gold); }
-
-.bet-section { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+.num { aspect-ratio: 1; background: var(--bg3); border: 2px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; cursor: pointer; }
+.num:hover { border-color: var(--accent); }
+.num.selected { background: var(--accent); color: #000; border-color: var(--accent); }
+.num.hit { background: var(--gold); color: #000; border-color: var(--gold); }
+.drawn { display: flex; gap: 8px; flex-wrap: wrap; }
+.ball { width: 36px; height: 36px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #000; }
+.info { display: flex; justify-content: space-between; margin-bottom: 16px; }
+.info span { color: var(--text2); font-size: 0.9rem; }
+.info strong { color: var(--accent); }
+.controls { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
 .bet-input { width: 100%; padding: 14px; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 1rem; margin-bottom: 12px; }
 .bet-controls { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
 .bet-btn { padding: 10px 16px; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; color: var(--text); cursor: pointer; font-size: 0.85rem; }
 .bet-btn:hover { border-color: var(--accent); }
 .play-btn { width: 100%; padding: 16px; background: var(--accent); border: none; border-radius: 8px; color: #000; font-size: 1rem; font-weight: 700; cursor: pointer; }
 .play-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-@media(max-width: 768px) { .sidebar { display: none; } }
+@media(max-width: 768px) { .sidebar { display: none; } .game-area { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
@@ -85,9 +71,22 @@ body { background: var(--bg); color: var(--text); font-family: 'Space Grotesk', 
     </div>
     <div class="nav-section">
       <div class="nav-label">Menu</div>
-      <a class="nav-link" href="livebets.html">Live Bets</a>
+      <a class="nav-link" href="../wallet.html">Wallet</a>
+      <a class="nav-link" href="../leaderboard.html">Leaderboard</a>
+      <a class="nav-link" href="../tournaments.html">Tournaments</a>
+      <a class="nav-link" href="../vip.html">VIP</a>
+      <a class="nav-link" href="../bonuses.html">Bonuses</a>
       <a class="nav-link" href="referral.html">Referrals</a>
       <a class="nav-link" href="daily.html">Daily Rewards</a>
+      <a class="nav-link" href="../history.html">Bet History</a>
+      <a class="nav-link" href="../achievements.html">Achievements</a>
+      <a class="nav-link" href="../chat.html">Chat</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Support</div>
+      <a class="nav-link" href="../settings.html">Settings</a>
+      <a class="nav-link" href="../faq.html">FAQ</a>
+      <a class="nav-link" href="../support.html">Support</a>
     </div>
   </div>
   <div class="main">
@@ -96,143 +95,32 @@ body { background: var(--bg); color: var(--text); font-family: 'Space Grotesk', 
       <div class="user"><span id="username">User</span><div class="user-avatar" id="avatar">U</div></div>
     </div>
     <div class="game-header">
-      <h1>Keno <span>- Pick 10 numbers</span></h1>
-      <p>Select up to 10 numbers and match them to win!</p>
+      <h1>Keno <span>- Pick 10 numbers!</span></h1>
+      <p>Match numbers to win!</p>
     </div>
-    <div class="keno-board">
-      <div class="keno-info">
-        <div class="keno-stats">Selected: <span id="selected-count">0</span>/10</div>
-        <div class="keno-stats">Hits: <span id="hits">0</span>/20</div>
+    <div class="game-area">
+      <div class="keno-board">
+        <div class="info"><span>Picked: <strong id="picked">0</strong>/10</span><span>Hits: <strong id="hits">0</strong>/20</span></div>
+        <div class="keno-grid" id="grid"></div>
+        <div class="drawn" id="drawn"></div>
       </div>
-      <div class="keno-grid" id="keno-grid"></div>
-      <div class="drawn-numbers" id="drawn-numbers"></div>
-    </div>
-    <div class="paytable">
-      <h3>Paytable</h3>
-      <div class="paytable-grid">
-        <div class="pay-row"><div class="pay-hits">10</div><div class="pay-multiplier">100x</div></div>
-        <div class="pay-row"><div class="pay-hits">9</div><div class="pay-multiplier">50x</div></div>
-        <div class="pay-row"><div class="pay-hits">8</div><div class="pay-multiplier">25x</div></div>
-        <div class="pay-row"><div class="pay-hits">7</div><div class="pay-multiplier">10x</div></div>
-        <div class="pay-row"><div class="pay-hits">6</div><div class="pay-multiplier">5x</div></div>
-        <div class="pay-row"><div class="pay-hits">5</div><div class="pay-multiplier">3x</div></div>
-        <div class="pay-row"><div class="pay-hits">4</div><div class="pay-multiplier">2x</div></div>
-        <div class="pay-row"><div class="pay-hits">3</div><div class="pay-multiplier">1x</div></div>
-        <div class="pay-row"><div class="pay-hits">2</div><div class="pay-multiplier">0.5x</div></div>
-        <div class="pay-row"><div class="pay-hits">0-1</div><div class="pay-multiplier">0x</div></div>
+      <div class="controls">
+        <input type="number" class="bet-input" id="bet-amount" placeholder="Bet Amount">
+        <div class="bet-controls"><button class="bet-btn" onclick="addBet(10)">+$10</button><button class="bet-btn" onclick="addBet(50)">+$50</button><button class="bet-btn" onclick="addBet(100)">+$100</button><button class="bet-btn" onclick="addBet(1000)">+$1K</button></div>
+        <button class="play-btn" id="play-btn" onclick="play()">PLAY</button>
       </div>
-    </div>
-    <div class="bet-section">
-      <input type="number" class="bet-input" id="bet-amount" placeholder="Bet Amount">
-      <div class="bet-controls">
-        <button class="bet-btn" onclick="addBet(10)">+$10</button>
-        <button class="bet-btn" onclick="addBet(50)">+$50</button>
-        <button class="bet-btn" onclick="addBet(100)">+$100</button>
-        <button class="bet-btn" onclick="addBet(1000)">+$1K</button>
-      </div>
-      <button class="play-btn" id="play-btn" onclick="playKeno()">PLAY</button>
     </div>
   </div>
 </div>
 <script src="../js/auth.js"></script>
 <script>
-const MAX_PICKS = 10;
-const MAX_DRAW = 20;
-const PAYTABLE = { 10: 100, 9: 50, 8: 25, 7: 10, 6: 5, 5: 3, 4: 2, 3: 1, 2: 0.5 };
-let selected = new Set();
-let drawn = [];
-let gameActive = false;
-
-async function init() {
-  await Session.init();
-  if (!Session.isLoggedIn()) location.href = '../login.html';
-  document.getElementById('username').textContent = window.currentUser.username;
-  document.getElementById('avatar').textContent = window.currentUser.username.charAt(0).toUpperCase();
-  document.getElementById('balance').textContent = '$' + window.balance.toLocaleString();
-  buildGrid();
-}
-
-function buildGrid() {
-  const grid = document.getElementById('keno-grid');
-  grid.innerHTML = '';
-  for (let i = 1; i <= 80; i++) {
-    const cell = document.createElement('div');
-    cell.className = 'keno-number';
-    cell.textContent = i;
-    cell.onclick = () => toggleNumber(i);
-    grid.appendChild(cell);
-  }
-}
-
-function toggleNumber(num) {
-  if (gameActive) return;
-  if (selected.has(num)) {
-    selected.delete(num);
-  } else if (selected.size < MAX_PICKS) {
-    selected.add(num);
-  }
-  updateGrid();
-}
-
-function updateGrid() {
-  document.querySelectorAll('.keno-number').forEach((cell, i) => {
-    const num = i + 1;
-    cell.classList.toggle('selected', selected.has(num));
-  });
-  document.getElementById('selected-count').textContent = selected.size;
-}
-
-function addBet(amount) {
-  const input = document.getElementById('bet-amount');
-  input.value = (parseInt(input.value) || 0) + amount;
-}
-
-async function playKeno() {
-  const bet = parseInt(document.getElementById('bet-amount').value) || 0;
-  if (!bet || bet < 1 || bet > window.balance || selected.size < 1) { alert('Select 1-10 numbers'); return; }
-  updateBalanceUI(window.balance - bet);
-  gameActive = true;
-  document.getElementById('play-btn').disabled = true;
-  drawn = [];
-  const drawnDiv = document.getElementById('drawn-numbers');
-  drawnDiv.innerHTML = '';
-  const nums = Array.from({ length: 80 }, (_, i) => i + 1);
-  for (let i = nums.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [nums[i], nums[j]] = [nums[j], nums[i]];
-  }
-  for (let i = 0; i < MAX_DRAW; i++) {
-    drawn.push(nums[i]);
-    const ball = document.createElement('div');
-    ball.className = 'drawn-ball';
-    ball.textContent = nums[i];
-    drawnDiv.appendChild(ball);
-    document.querySelectorAll('.keno-number')[nums[i] - 1].classList.add(drawn.includes(nums[i]) ? 'hit' : 'missed');
-    document.getElementById('hits').textContent = getHits();
-    await sleep(300);
-  }
-  const hits = getHits();
-  const mult = PAYTABLE[hits] || 0;
-  const winnings = Math.floor(bet * mult);
-  if (winnings > 0) {
-    updateBalanceUI(window.balance + winnings);
-    alert('Won $' + winnings + '! (' + hits + ' hits)');
-  } else {
-    alert('No wins this round');
-  }
-  gameActive = false;
-  document.getElementById('play-btn').disabled = false;
-  Session.saveBalance();
-}
-
-function getHits() {
-  let hits = 0;
-  selected.forEach(n => { if (drawn.includes(n)) hits++; });
-  return hits;
-}
-
-function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
-
+let selected = new Set(), drawn = [], bet = 0;
+async function init() { await Session.init(); if (!Session.isLoggedIn()) location.href = '../login.html'; document.getElementById('username').textContent = window.currentUser.username; document.getElementById('avatar').textContent = window.currentUser.username.charAt(0).toUpperCase(); document.getElementById('balance').textContent = '$' + window.balance.toLocaleString(); buildGrid(); }
+function buildGrid() { const g = document.getElementById('grid'); g.innerHTML = ''; for (let i = 1; i <= 80; i++) { const n = document.createElement('div'); n.className = 'num'; n.textContent = i; n.onclick = () => toggle(i); g.appendChild(n); } }
+function toggle(n) { if (drawn.length > 0) return; if (selected.has(n)) selected.delete(n); else if (selected.size < 10) selected.add(n); update(); }
+function update() { document.querySelectorAll('.num').forEach((el, i) => el.classList.toggle('selected', selected.has(i + 1))); document.getElementById('picked').textContent = selected.size; }
+function addBet(a) { document.getElementById('bet-amount').value = (parseInt(document.getElementById('bet-amount').value) || 0) + a; }
+async function play() { bet = parseInt(document.getElementById('bet-amount').value) || 0; if (!bet || bet < 1 || bet > window.balance || selected.size < 1) { alert('Pick 1-10 numbers'); return; } updateBalanceUI(window.balance - bet); document.getElementById('play-btn').disabled = true; const all = Array.from({length: 80}, (_, i) => i + 1); for (let i = all.length - 1; i > 0; i--) { let j = Math.floor(Math.random() * (i + 1)); [all[i], all[j]] = [all[j], all[i]]; } drawn = all.slice(0, 20); const d = document.getElementById('drawn'); d.innerHTML = ''; drawn.forEach(n => { const b = document.createElement('div'); b.className = 'ball'; b.textContent = n; d.appendChild(b); }); let hits = 0; selected.forEach(n => { if (drawn.includes(n)) hits++; document.querySelectorAll('.num')[n - 1].classList.toggle('hit', drawn.includes(n)); }); document.getElementById('hits').textContent = hits; const mult = [0, 0, 0.5, 1, 2, 3, 5, 10, 25, 50, 100][hits] || 0; const win = Math.floor(bet * mult); if (win > 0) { updateBalanceUI(window.balance + win); alert('Won $' + win + '! (' + hits + ' hits)'); } else { alert('No wins this time'); } document.getElementById('play-btn').disabled = false; Session.saveBalance(); }
 init();
 </script>
 </body>

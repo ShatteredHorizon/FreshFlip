@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FreshFlip - Limbo</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root { --bg: #0f0f13; --bg2: #1a1a23; --bg3: #222230; --accent: #00ff88; --red: #ff4757; --gold: #ffd700; --text: #fff; --text2: #888; --border: #2a2a35; }
@@ -16,7 +15,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Space Grotesk', 
 .logo span { color: var(--accent); }
 .nav-section { padding: 0 16px; margin-bottom: 20px; }
 .nav-label { font-size: 0.65rem; color: var(--text2); text-transform: uppercase; margin-bottom: 8px; }
-.nav-link { display: block; padding: 10px 12px; border-radius: 8px; color: var(--text); text-decoration: none; font-size: 0.9rem; transition: all 0.2s; cursor: pointer; }
+.nav-link { display: block; padding: 10px 12px; border-radius: 8px; color: var(--text); text-decoration: none; font-size: 0.9rem; transition: all 0.2s; }
 .nav-link:hover { background: var(--bg3); }
 .nav-link.active { background: var(--accent); color: #000; }
 .main { flex: 1; padding: 30px; overflow-y: auto; }
@@ -29,24 +28,23 @@ body { background: var(--bg); color: var(--text); font-family: 'Space Grotesk', 
 .game-header { margin-bottom: 30px; }
 .game-header h1 { font-size: 2rem; margin-bottom: 8px; }
 .game-header p { color: var(--text2); }
-.game-header span { color: var(--gold); font-weight: 700; }
-.limbo-display { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 60px; text-align: center; margin-bottom: 20px; min-height: 300px; display: flex; align-items: center; justify-content: center; }
-.limbo-number { font-size: 6rem; font-weight: 700; transition: all 0.1s; }
-.limbo-number.low { color: var(--accent); }
-.limbo-number.medium { color: var(--gold); }
-.limbo-number.high { color: var(--red); }
-.bet-section { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+.game-area { display: grid; grid-template-columns: 1fr 350px; gap: 24px; }
+.game-display { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 60px; text-align: center; min-height: 200px; }
+.limbo-num { font-size: 4rem; font-weight: 700; transition: all 0.1s; }
+.limbo-num.low { color: var(--accent); }
+.limbo-num.high { color: var(--red); }
+.controls { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+.targets { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 20px; }
+.target-btn { padding: 12px; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; color: var(--text); cursor: pointer; text-align: center; font-weight: 600; }
+.target-btn:hover { border-color: var(--accent); }
+.target-btn.active { background: var(--accent); color: #000; border-color: var(--accent); }
 .bet-input { width: 100%; padding: 14px; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 1rem; margin-bottom: 12px; }
 .bet-controls { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
 .bet-btn { padding: 10px 16px; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; color: var(--text); cursor: pointer; font-size: 0.85rem; }
 .bet-btn:hover { border-color: var(--accent); }
-.play-btn { width: 100%; padding: 16px; background: var(--accent); border: none; border-radius: 8px; color: #000; font-size: 1rem; font-weight: 700; cursor: pointer; }
+.play-btn { width: 100%; padding: 16px; background: var(--accent); border: none; border-radius: 8px; color: #000; font-size: 1rem; font-weight: 700; cursor: pointer; margin-bottom: 12px; }
 .play-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-.multipliers { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
-.multiplier-btn { padding: 8px 14px; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; color: var(--text); cursor: pointer; font-size: 0.85rem; }
-.multiplier-btn:hover { border-color: var(--accent); }
-.multiplier-btn.active { background: var(--accent); color: #000; border-color: var(--accent); }
-@media(max-width: 768px) { .sidebar { display: none; } }
+@media(max-width: 768px) { .sidebar { display: none; } .game-area { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
@@ -70,9 +68,22 @@ body { background: var(--bg); color: var(--text); font-family: 'Space Grotesk', 
     </div>
     <div class="nav-section">
       <div class="nav-label">Menu</div>
-      <a class="nav-link" href="livebets.html">Live Bets</a>
+      <a class="nav-link" href="../wallet.html">Wallet</a>
+      <a class="nav-link" href="../leaderboard.html">Leaderboard</a>
+      <a class="nav-link" href="../tournaments.html">Tournaments</a>
+      <a class="nav-link" href="../vip.html">VIP</a>
+      <a class="nav-link" href="../bonuses.html">Bonuses</a>
       <a class="nav-link" href="referral.html">Referrals</a>
       <a class="nav-link" href="daily.html">Daily Rewards</a>
+      <a class="nav-link" href="../history.html">Bet History</a>
+      <a class="nav-link" href="../achievements.html">Achievements</a>
+      <a class="nav-link" href="../chat.html">Chat</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Support</div>
+      <a class="nav-link" href="../settings.html">Settings</a>
+      <a class="nav-link" href="../faq.html">FAQ</a>
+      <a class="nav-link" href="../support.html">Support</a>
     </div>
   </div>
   <div class="main">
@@ -81,104 +92,27 @@ body { background: var(--bg); color: var(--text); font-family: 'Space Grotesk', 
       <div class="user"><span id="username">User</span><div class="user-avatar" id="avatar">U</div></div>
     </div>
     <div class="game-header">
-      <h1>Limbo <span>- Target the multiplier</span></h1>
-      <p>Get higher than your target to win!</p>
+      <h1>Limbo <span>- Target the multiplier!</span></h1>
+      <p>Roll under your target to win!</p>
     </div>
-    <div class="limbo-display">
-      <div class="limbo-number" id="limbo-num">1.00x</div>
-    </div>
-    <div class="bet-section">
-      <div class="multipliers">
-        <button class="multiplier-btn active" onclick="setTarget(2)">2x</button>
-        <button class="multiplier-btn" onclick="setTarget(5)">5x</button>
-        <button class="multiplier-btn" onclick="setTarget(10)">10x</button>
-        <button class="multiplier-btn" onclick="setTarget(25)">25x</button>
-        <button class="multiplier-btn" onclick="setTarget(50)">50x</button>
-        <button class="multiplier-btn" onclick="setTarget(100)">100x</button>
-        <button class="multiplier-btn" onclick="setTarget(500)">500x</button>
-        <button class="multiplier-btn" onclick="setTarget(1000)">1000x</button>
+    <div class="game-area">
+      <div class="game-display"><div class="limbo-num" id="limbo-num">0.00</div></div>
+      <div class="controls">
+        <div class="targets"><button class="target-btn" onclick="setTarget(2)">2x</button><button class="target-btn" onclick="setTarget(5)">5x</button><button class="target-btn" onclick="setTarget(10)">10x</button><button class="target-btn" onclick="setTarget(25)">25x</button><button class="target-btn active" onclick="setTarget(50)">50x</button><button class="target-btn" onclick="setTarget(100)">100x</button><button class="target-btn" onclick="setTarget(500)">500x</button><button class="target-btn" onclick="setTarget(1000)">1000x</button></div>
+        <input type="number" class="bet-input" id="bet-amount" placeholder="Bet Amount">
+        <div class="bet-controls"><button class="bet-btn" onclick="addBet(10)">+$10</button><button class="bet-btn" onclick="addBet(50)">+$50</button><button class="bet-btn" onclick="addBet(100)">+$100</button><button class="bet-btn" onclick="addBet(1000)">+$1K</button></div>
+        <button class="play-btn" id="bet-btn" onclick="bet()">BET</button>
       </div>
-      <input type="number" class="bet-input" id="target" placeholder="Target multiplier" value="2">
-      <input type="number" class="bet-input" id="bet-amount" placeholder="Bet Amount">
-      <div class="bet-controls">
-        <button class="bet-btn" onclick="addBet(10)">+$10</button>
-        <button class="bet-btn" onclick="addBet(50)">+$50</button>
-        <button class="bet-btn" onclick="addBet(100)">+$100</button>
-        <button class="bet-btn" onclick="addBet(1000)">+$1K</button>
-      </div>
-      <button class="play-btn" id="bet-btn" onclick="placeLimboBet()">BET</button>
     </div>
   </div>
 </div>
 <script src="../js/auth.js"></script>
 <script>
-let targetMultiplier = 2;
-
-async function init() {
-  await Session.init();
-  if (!Session.isLoggedIn()) location.href = '../login.html';
-  document.getElementById('username').textContent = window.currentUser.username;
-  document.getElementById('avatar').textContent = window.currentUser.username.charAt(0).toUpperCase();
-  document.getElementById('balance').textContent = '$' + window.balance.toLocaleString();
-}
-
-function setTarget(mult) {
-  targetMultiplier = mult;
-  document.getElementById('target').value = mult;
-  document.querySelectorAll('.multiplier-btn').forEach(btn => {
-    btn.classList.toggle('active', parseFloat(btn.textContent) === mult);
-  });
-}
-
-function addBet(amount) {
-  const input = document.getElementById('bet-amount');
-  input.value = (parseInt(input.value) || 0) + amount;
-}
-
-async function placeLimboBet() {
-  const bet = parseInt(document.getElementById('bet-amount').value) || 0;
-  targetMultiplier = parseFloat(document.getElementById('target').value) || 2;
-  
-  if (!bet || bet < 1 || bet > window.balance) { alert('Invalid bet'); return; }
-  
-  updateBalanceUI(window.balance - bet);
-  document.getElementById('bet-btn').disabled = true;
-  
-  let multiplier = 1;
-  const display = document.getElementById('limbo-num');
-  
-  for (let i = 0; i < 50; i++) {
-    if (biasedWin()) multiplier += 0.01;
-    else multiplier += 0.1 + Math.random() * 0.2;
-    
-    const show = multiplier.toFixed(2) + 'x';
-    display.textContent = show;
-    display.className = 'limbo-number ' + getColorClass(multiplier);
-    await sleep(50);
-  }
-  
-  const won = multiplier >= targetMultiplier;
-  
-  if (won) {
-    const winnings = Math.floor(bet * targetMultiplier);
-    updateBalanceUI(window.balance + winnings);
-    alert('Won $' + winnings + '!');
-  } else {
-    alert('Lost! Target was ' + targetMultiplier + 'x, got ' + multiplier.toFixed(2) + 'x');
-  }
-  
-  document.getElementById('bet-btn').disabled = false;
-  Session.saveBalance();
-}
-
-function getColorClass(mult) {
-  if (mult < 2) return 'low';
-  if (mult < 10) return 'medium';
-  return 'high';
-}
-
-function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
-
+let target = 50, betAmt = 0;
+async function init() { await Session.init(); if (!Session.isLoggedIn()) location.href = '../login.html'; document.getElementById('username').textContent = window.currentUser.username; document.getElementById('avatar').textContent = window.currentUser.username.charAt(0).toUpperCase(); document.getElementById('balance').textContent = '$' + window.balance.toLocaleString(); }
+function setTarget(t) { target = t; document.querySelectorAll('.target-btn').forEach(b => b.classList.toggle('active', parseInt(b.textContent) === t)); }
+function addBet(a) { document.getElementById('bet-amount').value = (parseInt(document.getElementById('bet-amount').value) || 0) + a; }
+async function bet() { betAmt = parseInt(document.getElementById('bet-amount').value) || 0; if (!betAmt || betAmt < 1 || betAmt > window.balance) { alert('Invalid bet'); return; } updateBalanceUI(window.balance - betAmt); document.getElementById('bet-btn').disabled = true; let roll = 0, display = document.getElementById('limbo-num'); for (let i = 0; i < 50; i++) { roll = Math.random() * target; display.textContent = roll.toFixed(2); display.className = 'limbo-num ' + (roll > target ? 'high' : 'low'); await new Promise(r => setTimeout(r, 50)); } const won = roll <= target; if (won) { const win = Math.floor(betAmt * target); updateBalanceUI(window.balance + win); alert('Won $' + win + '!'); } else { alert('Lost!'); } document.getElementById('bet-btn').disabled = false; Session.saveBalance(); }
 init();
 </script>
 </body>
