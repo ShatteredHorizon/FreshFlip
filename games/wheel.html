@@ -3,266 +3,199 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FreshFlip - Lucky Wheel</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>FreshFlip - Wheel</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg-primary: #0a0e17;
-  --bg-secondary: #111827;
-  --bg-tertiary: #1a2332;
-  --bg-card: #162032;
-  --accent-primary: #00ff88;
-  --accent-glow: rgba(0, 255, 136, 0.4);
-  --gold: #ffd700;
-  --red-bright: #ff3366;
-  --text-primary: #ffffff;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
-  --border-glow: rgba(0, 255, 136, 0.3);
-  --gradient-primary: linear-gradient(135deg, #00ff88 0%, #00cc6a 100%);
-  --shadow-glow: 0 0 30px rgba(0, 255, 136, 0.3);
-}
-
+:root { --bg: #0f0f13; --bg2: #1a1a23; --bg3: #222230; --accent: #00ff88; --red: #ff4757; --gold: #ffd700; --blue: #3742fa; --text: #fff; --text2: #888; --border: #2a2a35; }
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { background: var(--bg-primary); color: var(--text-primary); font-family: 'Inter', sans-serif; min-height: 100vh; }
-
-#app { display: none; flex-direction: column; min-height: 100vh; }
-
-header {
-  background: rgba(22, 32, 50, 0.95);
-  border-bottom: 1px solid var(--border-glow);
-  padding: 12px 24px;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
-.header-inner { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
-
-.logo { font-family: 'Orbitron', sans-serif; font-size: 1.5rem; font-weight: 700; letter-spacing: 3px; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; cursor: pointer; }
-
-.header-right { display: flex; align-items: center; gap: 16px; }
-
-.user-name { font-weight: 600; font-size: 0.9rem; color: var(--text-secondary); }
-
-.balance-display { display: flex; align-items: center; gap: 8px; background: rgba(0, 0, 0, 0.3); padding: 8px 16px; border-radius: 50px; border: 2px solid var(--accent-primary); }
-
-.balance-value { font-family: 'Orbitron', sans-serif; font-size: 1rem; font-weight: 700; color: var(--accent-primary); }
-
-.logout-btn { background: transparent; border: 1px solid var(--text-muted); color: var(--text-secondary); padding: 6px 14px; border-radius: 50px; cursor: pointer; font-size: 0.7rem; font-weight: 600; transition: all 0.3s; }
-.logout-btn:hover { border-color: var(--red-bright); color: var(--red-bright); }
-
-main { flex: 1; padding: 30px 24px; max-width: 600px; margin: 0 auto; width: 100%; }
-
-.game-title { font-family: 'Orbitron', sans-serif; font-size: 1.8rem; font-weight: 700; margin-bottom: 8px; }
-.game-subtitle { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 24px; }
-
-.game-card { background: var(--bg-card); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 24px; margin-bottom: 20px; }
-
-.section-label { font-size: 0.7rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
-
-.wheel-container { position: relative; width: 280px; height: 280px; margin: 20px auto; }
-
-.wheel {
-  width: 100%; height: 100%; border-radius: 50%; background: var(--bg-tertiary); border: 4px solid var(--accent-primary); box-shadow: var(--shadow-glow), inset 0 0 40px rgba(0, 255, 136, 0.1); position: relative; overflow: hidden; transform: rotate(0deg); transition: transform 0.1s ease-out;
-}
-
-.wheel::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: conic-gradient(from 0deg, #00ff88 0deg 45deg, #ffd700 45deg 90deg, #ff3366 90deg 135deg, #00d4ff 135deg 180deg, #00ff88 180deg 225deg, #ffd700 225deg 270deg, #ff3366 270deg 315deg, #00d4ff 315deg 360deg);
-  border-radius: 50%;
-}
-
-.wheel::after {
-  content: '';
-  position: absolute;
-  inset: 20px;
-  background: var(--bg-card);
-  border-radius: 50%;
-}
-
-.pointer {
-  position: absolute;
-  top: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 0;
-  height: 0;
-  border-left: 15px solid transparent;
-  border-right: 15px solid transparent;
-  border-top: 25px solid var(--accent-primary);
-  z-index: 10;
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
-}
-
-.wheel-center {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 70px;
-  height: 70px;
-  background: var(--gradient-primary);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Orbitron', sans-serif;
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: #000;
-  z-index: 10;
-  box-shadow: 0 4px 20px rgba(0, 255, 136, 0.5);
-}
-
-.select-sections { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 16px; }
-
-.select-section {
-  padding: 12px 8px;
-  background: var(--bg-tertiary);
-  border: 2px solid rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
-  cursor: pointer;
-  text-align: center;
-  transition: all 0.3s;
-}
-
-.select-section:hover { border-color: var(--accent-primary); }
-.select-section.active { border-color: var(--accent-primary); background: rgba(0, 255, 136, 0.15); }
-
-.select-section .val { font-family: 'Orbitron', sans-serif; font-size: 1.1rem; font-weight: 700; display: block; }
-.select-section .lbl { font-size: 0.6rem; color: var(--text-muted); text-transform: uppercase; margin-top: 4px; }
-
-.bet-input-wrap { display: flex; align-items: center; background: var(--bg-secondary); border: 2px solid rgba(255, 255, 255, 0.1); border-radius: 10px; margin-bottom: 12px; }
-.bet-input-wrap:focus-within { border-color: var(--accent-primary); box-shadow: var(--shadow-glow); }
-
-.bet-currency { color: var(--text-secondary); padding: 0 14px; font-family: 'Orbitron', sans-serif; font-weight: 700; }
-.bet-input { flex: 1; background: transparent; border: none; padding: 14px 0; color: var(--text-primary); font-family: 'Orbitron', sans-serif; font-size: 1.2rem; font-weight: 700; outline: none; }
-
-.quick-buttons { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
-
-.quick-btn { padding: 8px 14px; background: var(--bg-tertiary); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; color: var(--text-secondary); cursor: pointer; font-size: 0.75rem; font-weight: 600; transition: all 0.2s; }
-.quick-btn:hover { border-color: var(--accent-primary); color: var(--accent-primary); }
-
-.play-btn { width: 100%; padding: 16px; background: var(--gradient-primary); border: none; border-radius: 10px; color: #000; font-family: 'Orbitron', sans-serif; font-size: 1rem; font-weight: 700; letter-spacing: 2px; cursor: pointer; transition: all 0.3s; box-shadow: var(--shadow-glow); }
-.play-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 40px var(--accent-glow); }
-.play-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-
-.result-box { margin-top: 16px; padding: 20px; border-radius: 12px; text-align: center; display: none; }
-.result-box.win { background: rgba(0, 255, 136, 0.1); border: 2px solid rgba(0, 255, 136, 0.3); display: block; }
-.result-box.lose { background: rgba(255, 51, 102, 0.1); border: 2px solid rgba(255, 51, 102, 0.3); display: block; }
-
-.result-amount { font-family: 'Orbitron', sans-serif; font-size: 1.8rem; font-weight: 700; }
-.result-box.win .result-amount { color: var(--accent-primary); }
-.result-box.lose .result-amount { color: var(--red-bright); }
-.result-msg { color: var(--text-secondary); font-size: 0.85rem; margin-top: 6px; }
+body { background: var(--bg); color: var(--text); font-family: 'Space Grotesk', sans-serif; min-height: 100vh; }
+.app { display: flex; min-height: 100vh; }
+.sidebar { width: 240px; background: var(--bg2); border-right: 1px solid var(--border); padding: 20px 0; flex-shrink: 0; }
+.logo { font-size: 1.5rem; font-weight: 700; padding: 0 20px 20px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+.logo span { color: var(--accent); }
+.nav-section { padding: 0 16px; margin-bottom: 20px; }
+.nav-label { font-size: 0.65rem; color: var(--text2); text-transform: uppercase; margin-bottom: 8px; }
+.nav-link { display: block; padding: 10px 12px; border-radius: 8px; color: var(--text); text-decoration: none; font-size: 0.9rem; transition: all 0.2s; }
+.nav-link:hover { background: var(--bg3); }
+.nav-link.active { background: var(--accent); color: #000; }
+.main { flex: 1; padding: 30px; overflow-y: auto; }
+.header-bar { display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; background: var(--bg2); border-bottom: 1px solid var(--border); }
+.balance { display: flex; align-items: center; gap: 12px; }
+.balance-label { color: var(--text2); font-size: 0.75rem; }
+.balance-value { font-size: 1.2rem; font-weight: 700; color: var(--accent); }
+.user { display: flex; align-items: center; gap: 10px; }
+.user-avatar { width: 36px; height: 36px; background: var(--accent); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #000; }
+.game-header { margin-bottom: 30px; }
+.game-header h1 { font-size: 2rem; margin-bottom: 8px; }
+.game-header p { color: var(--text2); }
+.game-header span { color: var(--gold); font-weight: 700; }
+.game-area { display: grid; grid-template-columns: 1fr 350px; gap: 24px; }
+.wheel-display { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 40px; text-align: center; min-height: 300px; position: relative; }
+.wheel { width: 250px; height: 250px; border-radius: 50%; margin: 0 auto; position: relative; overflow: hidden; border: 4px solid var(--border); }
+.wheel-segment { position: absolute; width: 50%; height: 50%; top: 0; left: 50%; transform-origin: 0% 100%; background: var(--bg3); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; }
+.wheel-center { position: absolute; top: 50%; left: 50%; width: 60px; height: 60px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: 700; color: #000; transform: translate(-50%, -50%); cursor: pointer; }
+.wheel-pointer { position: absolute; top: 10px; left: 50%; width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 20px solid var(--red); transform: translateX(-50%); z-index: 10; }
+.winner-announce { font-size: 1.5rem; font-weight: 700; margin-top: 20px; }
+.winner-announce.win { color: var(--accent); }
+.controls { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+.color-pick { display: flex; gap: 10px; margin-bottom: 20px; }
+.color-btn { flex: 1; padding: 14px; border-radius: 8px; color: #000; font-weight: 700; cursor: pointer; border: none; }
+.color-btn.red { background: var(--red); }
+.color-btn.green { background: var(--accent); }
+.color-btn.black { background: #333; }
+.color-btn:hover { transform: scale(1.02); }
+.color-btn.active { outline: 3px solid var(--gold); }
+.bet-input { width: 100%; padding: 14px; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 1rem; margin-bottom: 12px; }
+.bet-controls { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+.bet-btn { padding: 10px 16px; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; color: var(--text); cursor: pointer; font-size: 0.85rem; }
+.bet-btn:hover { border-color: var(--accent); }
+.play-btn { width: 100%; padding: 16px; background: var(--accent); border: none; border-radius: 8px; color: #000; font-size: 1rem; font-weight: 700; cursor: pointer; }
+.play-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.instructions { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+.instructions h3 { margin-bottom: 12px; color: var(--accent); }
+.instructions ul { padding-left: 20px; color: var(--text2); font-size: 0.9rem; line-height: 1.8; }
+@media(max-width: 768px) { .sidebar { display: none; } .game-area { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
-<div id="app">
-  <header>
-    <div class="header-inner">
-      <div class="logo" onclick="location.href='../index.html'">FRESHFLIP</div>
-      <div class="header-right">
-        <span class="user-name" id="nav-user"></span>
-        <div class="balance-display"><span class="balance-value" id="nav-balance">$0</span></div>
-        <button class="logout-btn" onclick="Session.logout()">Sign Out</button>
-      </div>
+<div class="app">
+  <div class="sidebar">
+    <div class="logo">FRESH<span>FLIP</span></div>
+    <div class="nav-section">
+      <div class="nav-label">Games</div>
+      <a class="nav-link" href="mines.html">Mines</a>
+      <a class="nav-link" href="crash.html">Crash</a>
+      <a class="nav-link" href="hilo.html">HiLo</a>
+      <a class="nav-link" href="dice.html">Dice</a>
+      <a class="nav-link" href="coinflip.html">Coinflip</a>
+      <a class="nav-link" href="chicken.html">Chicken</a>
+      <a class="nav-link" href="tower.html">Dragon Tower</a>
+      <a class="nav-link active" href="wheel.html">Wheel</a>
+      <a class="nav-link" href="plinko.html">Plinko</a>
+      <a class="nav-link" href="blackjack.html">Blackjack</a>
+      <a class="nav-link" href="keno.html">Keno</a>
+      <a class="nav-link" href="limbo.html">Limbo</a>
     </div>
-  </header>
-  
-  <main>
-    <h1 class="game-title">Lucky Wheel</h1>
-    <p class="game-subtitle">Spin to win up to 10x your bet</p>
-    
-    <div class="game-card">
-      <p class="section-label">Select Segment</p>
-      <div class="select-sections">
-        <div class="select-section active" data-seg="1" onclick="selectSeg(1)"><span class="val">1x</span><span class="lbl">Gray</span></div>
-        <div class="select-section" data-seg="2" onclick="selectSeg(2)"><span class="val">2x</span><span class="lbl">Green</span></div>
-        <div class="select-section" data-seg="3" onclick="selectSeg(3)"><span class="val">5x</span><span class="lbl">Blue</span></div>
-        <div class="select-section" data-seg="4" onclick="selectSeg(4)"><span class="val">10x</span><span class="lbl">Red</span></div>
-      </div>
-      
-      <div class="wheel-container">
-        <div class="pointer"></div>
+    <div class="nav-section">
+      <div class="nav-label">Menu</div>
+      <a class="nav-link" href="../wallet.html">Wallet</a>
+      <a class="nav-link" href="../leaderboard.html">Leaderboard</a>
+      <a class="nav-link" href="../tournaments.html">Tournaments</a>
+      <a class="nav-link" href="../vip.html">VIP</a>
+      <a class="nav-link" href="../bonuses.html">Bonuses</a>
+      <a class="nav-link" href="referral.html">Referrals</a>
+      <a class="nav-link" href="daily.html">Daily Rewards</a>
+      <a class="nav-link" href="../history.html">Bet History</a>
+      <a class="nav-link" href="../achievements.html">Achievements</a>
+      <a class="nav-link" href="../chat.html">Chat</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Support</div>
+      <a class="nav-link" href="../settings.html">Settings</a>
+      <a class="nav-link" href="../faq.html">FAQ</a>
+      <a class="nav-link" href="../support.html">Support</a>
+    </div>
+  </div>
+  <div class="main">
+    <div class="header-bar">
+      <div class="balance"><span class="balance-label">Balance</span><span class="balance-value" id="balance">$0</span></div>
+      <div class="user"><span id="username">User</span><div class="user-avatar" id="avatar">U</div></div>
+    </div>
+    <div class="game-header">
+      <h1>Lucky Wheel <span>- Spin to win!</span></h1>
+      <p>Pick a color and test your luck!</p>
+    </div>
+    <div class="game-area">
+      <div class="wheel-display">
+        <div class="wheel-pointer"></div>
         <div class="wheel" id="wheel"></div>
-        <div class="wheel-center" id="wheel-center">?</div>
+        <div class="winner-announce" id="winner">Spin the wheel!</div>
       </div>
-      
-      <p class="section-label">Bet Amount</p>
-      <div class="bet-input-wrap"><span class="bet-currency">$</span><input class="bet-input" id="wheel-bet" type="number" placeholder="0"></div>
-      <div class="quick-buttons">
-        <button class="quick-btn" onclick="setBet('wheel-bet',10)">$10</button>
-        <button class="quick-btn" onclick="setBet('wheel-bet',50)">$50</button>
-        <button class="quick-btn" onclick="setBet('wheel-bet',100)">$100</button>
-        <button class="quick-btn" onclick="halfBet('wheel-bet')">1/2</button>
-        <button class="quick-btn" onclick="doubleBet('wheel-bet')">2x</button>
+      <div class="controls">
+        <div class="color-pick">
+          <button class="color-btn red" onclick="pick('red')">RED<br><small>2x</small></button>
+          <button class="color-btn green" onclick="pick('green')">GREEN<br><small>2x</small></button>
+          <button class="color-btn black" onclick="pick('black')">BLACK<br><small>2x</small></button>
+        </div>
+        <input type="number" class="bet-input" id="bet-amount" placeholder="Bet Amount">
+        <div class="bet-controls">
+          <button class="bet-btn" onclick="addBet(10)">+$10</button>
+          <button class="bet-btn" onclick="addBet(50)">+$50</button>
+          <button class="bet-btn" onclick="addBet(100)">+$100</button>
+          <button class="bet-btn" onclick="addBet(1000)">+$1K</button>
+        </div>
+        <button class="play-btn" id="spin-btn" onclick="spin()">SPIN</button>
       </div>
-      <button class="play-btn" id="wheel-btn" onclick="spinWheel()">SPIN</button>
-      
-      <div class="result-box" id="wheel-result"><div class="result-amount" id="wheel-result-amount"></div><div class="result-msg" id="wheel-result-msg"></div></div>
     </div>
-  </main>
+    <div class="instructions">
+      <h3>How to Play</h3>
+      <ul>
+        <li>Pick a color (Red, Green, or Black)</li>
+        <li>Enter bet and click SPIN</li>
+        <li>All colors pay 2x</li>
+        <li>Green has lower odds but same payout</li>
+      </ul>
+    </div>
+  </div>
 </div>
-
 <script src="../js/auth.js"></script>
 <script>
-let selectedSeg = 1, spinning = false;
-const segMultipliers = { 1: 1, 2: 2, 3: 5, 4: 10 };
+const colors = ['red', 'green', 'black', 'red', 'green', 'black', 'red', 'green', 'black', 'red', 'green', 'black'];
+let pick = '';
+let spinning = false;
 
 async function init() {
   await Session.init();
-  if (!Session.isLoggedIn()) { location.href = '../login.html'; return; }
-  document.getElementById('app').style.display = 'flex';
-  document.getElementById('nav-user').textContent = window.currentUser.username;
-  updateBalanceUI(window.balance);
+  if (!Session.isLoggedIn()) location.href = '../login.html';
+  document.getElementById('username').textContent = window.currentUser.username;
+  document.getElementById('avatar').textContent = window.currentUser.username.charAt(0).toUpperCase();
+  document.getElementById('balance').textContent = '$' + window.balance.toLocaleString();
 }
 
-function selectSeg(s) {
-  selectedSeg = s;
-  document.querySelectorAll('.select-section').forEach(el => el.classList.toggle('active', parseInt(el.dataset.seg) === s));
-}
+function select(c) { pick = c; document.querySelectorAll('.color-btn').forEach(b => b.classList.toggle('active', b.classList.contains(c))); }
+function addBet(a) { document.getElementById('bet-amount').value = (parseInt(document.getElementById('bet-amount').value) || 0) + a; }
 
-async function spinWheel() {
-  const bet = getBet('wheel-bet');
-  if (!bet || bet < 1) return;
-  if (bet > window.balance) return;
+function spin() {
+  const bet = parseInt(document.getElementById('bet-amount').value) || 0;
+  if (!pick) { alert('Pick a color first!'); return; }
+  if (!bet || bet < 1 || bet > window.balance) { alert('Invalid bet'); return; }
   if (spinning) return;
-  
   spinning = true;
-  const btn = document.getElementById('wheel-btn');
-  btn.disabled = true;
   updateBalanceUI(window.balance - bet);
+  document.getElementById('spin-btn').disabled = true;
   
   const wheel = document.getElementById('wheel');
-  const center = document.getElementById('wheel-center');
+  wheel.innerHTML = '';
+  colors.forEach((c, i) => {
+    const seg = document.createElement('div');
+    seg.className = 'wheel-segment';
+    seg.style.background = c === 'red' ? 'var(--red)' : c === 'green' ? 'var(--accent)' : '#333';
+    seg.style.transform = `rotate(${i * 30}deg)`;
+    seg.style.clipPath = 'polygon(0% 0%, 100% 0%, 100% 100%)';
+    seg.style.zIndex = colors.length - i;
+    wheel.appendChild(seg);
+  });
   
-  const targetSeg = biasedWin() ? selectedSeg : Math.floor(Math.random() * 4) + 1;
-  const rotation = 1080 + (selectedSeg - targetSeg) * 45;
-  
-  wheel.style.transition = 'transform 3s cubic-bezier(0.17, 0.67, 0.12, 0.99)';
-  wheel.style.transform = `rotate(${rotation}deg)`;
-  center.textContent = segMultipliers[selectedSeg] + 'x';
-  
-  setTimeout(() => {
-    const won = bet * segMultipliers[targetSeg];
-    if (won > bet) {
-      updateBalanceUI(window.balance + won);
-      showResult('wheel', true, won - bet, `Landed on ${segMultipliers[targetSeg]}x!`);
-    } else {
-      showResult('wheel', false, bet, 'Try again!');
+  let rotation = 0;
+  const targetRotation = 360 * 5 + Math.random() * 360;
+  const interval = setInterval(() => {
+    rotation += (targetRotation - rotation) * 0.1;
+    if (targetRotation - rotation < 1) {
+      clearInterval(interval);
+      const index = Math.floor(((targetRotation % 360) / 30)) % 12;
+      const result = colors[index];
+      const won = result === pick;
+      const winnings = won ? bet * 2 : 0;
+      if (winnings > 0) updateBalanceUI(window.balance + winnings);
+      document.getElementById('winner').textContent = won ? 'YOU WON $' + winnings + '!' : 'YOU LOST!';
+      document.getElementById('winner').className = 'winner-announce ' + (won ? 'win' : '');
+      alert(won ? 'Won $' + winnings + '!' : 'Lost $' + bet);
+      document.getElementById('spin-btn').disabled = false;
+      spinning = false;
+      Session.saveBalance();
     }
-    spinning = false;
-    btn.disabled = false;
-    wheel.style.transition = 'none';
-    wheel.style.transform = 'rotate(0deg)';
-    center.textContent = '?';
-    Session.saveBalance();
-  }, 3000);
+    wheel.style.transform = `rotate(${rotation}deg)`;
+  }, 30);
 }
 
 init();

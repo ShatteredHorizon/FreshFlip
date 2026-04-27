@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FreshFlip - Crash</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root { --bg: #0f0f13; --bg2: #1a1a23; --bg3: #222230; --accent: #00ff88; --red: #ff4757; --gold: #ffd700; --text: #fff; --text2: #888; --border: #2a2a35; }
@@ -16,7 +15,7 @@ body { background: var(--bg); color: var(--text); font-family: 'Space Grotesk', 
 .logo span { color: var(--accent); }
 .nav-section { padding: 0 16px; margin-bottom: 20px; }
 .nav-label { font-size: 0.65rem; color: var(--text2); text-transform: uppercase; margin-bottom: 8px; }
-.nav-link { display: block; padding: 10px 12px; border-radius: 8px; color: var(--text); text-decoration: none; font-size: 0.9rem; transition: all 0.2s; cursor: pointer; }
+.nav-link { display: block; padding: 10px 12px; border-radius: 8px; color: var(--text); text-decoration: none; font-size: 0.9rem; transition: all 0.2s; }
 .nav-link:hover { background: var(--bg3); }
 .nav-link.active { background: var(--accent); color: #000; }
 .main { flex: 1; padding: 30px; overflow-y: auto; }
@@ -30,95 +29,28 @@ body { background: var(--bg); color: var(--text); font-family: 'Space Grotesk', 
 .game-header h1 { font-size: 2rem; margin-bottom: 8px; }
 .game-header p { color: var(--text2); }
 .game-header span { color: var(--gold); font-weight: 700; }
-
-.crash-display {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 40px;
-  text-align: center;
-  margin-bottom: 20px;
-  min-height: 300px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.crash-number {
-  font-size: 5rem;
-  font-weight: 700;
-  transition: all 0.1s;
-}
-
-.crash-number.low { color: var(--accent); }
-.crash-number.medium { color: var(--gold); }
-.crash-number.high { color: var(--red); }
-
-.crash-history {
-  display: flex;
-  gap: 8px;
-  margin-top: 20px;
-  justify-content: center;
-}
-
-.history-dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-}
-
-.history-dot.green { background: var(--accent); }
-.history-dot.gold { background: var(--gold); }
-.history-dot.red { background: var(--red); }
-
-.bet-section {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 20px;
-}
-
-.auto-toggle {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 16px;
-}
-
-.auto-btn {
-  padding: 10px 16px;
-  background: var(--bg3);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  color: var(--text);
-  cursor: pointer;
-  font-size: 0.85rem;
-}
-
-.auto-btn.active { background: var(--accent); color: #000; border-color: var(--accent); }
-
+.game-area { display: grid; grid-template-columns: 1fr 350px; gap: 24px; }
+.game-display { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 60px; text-align: center; min-height: 400px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.multiplier { font-size: 4rem; font-weight: 700; color: var(--accent); transition: all 0.1s; }
+.multiplier.crashed { color: var(--red); }
+.crash-line { position: absolute; bottom: 0; left: 0; height: 4px; background: var(--red); transition: width 0.1s; }
+.controls { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+.control-section { margin-bottom: 20px; }
+.control-section label { display: block; margin-bottom: 8px; color: var(--text2); font-size: 0.85rem; }
 .bet-input { width: 100%; padding: 14px; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 1rem; margin-bottom: 12px; }
-
-.bet-controls { display: flex; gap: 10px; margin-bottom: 12px; }
-
+.bet-controls { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
 .bet-btn { padding: 10px 16px; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; color: var(--text); cursor: pointer; font-size: 0.85rem; }
 .bet-btn:hover { border-color: var(--accent); }
-
-.withdraw-target { margin-bottom: 16px; }
-.withdraw-target label { display: block; color: var(--text2); font-size: 0.75rem; margin-bottom: 6px; }
-.withdraw-input { width: 100%; padding: 12px; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 1rem; }
-
-.play-btn { width: 100%; padding: 16px; background: var(--accent); border: none; border-radius: 8px; color: #000; font-size: 1rem; font-weight: 700; cursor: pointer; }
-.play-btn:hover { background: #00dd77; }
+.play-btn { width: 100%; padding: 16px; background: var(--accent); border: none; border-radius: 8px; color: #000; font-size: 1rem; font-weight: 700; cursor: pointer; margin-bottom: 12px; }
 .play-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-.stats-row { display: flex; gap: 12px; margin-bottom: 16px; }
-.stat { flex: 1; background: var(--bg3); border-radius: 8px; padding: 14px; text-align: center; }
-.stat-label { font-size: 0.7rem; color: var(--text2); }
-.stat-value { font-size: 1.1rem; font-weight: 700; color: var(--accent); }
-
-@media(max-width: 768px) { .sidebar { display: none; } }
+.history { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+.history-item { padding: 8px 12px; background: var(--bg3); border-radius: 6px; font-size: 0.85rem; }
+.history-item.win { color: var(--accent); }
+.history-item.loss { color: var(--red); }
+.instructions { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+.instructions h3 { margin-bottom: 12px; color: var(--accent); }
+.instructions ul { padding-left: 20px; color: var(--text2); font-size: 0.9rem; line-height: 1.8; }
+@media(max-width: 768px) { .sidebar { display: none; } .game-area { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
@@ -132,98 +64,84 @@ body { background: var(--bg); color: var(--text); font-family: 'Space Grotesk', 
       <a class="nav-link" href="hilo.html">HiLo</a>
       <a class="nav-link" href="dice.html">Dice</a>
       <a class="nav-link" href="coinflip.html">Coinflip</a>
-      <a class="nav-link" href="limbo.html">Limbo</a>
       <a class="nav-link" href="chicken.html">Chicken</a>
       <a class="nav-link" href="tower.html">Dragon Tower</a>
       <a class="nav-link" href="wheel.html">Wheel</a>
       <a class="nav-link" href="plinko.html">Plinko</a>
       <a class="nav-link" href="blackjack.html">Blackjack</a>
       <a class="nav-link" href="keno.html">Keno</a>
+      <a class="nav-link" href="limbo.html">Limbo</a>
     </div>
     <div class="nav-section">
       <div class="nav-label">Menu</div>
-      <a class="nav-link" href="livebets.html">Live Bets</a>
+      <a class="nav-link" href="../wallet.html">Wallet</a>
+      <a class="nav-link" href="../leaderboard.html">Leaderboard</a>
+      <a class="nav-link" href="../tournaments.html">Tournaments</a>
+      <a class="nav-link" href="../vip.html">VIP</a>
+      <a class="nav-link" href="../bonuses.html">Bonuses</a>
       <a class="nav-link" href="referral.html">Referrals</a>
       <a class="nav-link" href="daily.html">Daily Rewards</a>
-      <a class="nav-link" href="provablyfair.html">Provably Fair</a>
+      <a class="nav-link" href="../history.html">Bet History</a>
+      <a class="nav-link" href="../achievements.html">Achievements</a>
+      <a class="nav-link" href="../chat.html">Chat</a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Support</div>
+      <a class="nav-link" href="../settings.html">Settings</a>
+      <a class="nav-link" href="../faq.html">FAQ</a>
+      <a class="nav-link" href="../support.html">Support</a>
     </div>
   </div>
-  
   <div class="main">
     <div class="header-bar">
-      <div class="balance">
-        <span class="balance-label">Balance</span>
-        <span class="balance-value" id="balance">$0</span>
-      </div>
-      <div class="user">
-        <span id="username">User</span>
-        <div class="user-avatar" id="avatar">U</div>
-      </div>
+      <div class="balance"><span class="balance-label">Balance</span><span class="balance-value" id="balance">$0</span></div>
+      <div class="user"><span id="username">User</span><div class="user-avatar" id="avatar">U</div></div>
     </div>
-    
     <div class="game-header">
-      <h1>Crash <span>- Bet on the multiplier</span></h1>
-      <p>Cash out before the crash to win!</p>
+      <h1>Crash <span>- Don't miss the crash!</span></h1>
+      <p>Cash out before the multiplier crashes!</p>
     </div>
-    
-    <div class="crash-display">
-      <div class="crash-number" id="crash-num">1.00x</div>
-      <div style="color: var(--text2); margin-top: 10px;" id="crash-status">Waiting to start...</div>
-      <div class="crash-history" id="history"></div>
+    <div class="game-area">
+      <div class="game-display">
+        <div class="multiplier" id="multiplier">1.00x</div>
+        <p style="color: var(--text2); margin-top: 16px;" id="status-text">Place your bet</p>
+      </div>
+      <div class="controls">
+        <div class="control-section">
+          <label>Auto Cashout (optional)</label>
+          <input type="number" class="bet-input" id="auto-cashout" placeholder="e.g. 2.5">
+        </div>
+        <input type="number" class="bet-input" id="bet-amount" placeholder="Bet Amount">
+        <div class="bet-controls">
+          <button class="bet-btn" onclick="addBet(10)">+$10</button>
+          <button class="bet-btn" onclick="addBet(50)">+$50</button>
+          <button class="bet-btn" onclick="addBet(100)">+$100</button>
+          <button class="bet-btn" onclick="addBet(1000)">+$1K</button>
+        </div>
+        <button class="play-btn" id="bet-btn" onclick="placeBet()">BET</button>
+        <button class="play-btn" id="cashout-btn" onclick="cashOut()" disabled style="background: var(--gold);">CASHOUT</button>
+        <div class="history" id="history"></div>
+      </div>
     </div>
-    
-    <div class="stats-row">
-      <div class="stat">
-        <div class="stat-label">Current Multi</div>
-        <div class="stat-value" id="current-multi">1.00x</div>
-      </div>
-      <div class="stat">
-        <div class="stat-label">Your Profit</div>
-        <div class="stat-value" id="profit">$0</div>
-      </div>
-      <div class="stat">
-        <div class="stat-label">Bets</div>
-        <div class="stat-value" id="bets">0</div>
-      </div>
-    </div>
-    
-    <div class="bet-section">
-      <div class="auto-toggle">
-        <button class="auto-btn" id="manual-btn" onclick="setMode('manual')">Manual</button>
-        <button class="auto-btn" id="auto-btn" onclick="setMode('auto')">Auto</button>
-      </div>
-      
-      <input type="number" class="bet-input" id="bet-amount" placeholder="Bet Amount">
-      
-      <div class="bet-controls">
-        <button class="bet-btn" onclick="addBet(10)">+$10</button>
-        <button class="bet-btn" onclick="addBet(50)">+$50</button>
-        <button class="bet-btn" onclick="addBet(100)">+$100</button>
-        <button class="bet-btn" onclick="addBet(1000)">+$1K</button>
-        <button class="bet-btn" onclick="addBet(10000)">+$10K</button>
-      </div>
-      
-      <div class="withdraw-target">
-        <label>Auto Withdrawal at (leave empty for manual)</label>
-        <input type="number" class="withdraw-input" id="withdraw-at" placeholder="e.g. 2.00">
-      </div>
-      
-      <button class="play-btn" id="play-btn" onclick="placeBet()">PLACE BET</button>
+    <div class="instructions">
+      <h3>How to Play</h3>
+      <ul>
+        <li>Enter your bet amount</li>
+        <li>Set auto cashout for safety (optional)</li>
+        <li>Click BET to start</li>
+        <li>Watch multiplier rise</li>
+        <li>Click CASHOUT before crash!</li>
+        <li>Multiplier shown as 1.00x - 1000.00x</li>
+      </ul>
     </div>
   </div>
 </div>
-
 <script src="../js/auth.js"></script>
 <script>
+let bet = 0;
+let multiplier = 1;
 let gameActive = false;
-let autoMode = false;
-let currentMultiplier = 1;
-let betAmount = 0;
-let withdrawAt = null;
-let myBet = 0;
-let history = [];
-
-const crashHistory = [];
+let betInterval = null;
 
 async function init() {
   await Session.init();
@@ -233,121 +151,67 @@ async function init() {
   document.getElementById('balance').textContent = '$' + window.balance.toLocaleString();
 }
 
-function setMode(mode) {
-  autoMode = mode === 'auto';
-  document.getElementById('manual-btn').classList.toggle('active', !autoMode);
-  document.getElementById('auto-btn').classList.toggle('active', autoMode);
-}
-
 function addBet(amount) {
   const input = document.getElementById('bet-amount');
   input.value = (parseInt(input.value) || 0) + amount;
 }
 
-async function placeBet() {
-  betAmount = parseInt(document.getElementById('bet-amount').value) || 0;
-  withdrawAt = parseFloat(document.getElementById('withdraw-at').value) || null;
-  
-  if (!betAmount || betAmount < 1 || betAmount > window.balance) {
-    alert('Invalid bet amount');
-    return;
-  }
-  
-  if (gameActive) {
-    if (withdrawAt && currentMultiplier >= withdrawAt) {
-      cashOut();
-    }
-    return;
-  }
-  
-  myBet = betAmount;
-  updateBalanceUI(window.balance - betAmount);
+function placeBet() {
+  bet = parseInt(document.getElementById('bet-amount').value) || 0;
+  if (!bet || bet < 1 || bet > window.balance) { alert('Invalid bet'); return; }
+  updateBalanceUI(window.balance - bet);
   gameActive = true;
-  
-  document.getElementById('play-btn').textContent = 'CASH OUT';
-  document.getElementById('crash-status').textContent = 'Crashing...';
-  
-  startCrash();
+  multiplier = 1;
+  document.getElementById('bet-btn').disabled = true;
+  document.getElementById('cashout-btn').disabled = false;
+  document.getElementById('status-text').textContent = 'Rising...';
+  betInterval = setInterval(gameLoop, 100);
 }
 
-function startCrash() {
-  currentMultiplier = 1.00;
+function gameLoop() {
+  if (!gameActive) return;
+  multiplier += 0.01 + Math.random() * 0.02;
+  const display = document.getElementById('multiplier');
+  display.textContent = multiplier.toFixed(2) + 'x';
   
-  const interval = setInterval(() => {
-    if (!gameActive) {
-      clearInterval(interval);
-      return;
-    }
-    
-    if (biasedWin()) {
-      currentMultiplier += 0.01;
-    } else {
-      currentMultiplier += 0.05 + Math.random() * 0.1;
-    }
-    
-    const display = currentMultiplier.toFixed(2) + 'x';
-    document.getElementById('crash-num').textContent = display;
-    document.getElementById('current-multi').textContent = display;
-    document.getElementById('crash-num').className = 'crash-number ' + getColorClass(currentMultiplier);
-    
-    const profit = Math.floor(myBet * currentMultiplier);
-    document.getElementById('profit').textContent = '$' + profit;
-    
-    if (withdrawAt && currentMultiplier >= withdrawAt) {
-      cashOut();
-      clearInterval(interval);
-    }
-    
-    if (!biasedWin() && Math.random() < 0.15) {
-      crashNow();
-      clearInterval(interval);
-    }
-  }, 100);
+  if (Math.random() < 0.03 * Math.log(multiplier)) {
+    crash();
+  }
 }
 
-function crashNow() {
+function crash() {
   gameActive = false;
-  const crashedAt = currentMultiplier.toFixed(2);
-  
-  document.getElementById('crash-status').textContent = 'Crashed at ' + crashedAt + 'x';
-  document.getElementById('play-btn').textContent = 'PLACE BET';
-  
-  crashHistory.unshift(parseFloat(crashedAt));
-  if (crashHistory.length > 10) crashHistory.pop();
-  updateHistory();
-  
-  myBet = 0;
-  document.getElementById('profit').textContent = '$0';
+  clearInterval(betInterval);
+  const display = document.getElementById('multiplier');
+  display.className = 'multiplier crashed';
+  document.getElementById('status-text').textContent = 'CRASHED at ' + multiplier.toFixed(2) + 'x!';
+  document.getElementById('bet-btn').disabled = false;
+  document.getElementById('cashout-btn').disabled = true;
+  addToHistory(multiplier, false);
+  alert('Crashed at ' + multiplier.toFixed(2) + 'x! Lost $' + bet);
 }
 
 function cashOut() {
-  if (!gameActive || !myBet) return;
-  
-  const won = Math.floor(myBet * currentMultiplier);
-  updateBalanceUI(window.balance + won);
-  
-  document.getElementById('crash-status').textContent = 'Cashed out at ' + currentMultiplier.toFixed(2) + 'x!';
-  document.getElementById('play-btn').textContent = 'PLACE BET';
-  
+  if (!gameActive) return;
   gameActive = false;
-  myBet = 0;
+  clearInterval(betInterval);
+  const win = Math.floor(bet * multiplier);
+  updateBalanceUI(window.balance + win);
+  document.getElementById('status-text').textContent = 'Cashed out at ' + multiplier.toFixed(2) + 'x!';
+  document.getElementById('bet-btn').disabled = false;
+  document.getElementById('cashout-btn').disabled = true;
+  addToHistory(multiplier, true);
+  alert('Won $' + win + '!');
   Session.saveBalance();
 }
 
-function getColorClass(multi) {
-  if (multi < 2) return 'low';
-  if (multi < 10) return 'medium';
-  return 'high';
-}
-
-function updateHistory() {
-  const container = document.getElementById('history');
-  container.innerHTML = '';
-  crashHistory.forEach(val => {
-    const dot = document.createElement('div');
-    dot.className = 'history-dot ' + getColorClass(val);
-    container.appendChild(dot);
-  });
+function addToHistory(mult, won) {
+  const history = document.getElementById('history');
+  const item = document.createElement('div');
+  item.className = 'history-item ' + (won ? 'win' : 'loss');
+  item.textContent = mult.toFixed(2) + 'x';
+  history.insertBefore(item, history.firstChild);
+  if (history.children.length > 10) history.removeChild(history.lastChild);
 }
 
 init();
