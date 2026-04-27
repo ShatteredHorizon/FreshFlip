@@ -15,9 +15,12 @@ body { background: var(--bg); color: var(--text); font-family: 'Space Grotesk', 
 .logo span { color: var(--accent); }
 .nav-section { padding: 0 16px; margin-bottom: 20px; }
 .nav-label { font-size: 0.65rem; color: var(--text2); text-transform: uppercase; margin-bottom: 8px; }
-.nav-link { display: block; padding: 10px 12px; border-radius: 8px; color: var(--text); text-decoration: none; font-size: 0.9rem; transition: all 0.2s; }
+.nav-link { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; color: var(--text); text-decoration: none; font-size: 0.9rem; transition: all 0.2s; }
 .nav-link:hover { background: var(--bg3); }
 .nav-link.active { background: var(--accent); color: #000; }
+.nav-icon { width: 24px; height: 24px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; flex-shrink: 0; }
+.nav-link:hover .nav-icon { }
+.nav-link.active .nav-icon { }
 .main { flex: 1; padding: 30px; overflow-y: auto; }
 .header-bar { display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; background: var(--bg2); border-bottom: 1px solid var(--border); }
 .balance { display: flex; align-items: center; gap: 12px; }
@@ -57,37 +60,37 @@ body { background: var(--bg); color: var(--text); font-family: 'Space Grotesk', 
     <div class="logo">FRESH<span>FLIP</span></div>
     <div class="nav-section">
       <div class="nav-label">Games</div>
-      <a class="nav-link" href="mines.html">Mines</a>
-      <a class="nav-link" href="crash.html">Crash</a>
-      <a class="nav-link active" href="hilo.html">HiLo</a>
-      <a class="nav-link" href="dice.html">Dice</a>
-      <a class="nav-link" href="coinflip.html">Coinflip</a>
-      <a class="nav-link" href="chicken.html">Chicken</a>
-      <a class="nav-link" href="tower.html">Dragon Tower</a>
-      <a class="nav-link" href="wheel.html">Wheel</a>
-      <a class="nav-link" href="plinko.html">Plinko</a>
-      <a class="nav-link" href="blackjack.html">Blackjack</a>
-      <a class="nav-link" href="keno.html">Keno</a>
-      <a class="nav-link" href="limbo.html">Limbo</a>
+      <a class="nav-link" href="mines.html"><span class="nav-icon">💎</span>Mines</a>
+      <a class="nav-link" href="crash.html"><span class="nav-icon">📉</span>Crash</a>
+      <a class="nav-link active" href="hilo.html"><span class="nav-icon">🃏</span>HiLo</a>
+      <a class="nav-link" href="dice.html"><span class="nav-icon">🎲</span>Dice</a>
+      <a class="nav-link" href="coinflip.html"><span class="nav-icon">🪙</span>Coinflip</a>
+      <a class="nav-link" href="chicken.html"><span class="nav-icon">🐔</span>Chicken</a>
+      <a class="nav-link" href="tower.html"><span class="nav-icon">🏰</span>Dragon Tower</a>
+      <a class="nav-link" href="wheel.html"><span class="nav-icon">🎡</span>Wheel</a>
+      <a class="nav-link" href="plinko.html"><span class="nav-icon">🔻</span>Plinko</a>
+      <a class="nav-link" href="blackjack.html"><span class="nav-icon">♠️</span>Blackjack</a>
+      <a class="nav-link" href="keno.html"><span class="nav-icon">🎱</span>Keno</a>
+      <a class="nav-link" href="limbo.html"><span class="nav-icon">∞</span>Limbo</a>
     </div>
     <div class="nav-section">
       <div class="nav-label">Menu</div>
-      <a class="nav-link" href="../wallet.html">Wallet</a>
-      <a class="nav-link" href="../leaderboard.html">Leaderboard</a>
-      <a class="nav-link" href="../tournaments.html">Tournaments</a>
-      <a class="nav-link" href="../vip.html">VIP</a>
-      <a class="nav-link" href="../bonuses.html">Bonuses</a>
-      <a class="nav-link" href="referral.html">Referrals</a>
-      <a class="nav-link" href="daily.html">Daily Rewards</a>
-      <a class="nav-link" href="../history.html">Bet History</a>
-      <a class="nav-link" href="../achievements.html">Achievements</a>
-      <a class="nav-link" href="../chat.html">Chat</a>
+      <a class="nav-link" href="../wallet.html"><span class="nav-icon">💰</span>Wallet</a>
+      <a class="nav-link" href="../leaderboard.html"><span class="nav-icon">🏆</span>Leaderboard</a>
+      <a class="nav-link" href="../tournaments.html"><span class="nav-icon">🏅</span>Tournaments</a>
+      <a class="nav-link" href="../vip.html"><span class="nav-icon">👑</span>VIP</a>
+      <a class="nav-link" href="../bonuses.html"><span class="nav-icon">🎁</span>Bonuses</a>
+      <a class="nav-link" href="referral.html"><span class="nav-icon">👥</span>Referrals</a>
+      <a class="nav-link" href="daily.html"><span class="nav-icon">📅</span>Daily Rewards</a>
+      <a class="nav-link" href="../history.html"><span class="nav-icon">📊</span>Bet History</a>
+      <a class="nav-link" href="../achievements.html"><span class="nav-icon">🏵</span>Achievements</a>
+      <a class="nav-link" href="../chat.html"><span class="nav-icon">💬</span>Chat</a>
     </div>
     <div class="nav-section">
       <div class="nav-label">Support</div>
-      <a class="nav-link" href="../settings.html">Settings</a>
-      <a class="nav-link" href="../faq.html">FAQ</a>
-      <a class="nav-link" href="../support.html">Support</a>
+      <a class="nav-link" href="../settings.html"><span class="nav-icon">⚙️</span>Settings</a>
+      <a class="nav-link" href="../faq.html"><span class="nav-icon">❓</span>FAQ</a>
+      <a class="nav-link" href="../support.html"><span class="nav-icon">🎧</span>Support</a>
     </div>
   </div>
   <div class="main">
